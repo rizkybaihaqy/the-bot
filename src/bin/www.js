@@ -6,29 +6,16 @@ import "regenerator-runtime/runtime";
  * Module dependencies.
  */
 
+import S from "sanctuary";
 import app from "../app";
 import http from "http";
 const debug = require("debug")("the-bot:server");
 
 /**
- * Normalize a port into a number, string, or false.
+ * Normalize a port into a number
  */
 
-const normalizePort = (val) => {
-  const port = parseInt(val, 10);
-
-  if (Number.isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-};
+const normalizePort = S.compose(S.fromMaybe(3000))(S.parseInt(10));
 
 /**
  * Get port from environment and store in Express.
