@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+require("dotenv").config();
+
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
@@ -7,9 +9,20 @@ import "regenerator-runtime/runtime";
  */
 
 import S from "sanctuary";
+import axios from "axios";
 import app from "../app";
 import http from "http";
 const debug = require("debug")("the-bot:server");
+
+const { TOKEN, SERVER_URL } = process.env;
+const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
+const URI = `/webhook/${TOKEN}`;
+const WEBHOOK_URL = SERVER_URL + URI;
+
+const init = async () => {
+  const res = await axios.get(`${TELEGRAM_API}/setWebhook?url=${WEBHOOK_URL}`);
+  debug(res.data);
+};
 
 /**
  * Normalize a port into a number
@@ -70,6 +83,8 @@ const onListening = () => {
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, async () => {
+  await init();
+});
 server.on("error", onError);
 server.on("listening", onListening);
