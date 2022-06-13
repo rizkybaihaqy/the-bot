@@ -36,14 +36,12 @@ app.use("/users", usersRouter);
 app.get("/json", dispatch("welcome"));
 // app.post(URI, dispatch("echo"));
 app.post(URI, async (req, res) => {
-  const getChatId = S.gets(S.is($.Integer))(["body", "message", "chat", "id"]);
-  const getText = S.gets(S.is($.String))(["body", "message", "text"]);
+  const tap = (x) => (console.log(x), x);
 
-  const chatId_ = getChatId(req);
-  const text_ = getText(req);
-  if (S.isNothing(chatId_) && S.isNothing(text_)) {
-    return res.send();
-  }
+  const getMessageFromRequest = S.pipe([
+    S.gets(S.is($.Object))(["body", "message"]),
+    S.maybeToEither("No Message Found. Did not support updated message"),
+  ]);
 
   const echo = (chatId) => (text) =>
     Future((rej, res) => {
@@ -58,12 +56,14 @@ app.post(URI, async (req, res) => {
     console.log("resolve", res)
   );
 
-  const sendMessage = S.lift2(echo)(chatId_)(text_)
+  const eitherToFuture = S.either(Future.reject)(Future.resolve);
 
   S.pipe([
-    S.fromMaybe(reject("It broke!")),
+    getMessageFromRequest,
+    eitherToFuture,
+    S.chain((msg) => echo(msg.chat.id)(msg.text)),
     execute,
-  ])(sendMessage);
+  ])(req);
 
   return res.send();
 });
