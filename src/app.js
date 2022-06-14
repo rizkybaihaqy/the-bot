@@ -2,7 +2,7 @@ require("dotenv").config();
 import axios from "axios";
 import cookieParser from "cookie-parser";
 import express from "express";
-import Future, { fork, reject } from "fluture";
+import Future, { encaseP, fork } from "fluture";
 import { dispatcher } from "fluture-express";
 import { env as flutureEnv } from "fluture-sanctuary-types";
 import logger from "morgan";
@@ -43,29 +43,32 @@ app.post(URI, async (req, res) => {
     S.maybeToEither("No Message Found. Did not support updated message"),
   ]);
 
-  const echo = (chatId) => (text) =>
-    Future((rej, res) => {
-      axios.post(`${TELEGRAM_API}/sendMessage`, {
-        chat_id: chatId,
-        text: text,
-      });
-      return () => {};
-    });
+  const flAxios = encaseP(axios);
 
-  const execute = fork((rej) => console.log("reject", rej))((res) =>
-    console.log("resolve", res)
+  const echo = (chatId) => (text) =>
+    flAxios(
+      ("POST",
+      {
+        url: `${TELEGRAM_API}/sendMessage`,
+        data: {
+          chat_id: chatId,
+          text: text,
+        },
+      })
+    );
+
+  const execute = fork((rej) => (console.log(rej), rej))(
+    (res) => (console.log(res), res)
   );
 
   const eitherToFuture = S.either(Future.reject)(Future.resolve);
 
-  S.pipe([
+  return S.pipe([
     getMessageFromRequest,
     eitherToFuture,
     S.chain((msg) => echo(msg.chat.id)(msg.text)),
     execute,
   ])(req);
-
-  return res.send();
 });
 
 export default app;
