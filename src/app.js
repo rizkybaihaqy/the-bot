@@ -63,12 +63,14 @@ app.post(URI, async (req, res) => {
 
   const eitherToFuture = S.either(Future.reject)(Future.resolve);
 
-  return S.pipe([
+  S.pipe([
     getMessageFromRequest,
     eitherToFuture,
     S.chain((msg) => echo(msg.chat.id)(msg.text)),
     execute,
   ])(req);
+
+  res.send();
 });
 
 export default app;
