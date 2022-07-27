@@ -43,6 +43,18 @@ app.post(URI, async (req, res) => {
     S.maybeToEither("No Message Found. Did not support updated message"),
   ]);
 
+  const isTextAvailable = S.ifElse(
+    S.pipe([S.get(S.is($.String))("text"), S.isNothing])
+  )((_) =>
+    S.Left("No Text Found. Did not support other chat type other than text")
+  )(S.Right);
+
+  const isChatIdAvailable = S.ifElse(
+    S.pipe([S.gets(S.is($.Number))(["chat", "id"]), S.isNothing])
+  )((_) =>
+    S.Left("No Text Found. Did not support other chat type other than text")
+  )(S.Right);
+
   const flAxios = encaseP(axios);
 
   const echo = (chatId) => (text) =>
@@ -57,14 +69,14 @@ app.post(URI, async (req, res) => {
       })
     );
 
-  const execute = fork((rej) => (console.log(rej), rej))(
-    (res) => (console.log(res), res)
-  );
+  const execute = fork(tap)(tap);
 
   const eitherToFuture = S.either(Future.reject)(Future.resolve);
 
   S.pipe([
     getMessageFromRequest,
+    S.chain(isChatIdAvailable),
+    S.chain(isTextAvailable),
     eitherToFuture,
     S.chain((msg) => echo(msg.chat.id)(msg.text)),
     execute,
