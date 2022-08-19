@@ -1,1 +1,1 @@
-export const tap = (x) => (console.log(x), x);
+export const tap = (x) => (console.log (x), x)
