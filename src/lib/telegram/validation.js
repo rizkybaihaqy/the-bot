@@ -10,5 +10,5 @@ export const isTextAvailable = S.ifElse(
 export const isChatIdAvailable = S.ifElse(
   S.pipe([S.gets(S.is($.Number))(["chat", "id"]), S.isNothing])
 )((_) =>
-  S.Left("No Text Found. Did not support other chat type other than text")
+  S.Left("No Text Found. Who Are You?")
 )(S.Right);
