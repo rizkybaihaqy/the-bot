@@ -1,7 +1,7 @@
 import { TELEGRAM_API } from "../../constants/telegram";
 import { flAxios } from "../fluture";
 
-export const echo = (chatId) => (text) =>
+export const sendMessage = (chatId) => (text) =>
   flAxios(
     ("POST",
     {
