@@ -5,6 +5,6 @@ import { tap } from "../utils";
 
 export const eitherToFuture = S.either(Future.reject)(Future.resolve);
 
-export const execute = fork(tap)(tap);
+export const execute = fork(S.I)(S.I);
 
 export const flAxios = encaseP(axios);
