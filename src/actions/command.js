@@ -6,31 +6,48 @@ import {
   getMessageFromRequest,
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
-import { isChatIdAvailable, isTextAvailable } from '../lib/telegram/validation'
+import {
+  isChatIdAvailable,
+  isTextAvailable,
+} from '../lib/telegram/validation'
 import {tap} from '../lib/utils'
 
 export default (_) => (req) => {
-  if (req.body.message.entities && req.body.message.entities[0].type == 'bot_command') {
-    switch (req.body.message.text) {
-        case '/ping':
-            return S.pipe ([
-                getMessageFromRequest,
-                tap,
-                eitherToFuture,
-                S.chain ((msg) => sendMessage (msg.chat.id) ('pong')),
-                S.map ((msg) => Json (msg.data)),
-              ]) (req)
-        default:
-            break
+  if (
+    req.body.message.entities &&
+    req.body.message.entities[0].type == 'bot_command'
+  ) {
+    switch (req.body.message.text.split (" ")[0]) {
+      case '/ping':
+        return S.pipe ([
+          getChatIdFromRequest,
+          eitherToFuture,
+          S.chain ((chatId) =>
+            sendMessage (chatId) ('pong'),
+          ),
+          S.map ((msg) => Json (msg.data)),
+        ]) (req)
+      case '/echo':
+        const msg = req.body.message.text.slice (req.body.message.entities[0].length+1)
+        return S.pipe ([
+          getChatIdFromRequest,
+          eitherToFuture,
+          S.chain ((chatId) =>
+            sendMessage (chatId) (msg != '' ? msg : 'Pls add msg'),
+          ),
+          S.map ((msg) => Json (msg.data)),
+        ]) (req)
+      default:
+        break
     }
   } else {
     return S.pipe ([
-        getMessageFromRequest,
-        S.chain (isChatIdAvailable),
-        S.chain (isTextAvailable),
-        eitherToFuture,
-        S.chain ((msg) => sendMessage (msg.chat.id) (msg.text)),
-        S.map ((msg) => Json (msg.data)),
-      ]) (req)
+      getChatIdFromRequest,
+      eitherToFuture,
+      S.chain ((chatId) =>
+        sendMessage (chatId) ('Got Your Message'),
+      ),
+      S.map ((msg) => Json (msg.data)),
+    ]) (req)
   }
 }
