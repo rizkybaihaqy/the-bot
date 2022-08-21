@@ -1,4 +1,5 @@
-import {Json} from 'fluture-express'
+import Future from 'fluture'
+import {Json, Next} from 'fluture-express'
 import {eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary/instance'
 import {
@@ -12,28 +13,30 @@ import {
 } from '../lib/telegram/validation'
 import {tap} from '../lib/utils'
 
-export default (_) => (req) => {
+export default (locals) => (req) => {
   if (
     req.body.message.entities &&
     req.body.message.entities[0].type == 'bot_command'
   ) {
-    switch (req.body.message.text.split (" ")[0]) {
+    switch (req.body.message.text.split (' ')[0]) {
       case '/ping':
         return S.pipe ([
           getChatIdFromRequest,
           eitherToFuture,
-          S.chain ((chatId) =>
-            sendMessage (chatId) ('pong'),
-          ),
+          S.chain ((chatId) => sendMessage (chatId) ('pong')),
           S.map ((msg) => Json (msg.data)),
         ]) (req)
       case '/echo':
-        const msg = req.body.message.text.slice (req.body.message.entities[0].length+1)
+        const msg = req.body.message.text.slice (
+          req.body.message.entities[0].length + 1,
+        )
         return S.pipe ([
           getChatIdFromRequest,
           eitherToFuture,
           S.chain ((chatId) =>
-            sendMessage (chatId) (msg != '' ? msg : 'Pls add msg'),
+            sendMessage (chatId) (
+              msg != '' ? msg : 'Pls add msg',
+            ),
           ),
           S.map ((msg) => Json (msg.data)),
         ]) (req)
@@ -41,13 +44,6 @@ export default (_) => (req) => {
         break
     }
   } else {
-    return S.pipe ([
-      getChatIdFromRequest,
-      eitherToFuture,
-      S.chain ((chatId) =>
-        sendMessage (chatId) ('Got Your Message'),
-      ),
-      S.map ((msg) => Json (msg.data)),
-    ]) (req)
+    return Future.resolve (Next (locals))
   }
 }
