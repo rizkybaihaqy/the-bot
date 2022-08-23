@@ -1,5 +1,7 @@
 import {TELEGRAM_API} from '../../constants/telegram'
-import {flAxios} from '../fluture'
+import {eitherToFuture, flAxios} from '../fluture'
+import {S} from '../sanctuary/instance'
+import {getChatIdFromRequest} from './getter'
 
 export const sendMessage = (chatId) => (text) =>
   flAxios (
@@ -12,3 +14,10 @@ export const sendMessage = (chatId) => (text) =>
       },
     }),
   )
+
+export const reply = (msg) =>
+  S.pipe ([
+    getChatIdFromRequest,
+    eitherToFuture,
+    S.chain ((chatId) => sendMessage (chatId) (msg)),
+  ])

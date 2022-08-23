@@ -1,12 +1,8 @@
 import {Json} from 'fluture-express'
-import {eitherToFuture} from '../../fluture'
-import {getChatIdFromRequest} from '../getter'
-import {sendMessage} from '../request'
 import {S} from '../../sanctuary/instance'
+import {reply} from '../request'
 
 export const echo = S.pipe ([
-  getChatIdFromRequest,
-  eitherToFuture,
-  S.chain ((chatId) => sendMessage (chatId) ('echo')),
+  reply ('echo'),
   S.map ((msg) => Json (msg.data)),
 ])
