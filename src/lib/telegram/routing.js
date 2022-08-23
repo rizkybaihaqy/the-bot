@@ -1,29 +1,10 @@
-import {Json} from 'fluture-express'
-import {eitherToFuture} from '../fluture'
-import {S} from '../sanctuary/instance'
-import {getChatIdFromRequest} from './getter'
-import {sendMessage} from './request'
+import { echo } from './command/echo'
+import { invalid } from './command/invalid'
+import { ping } from './command/ping'
 
 export const command = (req) => (cmd) =>
   cmd === '/ping'
-    ? S.pipe ([
-        getChatIdFromRequest,
-        eitherToFuture,
-        S.chain ((chatId) => sendMessage (chatId) ('pong')),
-        S.map ((msg) => Json (msg.data)),
-      ]) (req)
+    ? ping (req)
   : cmd === '/echo'
-    ? S.pipe ([
-        getChatIdFromRequest,
-        eitherToFuture,
-        S.chain ((chatId) => sendMessage (chatId) ('echo')),
-        S.map ((msg) => Json (msg.data)),
-      ]) (req)
-  : S.pipe ([
-        getChatIdFromRequest,
-        eitherToFuture,
-        S.chain ((chatId) =>
-          sendMessage (chatId) ('Invalid Bot Command'),
-        ),
-        S.map ((msg) => Json (msg.data)),
-      ]) (req)
+    ? echo (req)
+  : invalid (req)
