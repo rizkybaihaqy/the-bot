@@ -21,8 +21,42 @@ export const getTextFromRequest = S.pipe ([
   ),
 ])
 
+export const getEntityFromRequest = S.pipe ([
+  S.gets (S.is ($.Array ($.Object))) ([
+    'body',
+    'message',
+    'entities',
+  ]),
+  S.chain (S.head),
+  S.maybeToEither (
+    'No Entities Found, Maybe Its A Plain Text',
+  ),
+])
+
+export const getEntityOffset = S.pipe ([
+  getEntityFromRequest,
+  S.map ((entity) => S.prop ('offset') (entity)),
+  S.fromRight (0),
+])
+
+export const getEntityLength = S.pipe ([
+  getEntityFromRequest,
+  S.map ((entity) => S.prop ('length') (entity)),
+  S.fromRight (0),
+])
+
 export const getBotCommandFromRequest = S.ifElse (
   isBotCommand,
-) (getTextFromRequest) ((_) =>
+) ((req) =>
+  S.pipe ([
+    getTextFromRequest,
+    S.map ((txt) =>
+      txt.slice (
+        getEntityOffset (req),
+        getEntityOffset (req) + getEntityLength (req),
+      ),
+    ),
+  ]) (req),
+) ((_) =>
   S.Left ('Not A Bot Command, Maybe Its A Plain Text'),
 )
