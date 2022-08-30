@@ -15,9 +15,11 @@ export const sendMessage = (chatId) => (text) =>
     }),
   )
 
-export const reply = (msg) =>
+export const reply = (msg) => (req) =>
   S.pipe ([
     getChatIdFromRequest,
     eitherToFuture,
     S.chain ((chatId) => sendMessage (chatId) (msg)),
-  ])
+  ]) (req)
+
+export const replyTo = (req) => (msg) => reply (msg) (req)
