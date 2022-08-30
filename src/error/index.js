@@ -3,11 +3,12 @@ import {S} from '../lib/sanctuary/instance'
 import {getChatIdFromRequest} from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
 
+// TODO Add Error body JSON
 export const errorHandler = (err, req, res, _) => {
   S.pipe ([
     getChatIdFromRequest,
     eitherToFuture,
-    S.chain ((msg) => sendMessage (msg) (err)),
+    S.chain ((chatId) => sendMessage (chatId) (`ERROR: ${err}`)),
     execute,
   ]) (req)
 
