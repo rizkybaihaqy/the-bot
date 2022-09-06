@@ -15,6 +15,20 @@ export const sendMessage = (chatId) => (text) =>
     }),
   )
 
+export const fetchTrackId = (myid) =>
+  flAxios ({
+    method: 'post',
+    url: 'https://indihome.co.id/api/landing-page/digital-tracker',
+    data: {
+      guid: '',
+      code: 0,
+      data: {
+        pApi: '54656c6b6f6d4d794358313233323032322d5365702d547565',
+        trackId: myid,
+      },
+    },
+  })
+
 export const reply = (msg) => (req) =>
   S.pipe ([
     getChatIdFromRequest,
