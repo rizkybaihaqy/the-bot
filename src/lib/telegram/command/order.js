@@ -1,27 +1,12 @@
-import {Json} from 'fluture-express'
-import {eitherToFuture} from '../../fluture'
-import {S} from '../../sanctuary/instance'
-import {
-  getEntityLength,
-  getEntityOffset,
-  getTextFromRequest,
-} from '../getter'
-import {fetchTrackId, replyTo} from '../request'
+import { Json } from 'fluture-express'
+import { eitherToFuture } from '../../fluture'
+import { S } from '../../sanctuary/instance'
+import { getNBotCommandParameter } from '../getter'
+import { fetchTrackId, replyTo } from '../request'
 
 export const order = (req) =>
   S.pipe ([
-    getTextFromRequest,
-    S.map ((txt) =>
-      txt.slice (
-        getEntityOffset (req) + getEntityLength (req),
-      ),
-    ),
-    S.map (S.trim),
-    S.chain (
-      S.ifElse ((txt) => txt === '') ((_) =>
-        S.Left ('Order Id Cannot Be Empty'),
-      ) (S.Right),
-    ),
+    getNBotCommandParameter (1),
     eitherToFuture,
     S.chain (fetchTrackId),
     S.map ((x) => x.data.data),
