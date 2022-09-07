@@ -1,3 +1,4 @@
+import {TRACKER_API_KEY} from '../../constants/indohome'
 import {TELEGRAM_API} from '../../constants/telegram'
 import {eitherToFuture, flAxios} from '../fluture'
 import {S} from '../sanctuary/instance'
@@ -23,7 +24,7 @@ export const fetchTrackId = (myid) =>
       guid: '',
       code: 0,
       data: {
-        pApi: '54656c6b6f6d4d794358313233323032322d5365702d547565',
+        pApi: TRACKER_API_KEY,
         trackId: myid,
       },
     },
