@@ -1,15 +1,22 @@
-import { Json } from 'fluture-express'
-import { eitherToFuture } from '../../fluture'
-import { S } from '../../sanctuary/instance'
-import { getNBotCommandParameter } from '../getter'
-import { fetchTrackId, replyTo } from '../request'
+import {reject, resolve} from 'fluture'
+import {Json} from 'fluture-express'
+import {eitherToFuture} from '../../fluture'
+import {S} from '../../sanctuary/instance'
+import {getNBotCommandParameter} from '../getter'
+import {fetchTrackId, replyTo} from '../request'
 
 export const order = (req) =>
   S.pipe ([
     getNBotCommandParameter (1),
     eitherToFuture,
     S.chain (fetchTrackId),
-    S.map ((x) => x.data.data),
+    S.map (S.prop ('data')),
+    S.chain (
+      S.ifElse (S.pipe ([ S.prop ('info'), S.equals ('OK') ])) (
+        resolve,
+      ) (S.pipe ([ S.prop ('info'), reject ])),
+    ),
+    S.map (S.prop ('data')),
     S.map (
       (x) => `
     Nama Pelanggan: ${
