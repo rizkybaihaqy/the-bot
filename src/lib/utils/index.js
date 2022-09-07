@@ -16,3 +16,10 @@ export const tapDetail = (x) => (
   ),
   x
 )
+
+export const tapJSONStringify = (x) =>
+  (console.log (JSON.stringify (x, null, 2)), x)
+
+export const checkPoint = (txt) => (x) => (
+  console.log (txt), x
+)
