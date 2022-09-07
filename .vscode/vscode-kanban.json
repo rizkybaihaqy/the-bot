@@ -1,0 +1,195 @@
+{
+  "todo": [
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Dashboard",
+      "creation_time": "2022-09-07T08:47:49.944Z",
+      "description": {
+        "content": "Contain sales data and his/her visit",
+        "mime": "text/markdown"
+      },
+      "id": "8",
+      "prio": 0,
+      "references": [],
+      "title": "Create Dashboard"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Dashboard",
+      "creation_time": "2022-09-07T08:49:27.825Z",
+      "description": {
+        "content": "default to display sales with most visit",
+        "mime": "text/markdown"
+      },
+      "id": "9",
+      "prio": 0,
+      "references": [],
+      "title": "Create function to filter sales data"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Bot sales visit report",
+      "creation_time": "2022-09-07T08:41:17.131Z",
+      "description": {
+        "content": "/visit [sales_id] [DEAL]? [MIP]?",
+        "mime": "text/markdown"
+      },
+      "id": "4",
+      "prio": 0,
+      "references": [],
+      "title": "Handle /visit command in telegram chat group"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Bot sales visit report",
+      "creation_time": "2022-09-07T08:42:20.621Z",
+      "id": "5",
+      "prio": 0,
+      "references": [],
+      "title": "Handle image upload by user"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Sales sensus visit",
+      "creation_time": "2022-09-07T08:50:25.819Z",
+      "description": {
+        "content": "share current user location with the bot",
+        "mime": "text/markdown"
+      },
+      "id": "10",
+      "prio": 0,
+      "references": [],
+      "title": "make trigger /shareloc"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Dashboard",
+      "creation_time": "2022-09-07T08:52:59.641Z",
+      "id": "13",
+      "prio": 0,
+      "references": [],
+      "title": "Map display from sensus data"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Sales sensus visit",
+      "creation_time": "2022-09-07T08:51:34.947Z",
+      "id": "11",
+      "prio": 0,
+      "references": [],
+      "title": "save user location to db"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Bot sales visit report",
+      "creation_time": "2022-09-07T08:44:54.199Z",
+      "description": {
+        "content": "1. Increment sales visit counter\n2. Increment new registred customer",
+        "mime": "text/markdown"
+      },
+      "id": "6",
+      "prio": 0,
+      "references": [],
+      "title": "Save user submitted to db"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Bot sales visit report",
+      "creation_time": "2022-09-07T08:45:23.091Z",
+      "id": "7",
+      "prio": 0,
+      "references": [],
+      "title": "send respon status back to user via telegram chat"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Sales sensus visit",
+      "creation_time": "2022-09-07T08:52:05.622Z",
+      "id": "12",
+      "prio": 0,
+      "references": [],
+      "title": "send respon status back to user via telegram chat"
+    }
+  ],
+  "in-progress": [],
+  "testing": [
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Bot check order",
+      "creation_time": "2022-09-07T08:36:37.723Z",
+      "description": {
+        "content": "https://indihome.co.id/tracking-order?trackid=MYID-2122202231153",
+        "mime": "text/markdown"
+      },
+      "id": "1",
+      "prio": 0,
+      "references": [],
+      "title": "Make Fetch Data Function"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Bot check order",
+      "creation_time": "2022-09-07T08:37:55.306Z",
+      "id": "2",
+      "prio": 0,
+      "references": [],
+      "title": "Make trigger to /order command"
+    },
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Bot check order",
+      "creation_time": "2022-09-07T08:38:45.338Z",
+      "description": {
+        "content": "send message to requesting user in telegram",
+        "mime": "text/markdown"
+      },
+      "id": "3",
+      "prio": 0,
+      "references": [],
+      "title": "send order data to telegram client"
+    }
+  ],
+  "done": [
+    {
+      "assignedTo": {
+        "name": "Rizky Muhammad Baihaqy"
+      },
+      "category": "Scaffolding",
+      "creation_time": "2022-09-07T09:02:36.681Z",
+      "description": {
+        "content": "1. Handle Bot command Routing\n2. Bot Generic Error Handle\n3. Resgister Telegram Webhook\n4. Instal Dependecies\n5. ",
+        "mime": "text/markdown"
+      },
+      "id": "14",
+      "prio": 0,
+      "references": [],
+      "title": "Scaffolding"
+    }
+  ]
+}
