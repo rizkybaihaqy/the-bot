@@ -61,7 +61,7 @@ export const getBotCommandFromRequest = S.ifElse (
   S.Left ('Not A Bot Command, Maybe Its A Plain Text'),
 )
 
-export const getNBotCommandParameter = (n) => (req) =>
+export const getBotCommandArgument = (req) =>
   S.pipe ([
     getTextFromRequest,
     S.map ((txt) =>
@@ -71,8 +71,20 @@ export const getNBotCommandParameter = (n) => (req) =>
     ),
     S.map (S.trim),
     S.chain (
-      S.ifElse ((txt) => txt === '') ((_) =>
-        S.Left ('This Command Need At Least One Parameter'),
+      S.ifElse (S.equals ('')) ((_) =>
+        S.Left ('This Command Need At One Argument'),
       ) (S.Right),
+    ),
+  ]) (req)
+
+export const getNBotCommandArguments = (n) => (req) =>
+  S.pipe ([
+    getBotCommandArgument,
+    S.map (S.words),
+    S.chain (
+      S.pipe ([
+        S.take (n),
+        S.maybeToEither (`Command Expect ${n} Argument`),
+      ]),
     ),
   ]) (req)

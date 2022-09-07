@@ -2,12 +2,18 @@ import {reject, resolve} from 'fluture'
 import {Json} from 'fluture-express'
 import {eitherToFuture} from '../../fluture'
 import {S} from '../../sanctuary/instance'
-import {getNBotCommandParameter} from '../getter'
+import {getNBotCommandArguments} from '../getter'
 import {fetchTrackId, replyTo} from '../request'
 
 export const order = (req) =>
   S.pipe ([
-    getNBotCommandParameter (1),
+    getNBotCommandArguments (1),
+    S.chain (
+      S.pipe ([
+        S.head,
+        S.maybeToEither ('No Track Id Passed To Command'),
+      ]),
+    ),
     eitherToFuture,
     S.chain (fetchTrackId),
     S.map (S.prop ('data')),
