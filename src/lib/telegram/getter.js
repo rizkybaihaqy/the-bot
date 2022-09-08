@@ -72,7 +72,9 @@ export const getBotCommandArgument = (req) =>
     S.map (S.trim),
     S.chain (
       S.ifElse (S.equals ('')) ((_) =>
-        S.Left ('This Command Need At Least One Or More Argument'),
+        S.Left (
+          'This Command Need At Least One Or More Argument',
+        ),
       ) (S.Right),
     ),
   ]) (req)

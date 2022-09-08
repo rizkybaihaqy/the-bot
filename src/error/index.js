@@ -8,7 +8,9 @@ export const errorHandler = (err, req, res, _) => {
   S.pipe ([
     getChatIdFromRequest,
     eitherToFuture,
-    S.chain ((chatId) => sendMessage (chatId) (`ERROR: ${err}`)),
+    S.chain ((chatId) =>
+      sendMessage (chatId) (`ERROR: ${err}`),
+    ),
     execute,
   ]) (req)
 

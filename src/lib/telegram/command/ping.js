@@ -1,6 +1,6 @@
-import { Json } from 'fluture-express'
-import { S } from '../../sanctuary/instance'
-import { reply } from '../request'
+import {Json} from 'fluture-express'
+import {S} from '../../sanctuary/instance'
+import {reply} from '../request'
 
 export const ping = S.pipe ([
   reply ('pong'),
