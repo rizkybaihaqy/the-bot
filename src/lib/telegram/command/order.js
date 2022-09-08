@@ -1,4 +1,4 @@
-import {reject, resolve} from 'fluture'
+import F from 'fluture'
 import {Json} from 'fluture-express'
 import {eitherToFuture} from '../../fluture'
 import {S} from '../../sanctuary/instance'
@@ -19,8 +19,8 @@ export const order = (req) =>
     S.map (S.prop ('data')),
     S.chain (
       S.ifElse (S.pipe ([ S.prop ('info'), S.equals ('OK') ])) (
-        resolve,
-      ) (S.pipe ([ S.prop ('info'), reject ])),
+        F.resolve,
+      ) (S.pipe ([ S.prop ('info'), F.reject ])),
     ),
     S.map (S.prop ('data')),
     S.map (

@@ -1,4 +1,4 @@
-import Future from 'fluture'
+import F from 'fluture'
 import {Next} from 'fluture-express'
 import {S} from '../lib/sanctuary/instance'
 import {getBotCommandFromRequest} from '../lib/telegram/getter'
@@ -12,4 +12,4 @@ export default (locals) => (req) =>
       S.fromRight (''),
       commandRouting (req),
     ]),
-  ) ((_) => Future.resolve (Next (locals))) (req)
+  ) ((_) => F.resolve (Next (locals))) (req)
