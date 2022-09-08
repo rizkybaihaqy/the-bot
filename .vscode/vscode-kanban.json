@@ -183,7 +183,7 @@
       "category": "Scaffolding",
       "creation_time": "2022-09-07T09:02:36.681Z",
       "description": {
-        "content": "1. Handle Bot command Routing\n2. Bot Generic Error Handle\n3. Resgister Telegram Webhook\n4. Instal Dependecies\n5. ",
+        "content": "1. Handle Bot command Routing\n2. Bot Generic Error Handle\n3. Resgister Telegram Webhook\n4. Instal Dependecies\n5. Create DB Connection",
         "mime": "text/markdown"
       },
       "id": "14",
