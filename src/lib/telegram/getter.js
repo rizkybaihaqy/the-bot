@@ -1,5 +1,6 @@
 import $ from 'sanctuary-def'
 import {S} from '../sanctuary/instance'
+import {tap} from '../utils'
 import {isBotCommand} from './predicate'
 
 export const getMessageFromRequest = S.pipe ([
@@ -45,21 +46,20 @@ export const getEntityLength = S.pipe ([
   S.fromRight (0),
 ])
 
-export const getBotCommandFromRequest = S.ifElse (
-  isBotCommand,
-) ((req) =>
+export const getBotCommandFromRequest = (req) =>
   S.pipe ([
-    getTextFromRequest,
+    S.tagBy (isBotCommand),
+    S.chain (getTextFromRequest),
     S.map ((txt) =>
       txt.slice (
         getEntityOffset (req),
         getEntityOffset (req) + getEntityLength (req),
       ),
     ),
-  ]) (req),
-) ((_) =>
-  S.Left ('Not A Bot Command, Maybe Its A Plain Text'),
-)
+    S.mapLeft (
+      S.K ('Not A Bot Command, Maybe Its A Plain Text'),
+    ),
+  ]) (req)
 
 export const getBotCommandArgument = (req) =>
   S.pipe ([
