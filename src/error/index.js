@@ -1,19 +1,16 @@
-import {eitherToFuture, execute} from '../lib/fluture'
+import {execute} from '../lib/fluture'
 import {S} from '../lib/sanctuary/instance'
-import {getChatIdFromRequest} from '../lib/telegram/getter'
-import {sendMessage} from '../lib/telegram/request'
+import {reply} from '../lib/telegram/request'
 
-// TODO Add Error body JSON
+// TODO Make It Pure
 export const errorHandler = (err, req, res, _) => {
   S.pipe ([
-    getChatIdFromRequest,
-    eitherToFuture,
-    S.chain ((chatId) =>
-      sendMessage (chatId) (`ERROR: ${err}`),
-    ),
+    reply (`ERROR: ${err}`),
+    S.map ((x) => {
+      res.header ('Content-Type', 'application/json')
+      res.status (200).send (x.data)
+      return x
+    }),
     execute,
   ]) (req)
-
-  res.header ('Content-Type', 'application/json')
-  res.status (200).send (err)
 }
