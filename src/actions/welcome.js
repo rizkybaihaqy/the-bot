@@ -1,5 +1,5 @@
-import {Json} from 'fluture-express'
 import F from 'fluture'
+import {Json} from 'fluture-express'
 
 export default (_) => (_) => {
   const welcome = 'stranger'

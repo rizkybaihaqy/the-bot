@@ -1,13 +1,13 @@
-import { echo } from './command/echo'
-import { invalid } from './command/invalid'
-import { order } from './command/order'
-import { ping } from './command/ping'
+import {echo} from './command/echo'
+import {invalid} from './command/invalid'
+import {order} from './command/order'
+import {ping} from './command/ping'
 
 export const command = (req) => (cmd) =>
   cmd === '/order'
     ? order (req)
-  : cmd === '/ping'
+    : cmd === '/ping'
     ? ping (req)
-  : cmd === '/echo'
+    : cmd === '/echo'
     ? echo (req)
-  : invalid (req)
+    : invalid (req)

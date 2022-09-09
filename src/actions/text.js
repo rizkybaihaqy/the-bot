@@ -1,4 +1,4 @@
-import {eitherToFuture, JSONData} from '../lib/fluture'
+import {JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary/instance'
 import {getTextFromRequest} from '../lib/telegram/getter'
 import {replyTo} from '../lib/telegram/request'

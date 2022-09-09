@@ -1,5 +1,5 @@
-import sanctuary from 'sanctuary'
 import {env as flutureEnv} from 'fluture-sanctuary-types'
+import sanctuary from 'sanctuary'
 
 export const S = sanctuary.create ({
   checkTypes: true,

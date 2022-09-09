@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-require ('dotenv').config ()
-
+import axios from 'axios'
 import 'core-js/stable'
+import http from 'http'
 import 'regenerator-runtime/runtime'
 
 /**
  * Module dependencies.
  */
-
 import S from 'sanctuary'
-import axios from 'axios'
 import app from '../app'
-import http from 'http'
+
+require ('dotenv').config ()
+
 const debug = require ('debug') ('the-bot:server')
 
 const {TOKEN, SERVER_URL} = process.env
