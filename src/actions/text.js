@@ -1,5 +1,4 @@
-import {Json} from 'fluture-express'
-import {eitherToFuture} from '../lib/fluture'
+import {eitherToFuture, JSONData} from '../lib/fluture'
 import {S} from '../lib/sanctuary/instance'
 import {getTextFromRequest} from '../lib/telegram/getter'
 import {replyTo} from '../lib/telegram/request'
@@ -10,5 +9,5 @@ export default (_) => (req) =>
     S.map ((_) => 'Got Your Message'),
     eitherToFuture,
     S.chain (replyTo (req)),
-    S.map ((msg) => Json (msg.data)),
+    S.map (JSONData),
   ]) (req)

@@ -1,5 +1,4 @@
-import {Json} from 'fluture-express'
-import {eitherToFuture} from '../../fluture'
+import {eitherToFuture, JSONData} from '../../fluture'
 import {S} from '../../sanctuary/instance'
 import {
   getEntityLength,
@@ -24,5 +23,5 @@ export const echo = (req) =>
     ),
     eitherToFuture,
     S.chain (replyTo (req)),
-    S.map ((msg) => Json (msg.data)),
+    S.map (JSONData),
   ]) (req)

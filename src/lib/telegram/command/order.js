@@ -1,6 +1,5 @@
 import F from 'fluture'
-import {Json} from 'fluture-express'
-import {eitherToFuture} from '../../fluture'
+import {eitherToFuture, JSONData} from '../../fluture'
 import {S} from '../../sanctuary/instance'
 import {getNBotCommandArguments} from '../getter'
 import {fetchTrackId, replyTo} from '../request'
@@ -67,5 +66,5 @@ ${x.milestones[7].name}: ${
     `,
     ),
     S.chain (replyTo (req)),
-    S.map ((msg) => Json (msg.data)),
+    S.map (JSONData),
   ]) (req)
