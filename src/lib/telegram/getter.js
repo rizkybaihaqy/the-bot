@@ -1,6 +1,6 @@
 import $ from 'sanctuary-def'
 import {S} from '../sanctuary/instance'
-import {tap} from '../utils'
+import {isEmptyString} from '../sanctuary/predicate'
 import {isBotCommand} from './predicate'
 
 export const getMessageFromRequest = S.pipe ([
@@ -70,12 +70,11 @@ export const getBotCommandArgument = (req) =>
       ),
     ),
     S.map (S.trim),
-    S.chain (
-      S.ifElse (S.equals ('')) ((_) =>
-        S.Left (
-          'This Command Need At Least One Or More Argument',
-        ),
-      ) (S.Right),
+    S.chain (S.tagBy (isEmptyString)),
+    S.mapLeft (
+      S.K (
+        'This Command Need At Least One Or More Argument',
+      ),
     ),
   ]) (req)
 
