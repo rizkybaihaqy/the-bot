@@ -6,11 +6,17 @@ import {reply} from '../lib/telegram/request'
 export const errorHandler = (err, req, res, _) => {
   S.pipe ([
     reply (`ERROR: ${err}`),
-    S.map ((x) => {
-      res.header ('Content-Type', 'application/json')
-      res.status (200).send (x.data)
-      return x
-    }),
+    S.map (
+      (x) => (
+        res.header ('Content-Type', 'application/json'), x
+      ),
+    ),
+    S.map (
+      (x) => (res.status (200).send (`ERROR: ${err}`), x),
+    ),
+    S.mapLeft (
+      (x) => (res.status (200).send (`ERROR: ${err}`), x),
+    ),
     execute,
   ]) (req)
 }
