@@ -1,0 +1,20 @@
+Table sales {
+  id int [pk, increment]
+  name varchar
+}
+
+Enum channel_list {
+  mip
+  sobi
+  landing_page
+  no_deal
+}
+
+Table visit {
+  id int [pk, increment]
+  sales_id int
+  channel channel_list
+  address varchar
+}
+
+Ref: visit.sales_id > sales.id
