@@ -1,8 +1,8 @@
 import {Pool} from 'pg'
-import { query } from '.'
+import { flQuery } from '.'
 
 require ('dotenv').config ()
 
 const pool = new Pool ()
 
-export const dbQuery = query (pool)
+export const pgFlQuery = flQuery (pool)

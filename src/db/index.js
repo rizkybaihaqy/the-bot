@@ -1,12 +1,7 @@
-export const query = (db) => (text, params, callback) => {
-  const start = Date.now ()
-  return db.query (text, params, (err, res) => {
-    const duration = Date.now () - start
-    console.log ('executed query', {
-      text,
-      duration,
-      rows: res.rowCount,
-    })
-    callback (err, res)
-  })
-}
+import {encaseP} from 'fluture'
+import {S} from '../lib/sanctuary/instance'
+
+const query = (db) => (text, params, callback) =>
+  db.query (text, params, callback)
+
+export const flQuery = (db) => S.pipe ([ query, encaseP ]) (db)
