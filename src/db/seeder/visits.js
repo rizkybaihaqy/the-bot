@@ -1,8 +1,8 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
-import {dbQuery} from '../instance'
+import {pgFlQuery} from '../instance'
 import {insertTo} from '../query'
 
-const fakeVisits = (n) =>
+const fakeVisits = (n) => (nSales) =>
   [...Array (n)].map ((_, i) => [
     [
       faker.address.streetAddress (),
@@ -12,19 +12,13 @@ const fakeVisits = (n) =>
         'sobi',
         'no_deal',
       ]),
-      faker.random.numeric (1),
+      faker.datatype.number ({min: 1, max: nSales}),
     ],
   ])
 
-const qs = insertTo ('visits') ([
-  'address',
-  'channel',
-  'sales_id',
-]) (fakeVisits (100))
-
-dbQuery ({name: 'visits', text: qs}, (err, result) => {
-  if (err) {
-    console.error (err)
-  }
-  console.log (result.rows)
-})
+export const visitsSeeder = (n) => (nSales) =>
+  pgFlQuery (
+    insertTo ('visits') ([ 'address', 'channel', 'sales_id' ]) (
+      fakeVisits (n) (nSales),
+    ),
+  )
