@@ -1,8 +1,9 @@
 import util from 'util'
+import chalk from 'chalk'
 
 const debug = require ('debug') ('the-bot:server')
 
-export const tap = (x) => (console.log (x), x)
+export const tap = (x) => (console.log (chalk.bgBlue (x)), x)
 
 export const tapToString = (x) => (
   console.log (x.toString ()), x
@@ -24,7 +25,7 @@ export const tapJSONStringify = (x) => (
 )
 
 export const checkPoint = (txt) => (x) => (
-  console.log (txt), x
+  console.log (chalk.bgYellow (txt)), x
 )
 
 export const tapDebug = (txt) => (x) => (debug (txt + x), x)
