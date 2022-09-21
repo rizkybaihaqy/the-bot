@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
-import {format} from 'node-pg-format'
 import {dbQuery} from '../instance'
+import {insertTo} from '../query'
 
 const fakeVisits = (n) =>
   [...Array (n)].map ((_, i) => [
@@ -16,21 +16,13 @@ const fakeVisits = (n) =>
     ],
   ])
 
-const insertTo = (table) => (cols) => (data) =>
-  format (
-    'INSERT INTO %I(%I) VALUES %L RETURNING *',
-    table,
-    cols,
-    data,
-  )
-const sqs = insertTo ('visits') ([
+const qs = insertTo ('visits') ([
   'address',
   'channel',
   'sales_id',
 ]) (fakeVisits (100))
-const query = (qs) => (name) => ({name, text: qs})
 
-dbQuery (query (sqs) ('visits'), (err, result) => {
+dbQuery ({name: 'visits', text: qs}, (err, result) => {
   if (err) {
     console.error (err)
   }
