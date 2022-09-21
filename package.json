@@ -8,7 +8,8 @@
     "build": "npm run clean && babel ./src --out-dir dist --copy-files",
     "prod": "node ./dist/bin/www.js",
     "format": "prettier-eslint --write $PWD/\"src/**/*.js\"",
-    "migrate": "node-pg-migrate"
+    "migrate": "node-pg-migrate",
+    "migrate-refresh-seed": "npm run migrate down 0 && npm run migrate up && babel-node ./db/seeder/sales.js && babel-node ./db/seeder/visits.js"
   },
   "dependencies": {
     "axios": "^0.27.2",
