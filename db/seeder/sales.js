@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
 import {format} from 'node-pg-format'
-import {dbQuery} from '../index'
+import {dbQuery} from '../instance'
 
 const fakeNames = (n) =>
   [...Array (n)].map ((_, i) => [faker.name.fullName ()])
