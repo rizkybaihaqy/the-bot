@@ -9,7 +9,7 @@
     "prod": "node ./dist/bin/www.js",
     "format": "prettier-eslint --write $PWD/\"src/**/*.js\"",
     "migrate": "node-pg-migrate",
-    "migrate-refresh-seed": "npm run migrate down 0 && npm run migrate up && babel-node ./src/db/seeder/sales.js && babel-node ./src/db/seeder/visits.js"
+    "migrate-fresh-seed": "npm run migrate down 0 && npm run migrate up && babel-node ./src/db/seeder/index.js"
   },
   "dependencies": {
     "axios": "^0.27.2",
