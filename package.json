@@ -28,7 +28,8 @@
     "pg": "^8.8.0",
     "regenerator-runtime": "^0.13.9",
     "sanctuary": "^3.1.0",
-    "sanctuary-def": "^0.22.0"
+    "sanctuary-def": "^0.22.0",
+    "supports-color": "^9.2.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
