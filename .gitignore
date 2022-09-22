@@ -62,3 +62,6 @@ typings/
 
 # build forder
 dist
+
+# Scrach Pad File
+pad.js
