@@ -1,31 +1,5 @@
-import util from 'util'
-import chalk from 'chalk'
+import debug from 'debug'
 
-const debug = require ('debug') ('the-bot:server')
-
-export const tap = (x) => (console.log (chalk.bgBlue (x)), x)
-
-export const tapToString = (x) => (
-  console.log (x.toString ()), x
+export const tap = (env) => (txt) => (x) => (
+  debug ('the-bot:' + env) ('%O', txt), x
 )
-
-export const tapDetail = (x) => (
-  console.log (
-    util.inspect (x, {
-      showHidden: false,
-      depth: null,
-      colors: true,
-    }),
-  ),
-  x
-)
-
-export const tapJSONStringify = (x) => (
-  console.log (JSON.stringify (x, null, 2)), x
-)
-
-export const checkPoint = (txt) => (x) => (
-  console.log (chalk.bgYellow (txt)), x
-)
-
-export const tapDebug = (txt) => (x) => (debug (txt + x), x)
