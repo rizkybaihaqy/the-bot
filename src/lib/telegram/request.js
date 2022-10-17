@@ -1,7 +1,7 @@
 import {TRACKER_API_KEY} from '../../constants/indohome'
 import {TELEGRAM_API} from '../../constants/telegram'
 import {eitherToFuture, flAxios} from '../fluture'
-import {S} from '../sanctuary/instance'
+import {S} from '../sanctuary'
 import {getChatIdFromRequest} from './getter'
 
 export const sendMessage = (chatId) => (text) =>

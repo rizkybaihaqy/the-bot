@@ -1,6 +1,6 @@
 import F from 'fluture'
 import {JSONData, eitherToFuture} from '../../fluture'
-import {S} from '../../sanctuary/instance'
+import {S} from '../../sanctuary'
 import {getNBotCommandArguments} from '../getter'
 import {fetchTrackId, replyTo} from '../request'
 

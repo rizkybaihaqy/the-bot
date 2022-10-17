@@ -4,7 +4,7 @@ import {
   mockEntities,
   mockText,
 } from '../../../../test/helper'
-import {S} from '../../sanctuary/instance'
+import {S} from '../../sanctuary'
 import {
   getBotCommandArgument,
   getBotCommandFromRequest,

@@ -1,5 +1,5 @@
 import $ from 'sanctuary-def'
-import {S} from '../sanctuary/instance'
+import {S} from '../sanctuary'
 
 export const isBotCommand = S.pipe ([
   S.gets (S.is ($.Array ($.Object))) ([

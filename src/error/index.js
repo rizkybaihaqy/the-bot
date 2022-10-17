@@ -1,5 +1,5 @@
 import {execute} from '../lib/fluture'
-import {S} from '../lib/sanctuary/instance'
+import {S} from '../lib/sanctuary'
 import {reply} from '../lib/telegram/request'
 
 // TODO Make It Pure

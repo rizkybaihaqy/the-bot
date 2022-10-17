@@ -1,5 +1,5 @@
 import {JSONData, eitherToFuture} from '../../fluture'
-import {S} from '../../sanctuary/instance'
+import {S} from '../../sanctuary'
 import {getBotCommandArgument} from '../getter'
 import {replyTo} from '../request'
 

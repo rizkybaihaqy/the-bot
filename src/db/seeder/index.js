@@ -1,5 +1,5 @@
 import {fork, reject, resolve} from 'fluture'
-import {S} from '../../lib/sanctuary/instance'
+import {S} from '../../lib/sanctuary'
 import {checkPoint, tap} from '../../lib/utils'
 import {salesSeeder} from './sales'
 import {visitsSeeder} from './visits'

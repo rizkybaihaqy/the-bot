@@ -1,5 +1,5 @@
 import $ from 'sanctuary-def'
-import {S} from '../sanctuary/instance'
+import {S} from '../sanctuary'
 
 export const isTextAvailable = S.ifElse (
   S.pipe ([ S.get (S.is ($.String)) ('text'), S.isNothing ]),
