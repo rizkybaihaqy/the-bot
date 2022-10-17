@@ -1,6 +1,6 @@
 import $ from 'sanctuary-def'
-import {S} from '../sanctuary/instance'
-import {isEmptyString} from '../sanctuary/predicate'
+import {S} from '../sanctuary'
+import {isEmptyString} from '../utils/predicate'
 import {isBotCommand} from './predicate'
 
 export const getMessageFromRequest = S.pipe ([

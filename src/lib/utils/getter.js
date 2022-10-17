@@ -1,4 +1,4 @@
-import {S} from './instance'
+import {S} from '../sanctuary'
 
 export const getArrayElement = (i) =>
   S.pipe ([
