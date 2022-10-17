@@ -70,7 +70,7 @@ export const getBotCommandArgument = (req) =>
       ),
     ),
     S.map (S.trim),
-    S.chain (S.tagBy (isEmptyString)),
+    S.chain (S.tagBy (S.complement (isEmptyString))),
     S.mapLeft (
       S.K (
         'This Command Need At Least One Or More Argument',

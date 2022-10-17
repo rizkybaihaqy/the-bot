@@ -1,5 +1,3 @@
 import {S} from '../sanctuary'
 
-export const isEmptyString = S.complement (
-  S.equals (S.empty (String)),
-)
+export const isEmptyString = S.equals (S.empty (String))
