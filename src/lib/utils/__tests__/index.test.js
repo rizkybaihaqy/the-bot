@@ -1,4 +1,4 @@
-import {tap} from './index'
+import {tap} from '../index'
 
 const mockDebug = jest.fn ()
 jest.mock ('debug', () => {
