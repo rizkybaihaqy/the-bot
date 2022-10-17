@@ -1,7 +1,9 @@
 import axios from 'axios'
-import F from 'fluture'
+import * as fluture from 'fluture'
 import {Json} from 'fluture-express'
-import {S} from '../sanctuary/instance'
+import {S} from '../sanctuary'
+
+export const F  = fluture
 
 export const eitherToFuture = S.either (F.reject) (F.resolve)
 
