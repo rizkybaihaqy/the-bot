@@ -49,15 +49,15 @@ export const getEntityLength = S.pipe ([
 export const getBotCommandFromRequest = (req) =>
   S.pipe ([
     S.tagBy (isBotCommand),
+    S.mapLeft (
+      S.K ('Not A Bot Command, Maybe Its A Plain Text'),
+    ),
     S.chain (getTextFromRequest),
     S.map ((txt) =>
       txt.slice (
         getEntityOffset (req),
         getEntityOffset (req) + getEntityLength (req),
       ),
-    ),
-    S.mapLeft (
-      S.K ('Not A Bot Command, Maybe Its A Plain Text'),
     ),
   ]) (req)
 
@@ -84,7 +84,10 @@ export const getNBotCommandArguments = (n) => (req) =>
     S.map (S.words),
     S.chain (
       S.pipe ([
-        S.take (n),
+        S.ifElse ((words) => S.size (words) === n) (S.Just) (
+          (_) => S.Nothing,
+        ),
+        S.chain (S.take (n)),
         S.maybeToEither (`Command Expect ${n} Argument`),
       ]),
     ),
