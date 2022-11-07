@@ -1,3 +1,5 @@
+// TODO DELETE LATER. NOT REALLY USEFULL
+
 import $ from 'sanctuary-def'
 import {S} from '../sanctuary'
 
