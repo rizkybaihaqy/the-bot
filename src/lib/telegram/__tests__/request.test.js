@@ -1,5 +1,12 @@
-import { mockBody, mockChat } from '../../../../test/helper'
-import { fetchTrackId, reply, sendMessage } from '../request'
+import {mockBody, mockChat} from '../../../../test/helper'
+import {S} from '../../sanctuary'
+import {
+  fetchTrackId,
+  reply,
+  replyTo,
+  sendMessage,
+} from '../request'
+import * as request from '../request'
 
 describe ('sendMessage', () => {
   it ('Should return future of request telegram send message', () => {
@@ -27,6 +34,20 @@ describe ('reply', () => {
     const ret = reply ('test') (
       mockBody ({chat: mockChat, text: 'test'}),
     )
+    expect (JSON.stringify (ret)).toIncludeMultiple ([
+      '"type":"resolve"',
+      '"args":[642130106]',
+      '"type":"chain"',
+    ])
+  })
+})
+
+describe ('replyTo', () => {
+  let spy = jest.spyOn (request, 'reply')
+  it ('Should return future of request send Message from request', () => {
+    const ret = replyTo (
+      mockBody ({chat: mockChat, text: 'test'}),
+    ) ('test')
     expect (JSON.stringify (ret)).toIncludeMultiple ([
       '"type":"resolve"',
       '"args":[642130106]',
