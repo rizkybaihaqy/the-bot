@@ -24,6 +24,7 @@ app.use ('/', indexRouter)
 app.use ('/users', usersRouter)
 app.get ('/json', dispatch ('welcome'))
 app.post (URI, dispatch ('command'))
+app.post (URI, dispatch ('callbackQuery'))
 app.post (URI, dispatch ('text'))
 app.use (errorHandler)
 

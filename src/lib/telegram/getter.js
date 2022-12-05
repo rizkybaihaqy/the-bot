@@ -78,17 +78,35 @@ export const getBotCommandArgument = (req) =>
     ),
   ]) (req)
 
-export const getNBotCommandArguments = (n) => (req) =>
-  S.pipe ([
-    getBotCommandArgument,
-    S.map (S.words),
-    S.chain (
-      S.pipe ([
-        S.ifElse ((words) => S.size (words) === n) (S.Just) (
-          (_) => S.Nothing,
-        ),
-        S.chain (S.take (n)),
-        S.maybeToEither (`Command Expect ${n} Argument`),
-      ]),
-    ),
-  ]) (req)
+export const getNBotCommandArguments =
+  (delimiter) => (n) => (req) =>
+    S.pipe ([
+      getBotCommandArgument,
+      S.map (delimiter),
+      S.chain (
+        S.pipe ([
+          S.ifElse ((args) => S.size (args) === n) (S.Just) (
+            (_) => S.Nothing,
+          ),
+          S.chain (S.take (n)),
+          S.maybeToEither (`Command Expect ${n} Argument`),
+        ]),
+      ),
+    ]) (req)
+
+export const getNBotCommandArgumentsBySpace =
+  getNBotCommandArguments (S.words)
+
+export const getNBotCommandArgumentsByNewLine =
+  getNBotCommandArguments (S.lines)
+
+export const getCallbackDataFromRequest = S.pipe ([
+  S.gets (S.is ($.String)) ([
+    'body',
+    'callback_query',
+    'data',
+  ]),
+  S.maybeToEither (
+    'No Callback Data Found. Maybe its not a callback query',
+  ),
+])

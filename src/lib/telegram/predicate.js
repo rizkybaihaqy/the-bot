@@ -11,3 +11,12 @@ export const isBotCommand = S.pipe ([
   S.chain (S.get (S.is ($.String)) ('type')),
   S.equals (S.Just ('bot_command')),
 ])
+
+export const isCallbackQuery = S.pipe ([
+  S.gets (S.is ($.String)) ([
+    'body',
+    'callback_query',
+    'data',
+  ]),
+  S.isJust,
+])
