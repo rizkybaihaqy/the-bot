@@ -21,3 +21,8 @@ export const callbackData = (req) => (data) =>
     : // : data === 'visit_survey'
       // ? surveyReport ()
       invalid (req)
+
+export const hastag = (req) => (hashtag) =>
+  hashtag === '#VisitReport'
+    ? visitReport (req)
+    : invalid (req)

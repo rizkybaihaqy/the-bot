@@ -20,3 +20,15 @@ export const isCallbackQuery = S.pipe ([
   ]),
   S.isJust,
 ])
+
+export const isHashTag = S.pipe ([
+  S.gets (S.is ($.Array ($.Object))) ([
+    'body',
+    'message',
+    'entities',
+  ]),
+  S.map (S.map (S.get (S.is ($.String)) ('type'))),
+  S.map (S.justs),
+  S.map (S.any (S.equals ('hashtag'))),
+  S.fromMaybe (false),
+])

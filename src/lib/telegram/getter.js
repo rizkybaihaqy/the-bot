@@ -1,7 +1,7 @@
 import $ from 'sanctuary-def'
 import {S} from '../sanctuary'
 import {isEmptyString} from '../utils/predicate'
-import {isBotCommand} from './predicate'
+import {isBotCommand, isHashTag} from './predicate'
 
 export const getMessageFromRequest = S.pipe ([
   S.gets (S.is ($.Object)) ([ 'body', 'message' ]),
@@ -12,6 +12,17 @@ export const getMessageFromRequest = S.pipe ([
 
 export const getChatIdFromRequest = S.pipe ([
   S.gets (S.is ($.Number)) ([ 'body', 'message', 'chat', 'id' ]),
+  S.maybeToEither ('No Chat Id Found. Who are you?'),
+])
+
+export const getChatIdFromCallbackQueryRequest = S.pipe ([
+  S.gets (S.is ($.Number)) ([
+    'body',
+    'callback_query',
+    'message',
+    'chat',
+    'id',
+  ]),
   S.maybeToEither ('No Chat Id Found. Who are you?'),
 ])
 
@@ -34,17 +45,57 @@ export const getEntityFromRequest = S.pipe ([
   ),
 ])
 
+// req -> Either String Entity
+export const getEntityFromRequest_ = (entityType) =>
+  S.pipe ([
+    S.gets (S.is ($.Array ($.Object))) ([
+      'body',
+      'message',
+      'entities',
+    ]),
+    S.map (
+      S.map ((entities) =>
+        S.equals (S.get (S.is ($.String)) ('type') (entities)) (
+          S.Just (entityType),
+        )
+          ? S.Just (entities)
+          : S.Nothing,
+      ),
+    ),
+    S.map (S.justs),
+    S.chain (S.head),
+    S.maybeToEither (
+      'No Entities Found, Maybe Its A Plain Text',
+    ),
+  ])
+
 export const getEntityOffset = S.pipe ([
   getEntityFromRequest,
   S.map ((entity) => S.prop ('offset') (entity)),
   S.fromRight (0),
 ])
 
+// Req -> Integer
+export const getEntityOffset_ = (entityType) =>
+  S.pipe ([
+    getEntityFromRequest_ (entityType),
+    S.map ((entity) => S.prop ('offset') (entity)),
+    S.fromRight (0),
+  ])
+
 export const getEntityLength = S.pipe ([
   getEntityFromRequest,
   S.map ((entity) => S.prop ('length') (entity)),
   S.fromRight (0),
 ])
+
+// Req -> Integer
+export const getEntityLength_ = (entityType) =>
+  S.pipe ([
+    getEntityFromRequest_ (entityType),
+    S.map ((entity) => S.prop ('length') (entity)),
+    S.fromRight (0),
+  ])
 
 export const getBotCommandFromRequest = (req) =>
   S.pipe ([
@@ -59,6 +110,21 @@ export const getBotCommandFromRequest = (req) =>
         getEntityOffset (req) + getEntityLength (req),
       ),
     ),
+  ]) (req)
+
+// Req -> Either String String
+export const getHashtagFromRequest = (req) =>
+  S.pipe ([
+    S.tagBy (isHashTag),
+    S.chain (getTextFromRequest),
+    S.map ((txt) =>
+      txt.slice (
+        getEntityOffset_ ('hashtag') (req),
+        getEntityOffset_ ('hashtag') (req) +
+          getEntityLength_ ('hashtag') (req),
+      ),
+    ),
+    S.mapLeft (S.K ('Not A Hashtag, Maybe Its A Plain Text')),
   ]) (req)
 
 export const getBotCommandArgument = (req) =>
