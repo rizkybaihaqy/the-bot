@@ -1,12 +1,13 @@
 import F from 'fluture'
 import {JSONData, eitherToFuture} from '../../fluture'
 import {S} from '../../sanctuary'
-import {getNBotCommandArguments} from '../getter'
-import {fetchTrackId, replyTo} from '../request'
+import {getNBotCommandArgumentsBySpace} from '../getter'
+import {reply} from '../reply'
+import {fetchTrackId} from '../request'
 
 export const order = (req) =>
   S.pipe ([
-    getNBotCommandArguments (1),
+    getNBotCommandArgumentsBySpace (1),
     S.chain (
       S.pipe ([
         S.head,
@@ -65,6 +66,6 @@ ${x.milestones[7].name}: ${
       }
     `,
     ),
-    S.chain (replyTo (req)),
+    S.chain (S.flip (reply) (req)),
     S.map (JSONData),
   ]) (req)

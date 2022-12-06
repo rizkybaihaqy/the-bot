@@ -1,6 +1,6 @@
 import {execute} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
-import {reply} from '../lib/telegram/request'
+import {reply} from '../lib/telegram/reply'
 
 // TODO Make It Pure
 export const errorHandler = (err, req, res, _) => {

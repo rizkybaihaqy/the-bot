@@ -1,12 +1,12 @@
 import {JSONData, eitherToFuture} from '../../fluture'
 import {S} from '../../sanctuary'
 import {getBotCommandArgument} from '../getter'
-import {replyTo} from '../request'
+import {reply} from '../reply'
 
 export const echo = (req) =>
   S.pipe ([
     getBotCommandArgument,
     eitherToFuture,
-    S.chain (replyTo (req)),
+    S.chain (S.flip (reply) (req)),
     S.map (JSONData),
   ]) (req)
