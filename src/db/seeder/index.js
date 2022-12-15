@@ -1,12 +1,11 @@
 import {fork, reject, resolve} from 'fluture'
 import {S} from '../../lib/sanctuary'
-import {checkPoint, tap} from '../../lib/utils'
 import {salesSeeder} from './sales'
 import {visitsSeeder} from './visits'
 
 const seed = (nSales) => (nVisits) =>
   S.pipe ([
-    checkPoint ('seeding'),
+    (x => (console.log ('Seeding'), x)),
     salesSeeder,
     S.chain (
       S.pipe ([
@@ -19,4 +18,6 @@ const seed = (nSales) => (nVisits) =>
     S.chain (visitsSeeder (nVisits)),
   ]) (nSales)
 
-fork (tap) (checkPoint ('seeding success')) (seed (3) (6))
+fork ((x) => (console.log (x), x)) (
+  (x) => (console.log ('seeding complete'), x),
+) (seed (3) (18))
