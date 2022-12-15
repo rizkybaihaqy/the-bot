@@ -19,6 +19,7 @@ exports.up = (pgm) => {
     // ]),
     pgm.createTable ('visits', {
       id: 'id',
+      track_id: {type: 'varchar(1000)', notNull: true},
       customer_name: {type: 'varchar(1000)', notNull: true},
       customer_email: {
         type: 'varchar(1000)',

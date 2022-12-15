@@ -5,6 +5,7 @@ import {insertTo} from '../query'
 const fakeVisits = (n) => (nSales) =>
   [...Array (n)].map ((_, i) => [
     [
+      `MYID-${faker.random.numeric (13)}`,
       faker.name.fullName (),
       faker.internet.email (),
       faker.phone.number (),
@@ -34,6 +35,7 @@ const fakeVisits = (n) => (nSales) =>
 export const visitsSeeder = (n) => (nSales) =>
   pgFlQuery (
     insertTo ('visits') ([
+      'track_id',
       'customer_name',
       'customer_email',
       'customer_cp',
