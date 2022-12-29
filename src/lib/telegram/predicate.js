@@ -32,3 +32,12 @@ export const isHashTag = S.pipe ([
   S.map (S.any (S.equals ('hashtag'))),
   S.fromMaybe (false),
 ])
+
+export const isReply = S.pipe ([
+  S.gets (S.is ($.Object)) ([
+    'body',
+    'message',
+    'reply_to_message',
+  ]),
+  S.isJust,
+])

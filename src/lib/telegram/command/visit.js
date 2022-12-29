@@ -7,7 +7,11 @@ import {
   getChatIdFromRequest,
   getTextFromRequest,
 } from '../getter'
-import {reply, replyWithInlineKeyboard} from '../reply'
+import {
+  reply,
+  replyWithInlineKeyboard,
+  replyWithKeyboard,
+} from '../reply'
 
 const insertToVisit = insertTo ('visits')
 const insertToVisitOrdered = insertToVisit ([
@@ -77,14 +81,38 @@ const getSalesIdFromTelegramId = S.pipe ([
 
 export const visitReport = (req) =>
   S.pipe ([
-    (x) =>
-      F.both (getVisitData (x)) (getSalesIdFromTelegramId (x)),
-    S.map (S.join),
-    S.map ((x) => [x]),
-    S.map (insertToVisitOrdered),
-    S.chain (pgFlQuery),
-    S.map ((x) => x.rows[0]),
-    S.map ((x) => (console.log (x), x)),
-    S.chain (S.flip (reply) (req)),
+    getTextFromRequest,
+    eitherToFuture,
+    S.chain (
+      S.flip (
+        replyWithKeyboard ([
+          [
+            {
+              text: 'Send Location',
+              request_location: true,
+            },
+          ],
+        ]),
+      ) (req),
+    ),
     S.map (JSONData),
   ]) (req)
+
+export const submitReport = S.pipe ([
+  reply ('submit report'),
+  S.map (JSONData),
+])
+
+// export const submitReport = (req) =>
+//   S.pipe ([
+//     (x) =>
+//       F.both (getVisitData (x)) (getSalesIdFromTelegramId (x)),
+//     S.map (S.join),
+//     S.map ((x) => [x]),
+//     S.map (insertToVisitOrdered),
+//     S.chain (pgFlQuery),
+//     S.map ((x) => x.rows[0]),
+//     S.map ((x) => (console.log (x), x)),
+//     S.chain (S.flip (reply) (req)),
+//     S.map (JSONData),
+//   ]) (req)

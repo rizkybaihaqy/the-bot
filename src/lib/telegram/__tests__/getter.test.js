@@ -14,6 +14,7 @@ import {
   getEntityOffset,
   getMessageFromRequest,
   getNBotCommandArguments,
+  getNBotCommandArgumentsBySpace,
   getTextFromRequest,
 } from '../getter'
 
@@ -148,7 +149,7 @@ describe ('getBotCommandFromRequest', () => {
 })
 
 describe ('getBotCommandArgument', () => {
-  it ('Should return Right with bot command argument string from request', () => {
+it ('Should return Right with bot command argument string from request', () => {
     const msg = getBotCommandArgument (
       mockBody ({
         text: '/order MYID-2122202231153',
@@ -173,10 +174,13 @@ describe ('getBotCommandArgument', () => {
   })
 })
 
-describe ('getNBotCommandArguments', () => {
+describe ('getNBotCommandArgumentsBySpace', () => {
   it ('Should return Right with array of bot command string from request', () => {
-    const msg = getNBotCommandArguments (4) (
-      mockBody ({text: mockText, entities: mockEntities}),
+    const msg = getNBotCommandArgumentsBySpace (4) (
+      mockBody ({
+        text: '/visit\n1\ndeal\nmip\njl_padi',
+        entities: mockEntities,
+      }),
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toBe (
@@ -185,7 +189,12 @@ describe ('getNBotCommandArguments', () => {
   })
 
   it ('Should return Left with error message', () => {
-    const msg = getNBotCommandArguments (4) (mockBody ({text: '/visit 1 mip deal', entities: mockEntities}))
+    const msg = getNBotCommandArgumentsBySpace (4) (
+      mockBody ({
+        text: '/visit 1 mip deal',
+        entities: mockEntities,
+      }),
+    )
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
       'Left ("Command Expect 4 Argument")',

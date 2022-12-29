@@ -26,3 +26,15 @@ export const replyWithInlineKeyboard =
         }) (chatId) (msg),
       ),
     ]) (req)
+
+export const replyWithKeyboard =
+  (keyboard) => (msg) => (req) =>
+    S.pipe ([
+      getChatIdFromRequest,
+      eitherToFuture,
+      S.chain ((chatId) =>
+        sendMessage ({
+          keyboard: keyboard,
+        }) (chatId) (msg),
+      ),
+    ]) (req)

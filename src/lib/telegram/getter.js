@@ -1,12 +1,23 @@
 import $ from 'sanctuary-def'
 import {S} from '../sanctuary'
 import {isEmptyString} from '../utils/predicate'
-import {isBotCommand, isHashTag} from './predicate'
+import {isBotCommand, isHashTag, isReply} from './predicate'
 
 export const getMessageFromRequest = S.pipe ([
   S.gets (S.is ($.Object)) ([ 'body', 'message' ]),
   S.maybeToEither (
     'No Message Found. Did not support updated message',
+  ),
+])
+
+export const getReplyMessageFromRequest = S.pipe ([
+  S.gets (S.is ($.Object)) ([
+    'body',
+    'message',
+    'reply_to_message',
+  ]),
+  S.maybeToEither (
+    'No Reply Message Found. Did not support updated message',
   ),
 ])
 
@@ -28,6 +39,14 @@ export const getChatIdFromCallbackQueryRequest = S.pipe ([
 
 export const getTextFromRequest = S.pipe ([
   S.gets (S.is ($.String)) ([ 'body', 'message', 'text' ]),
+  S.maybeToEither (
+    'No Text Found. Did not support other chat type other than text',
+  ),
+])
+
+// Message -> string
+export const getTextFromMessage = S.pipe ([
+  S.get (S.is ($.String)) ('text'),
   S.maybeToEither (
     'No Text Found. Did not support other chat type other than text',
   ),
@@ -69,7 +88,27 @@ export const getEntityFromRequest_ = (entityType) =>
     ),
   ])
 
-export const getEntityOffset = S.pipe ([
+// req -> Either String Entity
+export const getEntityFromMessage = (entityType) =>
+  S.pipe ([
+    S.get (S.is ($.Array ($.Object))) ('entities'),
+    S.map (
+      S.map ((entities) =>
+        S.equals (S.get (S.is ($.String)) ('type') (entities)) (
+          S.Just (entityType),
+        )
+          ? S.Just (entities)
+          : S.Nothing,
+      ),
+    ),
+    S.map (S.justs),
+    S.chain (S.head),
+    S.maybeToEither (
+      'No Entities Found, Maybe Its A Plain Text',
+    ),
+  ])
+
+export const getEntityOffset = (entityType) => S.pipe ([
   getEntityFromRequest,
   S.map ((entity) => S.prop ('offset') (entity)),
   S.fromRight (0),
@@ -125,6 +164,31 @@ export const getHashtagFromRequest = (req) =>
       ),
     ),
     S.mapLeft (S.K ('Not A Hashtag, Maybe Its A Plain Text')),
+  ]) (req)
+
+// Message -> Either String String
+export const getHashtagFromMessage = (req) =>
+  S.pipe ([
+    getTextFromMessage,
+    S.map ((txt) =>
+      txt.slice (
+        getEntityOffset_ ('hashtag') (req),
+        getEntityOffset_ ('hashtag') (req) +
+          getEntityLength_ ('hashtag') (req),
+      ),
+    ),
+    S.mapLeft (S.K ('Not A Hashtag, Maybe Its A Plain Text')),
+  ]) (req)
+
+// Req -> Either String String
+export const getReplyFromRequest = (req) =>
+  S.pipe ([
+    S.gets (S.is ($.Object)) ([
+      'body',
+      'message',
+      'reply_to_message',
+    ]),
+    S.maybeToEither ('No Reply Found'),
   ]) (req)
 
 export const getBotCommandArgument = (req) =>

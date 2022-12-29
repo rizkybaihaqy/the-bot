@@ -2,7 +2,11 @@ import {echo} from './command/echo'
 import {invalid} from './command/invalid'
 import {order} from './command/order'
 import {ping} from './command/ping'
-import {visitReport, visitStart} from './command/visit'
+import {
+  submitReport,
+  visitReport,
+  visitStart,
+} from './command/visit'
 
 export const command = (req) => (cmd) =>
   cmd === '/order'
@@ -25,4 +29,6 @@ export const callbackData = (req) => (data) =>
 export const hastag = (req) => (hashtag) =>
   hashtag === '#VisitReport'
     ? visitReport (req)
+    : hashtag === '#SubmitReport'
+    ? submitReport (req)
     : invalid (req)
