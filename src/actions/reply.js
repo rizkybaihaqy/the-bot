@@ -6,6 +6,7 @@ import {
   getHashtagFromMessage,
   getHashtagFromRequest,
   getReplyFromRequest,
+  getReplyMessageFromRequest,
 } from '../lib/telegram/getter'
 import {isReply} from '../lib/telegram/predicate'
 import {hastag as hastagRouting} from '../lib/telegram/routing'
@@ -13,9 +14,8 @@ import {hastag as hastagRouting} from '../lib/telegram/routing'
 export default (locals) => (req) =>
   S.ifElse (isReply) (
     S.pipe ([
-      getReplyFromRequest,
+      getReplyMessageFromRequest,
       S.chain (getHashtagFromMessage),
-      x => (console.log (x), x),
       eitherToFuture,
       S.chain (hastagRouting (req)),
     ]),

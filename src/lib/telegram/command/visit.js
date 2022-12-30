@@ -5,6 +5,9 @@ import {F} from '../../fluture'
 import {S} from '../../sanctuary'
 import {
   getChatIdFromRequest,
+  getMessageFromRequest,
+  getReplyMessageFromRequest,
+  getTextFromMessage,
   getTextFromRequest,
 } from '../getter'
 import {
@@ -51,7 +54,8 @@ export const visitStart = S.pipe ([
 ])
 
 const getVisitData = S.pipe ([
-  getTextFromRequest,
+  getReplyMessageFromRequest,
+  S.chain (getTextFromMessage),
   S.map (S.lines),
   S.map (S.map (S.splitOn (':'))),
   S.map (S.filter ((x) => x.length === 2)),
@@ -82,6 +86,9 @@ const getSalesIdFromTelegramId = S.pipe ([
 export const visitReport = (req) =>
   S.pipe ([
     getTextFromRequest,
+    S.map ((text) =>
+      text.replace ('#VisitReport', '#SubmitReport'),
+    ),
     eitherToFuture,
     S.chain (
       S.flip (
@@ -98,21 +105,15 @@ export const visitReport = (req) =>
     S.map (JSONData),
   ]) (req)
 
-export const submitReport = S.pipe ([
-  reply ('submit report'),
-  S.map (JSONData),
-])
-
-// export const submitReport = (req) =>
-//   S.pipe ([
-//     (x) =>
-//       F.both (getVisitData (x)) (getSalesIdFromTelegramId (x)),
-//     S.map (S.join),
-//     S.map ((x) => [x]),
-//     S.map (insertToVisitOrdered),
-//     S.chain (pgFlQuery),
-//     S.map ((x) => x.rows[0]),
-//     S.map ((x) => (console.log (x), x)),
-//     S.chain (S.flip (reply) (req)),
-//     S.map (JSONData),
-//   ]) (req)
+export const submitReport = (req) =>
+  S.pipe ([
+    (x) =>
+      F.both (getVisitData (x)) (getSalesIdFromTelegramId (x)),
+    S.map (S.join),
+    S.map ((x) => [x]),
+    S.map (insertToVisitOrdered),
+    S.chain (pgFlQuery),
+    S.map ((x) => x.rows[0]),
+    S.chain (S.flip (reply) (req)),
+    S.map (JSONData),
+  ]) (req)

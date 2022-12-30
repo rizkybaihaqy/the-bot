@@ -151,34 +151,29 @@ export const getBotCommandFromRequest = (req) =>
     ),
   ]) (req)
 
-// Req -> Either String String
-export const getHashtagFromRequest = (req) =>
-  S.pipe ([
-    S.tagBy (isHashTag),
-    S.chain (getTextFromRequest),
-    S.map ((txt) =>
-      txt.slice (
-        getEntityOffset_ ('hashtag') (req),
-        getEntityOffset_ ('hashtag') (req) +
-          getEntityLength_ ('hashtag') (req),
-      ),
-    ),
-    S.mapLeft (S.K ('Not A Hashtag, Maybe Its A Plain Text')),
-  ]) (req)
-
 // Message -> Either String String
-export const getHashtagFromMessage = (req) =>
-  S.pipe ([
-    getTextFromMessage,
-    S.map ((txt) =>
-      txt.slice (
-        getEntityOffset_ ('hashtag') (req),
-        getEntityOffset_ ('hashtag') (req) +
-          getEntityLength_ ('hashtag') (req),
-      ),
+export const getHashtagFromMessage = S.pipe ([
+  (msg) => ({
+    text: getTextFromMessage (msg),
+    entity: getEntityFromMessage ('hashtag') (msg),
+  }),
+  ({text, entity}) =>
+    S.isLeft (text)
+      ? text
+      : S.isLeft (entity)
+      ? entity
+      : S.Right ({
+          text: S.fromRight ('') (text),
+          entity: S.fromRight ({}) (entity),
+        }),
+  S.map (({text, entity}) =>
+    text.slice (
+      S.prop ('offset') (entity),
+      S.prop ('offset') (entity) + S.prop ('length') (entity),
     ),
-    S.mapLeft (S.K ('Not A Hashtag, Maybe Its A Plain Text')),
-  ]) (req)
+  ),
+  S.mapLeft (S.K ('Not A Hashtag, Maybe Its A Plain Text')),
+])
 
 // Req -> Either String String
 export const getReplyFromRequest = (req) =>
