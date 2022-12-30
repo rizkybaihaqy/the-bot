@@ -108,11 +108,12 @@ export const getEntityFromMessage = (entityType) =>
     ),
   ])
 
-export const getEntityOffset = (entityType) => S.pipe ([
-  getEntityFromRequest,
-  S.map ((entity) => S.prop ('offset') (entity)),
-  S.fromRight (0),
-])
+export const getEntityOffset = (entityType) =>
+  S.pipe ([
+    getEntityFromRequest,
+    S.map ((entity) => S.prop ('offset') (entity)),
+    S.fromRight (0),
+  ])
 
 // Req -> Integer
 export const getEntityOffset_ = (entityType) =>
@@ -233,5 +234,15 @@ export const getCallbackDataFromRequest = S.pipe ([
   ]),
   S.maybeToEither (
     'No Callback Data Found. Maybe its not a callback query',
+  ),
+])
+
+// Location -> Either String String
+export const getLocationFromMessage = S.pipe ([
+  S.get (S.is ($.Object)) ('location'),
+  S.map (S.values),
+  S.map ((location) => location.toString ()),
+  S.maybeToEither (
+    'No Location Found, Maybe Its A Plain Text',
   ),
 ])

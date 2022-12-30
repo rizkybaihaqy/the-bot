@@ -5,6 +5,7 @@ import {F} from '../../fluture'
 import {S} from '../../sanctuary'
 import {
   getChatIdFromRequest,
+  getLocationFromMessage,
   getMessageFromRequest,
   getReplyMessageFromRequest,
   getTextFromMessage,
@@ -31,6 +32,7 @@ const insertToVisitOrdered = insertToVisit ([
   'package_desc',
   'home_state',
   'additional_desc',
+  'location',
   'sales_id',
 ])
 
@@ -62,6 +64,27 @@ const getVisitData = S.pipe ([
   S.map (S.map ((x) => S.Pair (x[0]) (x[1]))),
   S.map (S.map (S.snd)),
   S.map (S.map (S.trim)),
+])
+
+const getVisitDataAndLocation = S.pipe ([
+  (req) => [
+    getVisitData (req),
+    S.pipe ([
+      getMessageFromRequest,
+      S.chain (getLocationFromMessage),
+      S.map (x => [x])
+    ]) (req),
+  ],
+  (x) =>
+    S.isLeft (x[0])
+      ? x[0]
+      : S.isLeft (x[1])
+      ? x[1]
+      : S.Right ([
+          S.fromRight ([]) (x[0]),
+          S.fromRight ([]) (x[1]),
+        ]),
+  S.map (S.join),
   eitherToFuture,
 ])
 
@@ -108,7 +131,7 @@ export const visitReport = (req) =>
 export const submitReport = (req) =>
   S.pipe ([
     (x) =>
-      F.both (getVisitData (x)) (getSalesIdFromTelegramId (x)),
+      F.both (getVisitDataAndLocation (x)) (getSalesIdFromTelegramId (x)),
     S.map (S.join),
     S.map ((x) => [x]),
     S.map (insertToVisitOrdered),

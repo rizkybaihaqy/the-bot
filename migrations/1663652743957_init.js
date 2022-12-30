@@ -47,6 +47,7 @@ exports.up = (pgm) => {
         type: 'varchar(1000)',
         notNull: true,
       },
+      location: {type: 'point', notNull: true},
       // channel: {type: '"channel_list"', notNull: true},
       sales_id: {
         type: 'integer',

@@ -22,6 +22,11 @@ const fakeVisits = (n) => (nSales) =>
         'state_property',
       ]),
       faker.lorem.text (),
+      faker.address.nearbyGPSCoordinate (
+        [ -7.057418, 110.44067 ],
+        1,
+        true,
+      ).toString (),
       // faker.helpers.arrayElement ([
       //   'mip',
       //   'landing_page',
@@ -48,6 +53,7 @@ export const visitsSeeder = (n) => (nSales) =>
       'package_desc',
       'home_state',
       'additional_desc',
+      'location',
       'sales_id',
     ]) (fakeVisits (n) (nSales)),
   )
