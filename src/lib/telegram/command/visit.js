@@ -55,6 +55,7 @@ export const visitStart = S.pipe ([
   S.map (JSONData),
 ])
 
+// Req -> Either String []String
 const getVisitData = S.pipe ([
   getReplyMessageFromRequest,
   S.chain (getTextFromMessage),
@@ -67,24 +68,13 @@ const getVisitData = S.pipe ([
 ])
 
 const getVisitDataAndLocation = S.pipe ([
-  (req) => [
-    getVisitData (req),
-    S.pipe ([
-      getMessageFromRequest,
-      S.chain (getLocationFromMessage),
-      S.map (x => [x])
-    ]) (req),
-  ],
-  (x) =>
-    S.isLeft (x[0])
-      ? x[0]
-      : S.isLeft (x[1])
-      ? x[1]
-      : S.Right ([
-          S.fromRight ([]) (x[0]),
-          S.fromRight ([]) (x[1]),
-        ]),
-  S.map (S.join),
+  (req) =>
+    S.lift2 ((x) => (y) => [ ...x, y ]) (getVisitData (req)) (
+      S.pipe ([
+        getMessageFromRequest,
+        S.chain (getLocationFromMessage),
+      ]) (req),
+    ),
   eitherToFuture,
 ])
 
@@ -131,7 +121,9 @@ export const visitReport = (req) =>
 export const submitReport = (req) =>
   S.pipe ([
     (x) =>
-      F.both (getVisitDataAndLocation (x)) (getSalesIdFromTelegramId (x)),
+      F.both (getVisitDataAndLocation (x)) (
+        getSalesIdFromTelegramId (x),
+      ),
     S.map (S.join),
     S.map ((x) => [x]),
     S.map (insertToVisitOrdered),
