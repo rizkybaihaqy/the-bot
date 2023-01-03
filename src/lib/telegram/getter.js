@@ -3,6 +3,7 @@ import {S} from '../sanctuary'
 import {isEmptyString} from '../utils/predicate'
 import {isBotCommand, isHashTag, isReply} from './predicate'
 
+// Request -> Either String Message
 export const getMessageFromRequest = S.pipe ([
   S.gets (S.is ($.Object)) ([ 'body', 'message' ]),
   S.maybeToEither (
@@ -44,7 +45,7 @@ export const getTextFromRequest = S.pipe ([
   ),
 ])
 
-// Message -> string
+// Message -> String
 export const getTextFromMessage = S.pipe ([
   S.get (S.is ($.String)) ('text'),
   S.maybeToEither (
@@ -88,7 +89,7 @@ export const getEntityFromRequest_ = (entityType) =>
     ),
   ])
 
-// req -> Either String Entity
+// Request -> Either String Entity
 export const getEntityFromMessage = (entityType) =>
   S.pipe ([
     S.get (S.is ($.Array ($.Object))) ('entities'),
@@ -245,4 +246,22 @@ export const getLocationFromMessage = S.pipe ([
   S.maybeToEither (
     'No Location Found, Maybe Its A Plain Text',
   ),
+])
+
+// Message -> Either String String
+export const getEntityTextFromMessage = (entityType) => (req) =>
+  S.lift2 (
+    (text) => (entity) =>
+      text.slice (
+        S.prop ('offset') (entity),
+        S.prop ('offset') (entity) + S.prop ('length') (entity),
+      ),
+  ) (getTextFromMessage (req)) (
+    getEntityFromMessage (entityType) (req),
+  )
+
+// Message -> Either String String
+export const getChatIdFromMessage = S.pipe ([
+  S.gets (S.is ($.Number)) ([ 'chat', 'id' ]),
+  S.maybeToEither ('No Chat Id Found. Who are you?'),
 ])

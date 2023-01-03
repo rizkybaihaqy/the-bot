@@ -2,7 +2,7 @@ import {TRACKER_API_KEY} from '../../constants/indohome'
 import {TELEGRAM_API} from '../../constants/telegram'
 import {flAxios} from '../fluture'
 
-// ReplyMarkup => String => String => Future Error Axios
+// ReplyMarkup -> String -> String -> Future Error Axios
 export const sendMessage =
   (replyMarkup) => (chatId) => (text) =>
     flAxios (

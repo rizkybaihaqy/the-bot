@@ -4,7 +4,7 @@ import {reply} from '../lib/telegram/reply'
 
 // TODO Make It Pure
 export const errorHandler = (err, req, res, _) => {
-  console.log (err)
+  console.log ('ERROR:', err)
   S.pipe ([
     reply (`ERROR: ${err}`),
     S.map (
