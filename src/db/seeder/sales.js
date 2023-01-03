@@ -1,4 +1,5 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
+import Sales from '../../models/Sales'
 import {pgFlQuery} from '../instance'
 import {insertTo} from '../query'
 
@@ -12,5 +13,5 @@ const testUser = [ 'Rizky Baihaqy', '642130106' ]
 
 export const salesSeeder = (n) =>
   pgFlQuery (
-    insertTo ('sales') ([ 'name', 'telegram_id' ]) ([ ...fakeSales (n), testUser ]),
+    insertTo ('sales') (Sales) ([ ...fakeSales (n), testUser ]),
   )

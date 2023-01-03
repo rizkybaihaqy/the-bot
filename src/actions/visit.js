@@ -9,30 +9,13 @@ import {
   getEntityTextFromMessage,
   getLocationFromMessage,
   getMessageFromRequest,
-  getReplyFromRequest,
   getReplyMessageFromRequest,
   getTextFromMessage,
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
+import Visit from '../models/Visit'
 
-const insertToVisit = insertTo ('visits')
-const insertToVisitOrdered = insertToVisit ([
-  'track_id',
-  'customer_name',
-  'customer_email',
-  'customer_cp',
-  'customer_alt_cp',
-  'odp_datek',
-  'odp_alternative_1',
-  'odp_alternative_2',
-  'id_pln',
-  'address',
-  'package_desc',
-  'home_state',
-  'additional_desc',
-  'location',
-  'sales_id',
-])
+const insertToVisit = insertTo ('visits') (Visit)
 
 // Req -> boolean
 const isVisitStart = S.pipe ([
@@ -182,13 +165,9 @@ const visitSubmit = S.pipe ([
       ]) (req),
     ),
   S.chain (([ data, chatId ]) =>
-    F.and (sendMessage ({remove_keyboard: true}) (chatId) (data)) (
-      S.pipe ([
-        (x) => [x],
-        insertToVisitOrdered,
-        pgFlQuery,
-      ]) (data),
-    ),
+    F.and (
+      sendMessage ({remove_keyboard: true}) (chatId) (data),
+    ) (S.pipe ([ (x) => [x], insertToVisit, pgFlQuery ]) (data)),
   ),
   S.map (JSONData),
 ])

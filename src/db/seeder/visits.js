@@ -1,4 +1,5 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
+import Visit from '../../models/Visit'
 import {pgFlQuery} from '../instance'
 import {insertTo} from '../query'
 
@@ -22,11 +23,13 @@ const fakeVisits = (n) => (nSales) =>
         'state_property',
       ]),
       faker.lorem.text (),
-      faker.address.nearbyGPSCoordinate (
-        [ -7.057418, 110.44067 ],
-        1,
-        true,
-      ).toString (),
+      faker.address
+        .nearbyGPSCoordinate (
+          [ -7.057418, 110.44067 ],
+          1,
+          true,
+        )
+        .toString (),
       // faker.helpers.arrayElement ([
       //   'mip',
       //   'landing_page',
@@ -39,21 +42,5 @@ const fakeVisits = (n) => (nSales) =>
 
 export const visitsSeeder = (n) => (nSales) =>
   pgFlQuery (
-    insertTo ('visits') ([
-      'track_id',
-      'customer_name',
-      'customer_email',
-      'customer_cp',
-      'customer_alt_cp',
-      'odp_datek',
-      'odp_alternative_1',
-      'odp_alternative_2',
-      'id_pln',
-      'address',
-      'package_desc',
-      'home_state',
-      'additional_desc',
-      'location',
-      'sales_id',
-    ]) (fakeVisits (n) (nSales)),
+    insertTo ('visits') (Visit) (fakeVisits (n) (nSales)),
   )
