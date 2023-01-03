@@ -1,7 +1,7 @@
 import F from 'fluture'
 import {Next} from 'fluture-express'
-import {pgFlQuery} from '../db/instance'
-import {insertTo} from '../db/query'
+import {getSalesByTelegramId} from '../data-access/sales'
+import {insertOneToVisits} from '../data-access/visits'
 import {JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
@@ -13,9 +13,6 @@ import {
   getTextFromMessage,
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
-import Visit from '../models/Visit'
-
-const insertToVisit = insertTo ('visits') (Visit)
 
 // Req -> boolean
 const isVisitStart = S.pipe ([
@@ -70,19 +67,12 @@ const getSalesIdFromTelegramId = S.pipe ([
   getMessageFromRequest,
   S.chain (getChatIdFromMessage),
   eitherToFuture,
-  S.chain ((telegramId) =>
-    pgFlQuery ({
-      name: 'select one sales by telegram id',
-      text: 'SELECT id FROM sales WHERE telegram_id=$1',
-      values: [telegramId],
-    }),
-  ),
+  S.chain (getSalesByTelegramId),
   S.chain (
     S.ifElse ((x) => x.rowCount === 0) ((_) =>
       F.reject ('No Sales Found With This Telegram Account'),
     ) ((x) => F.resolve (x.rows[0].id.toString ())),
   ),
-  // S.map ((x) => [x]),
 ])
 
 // Req -> Future Error Array
@@ -167,7 +157,7 @@ const visitSubmit = S.pipe ([
   S.chain (([ data, chatId ]) =>
     F.and (
       sendMessage ({remove_keyboard: true}) (chatId) (data),
-    ) (S.pipe ([ (x) => [x], insertToVisit, pgFlQuery ]) (data)),
+    ) (insertOneToVisits (data)),
   ),
   S.map (JSONData),
 ])

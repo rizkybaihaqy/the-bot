@@ -1,7 +1,5 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
-import Visit from '../../models/Visit'
-import {pgFlQuery} from '../instance'
-import {insertTo} from '../query'
+import {insertManyToVisits} from '../../data-access/visits'
 
 const fakeVisits = (n) => (nSales) =>
   [...Array (n)].map ((_, i) => [
@@ -36,11 +34,11 @@ const fakeVisits = (n) => (nSales) =>
       //   'sobi',
       //   'no_deal',
       // ]),
-      faker.datatype.number ({min: 1, max: nSales}),
+      faker.datatype
+        .number ({min: 1, max: nSales})
+        .toString (),
     ],
   ])
 
 export const visitsSeeder = (n) => (nSales) =>
-  pgFlQuery (
-    insertTo ('visits') (Visit) (fakeVisits (n) (nSales)),
-  )
+  insertManyToVisits (fakeVisits (n) (nSales))
