@@ -12,12 +12,3 @@ export const isCommandEqualsTo = (cmd) =>
     S.map (S.equals (cmd)),
     S.fromRight (false),
   ])
-
-// String -> Request -> Boolean
-export const isHashtagEqualsTo = (hashtag) =>
-  S.pipe ([
-    getMessageFromRequest,
-    S.chain (getEntityTextFromMessage ('hashtag')),
-    S.map (S.equals (hashtag)),
-    S.fromRight (false),
-  ])

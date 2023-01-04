@@ -3,14 +3,23 @@ import {Next} from 'fluture-express'
 import {JSONData, eitherToFuture} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {
+  getEntityTextFromMessage,
   getLocationFromMessage,
   getMessageFromRequest,
   getReplyMessageFromMessage,
   getTelegramIdFromMessage,
   getTextFromMessage,
 } from '../../lib/telegram/getter'
-import {isHashtagEqualsTo} from '../../lib/telegram/predicate'
 import {addVisit} from '../../use-case/visit'
+
+// Req -> boolean
+const isVisitSubmit = S.pipe ([
+  getMessageFromRequest,
+  S.chain (getReplyMessageFromMessage),
+  S.chain (getEntityTextFromMessage ('hashtag')),
+  S.map (S.equals ('#VisitSubmit')),
+  S.fromRight (false),
+])
 
 // Message -> Either String Array String
 const getVisitDataFromReplyMessage = S.pipe ([
@@ -34,7 +43,7 @@ const getUserInput = (msg) =>
 
 // Locals -> Req -> Future Error Axios
 export default (locals) =>
-  S.ifElse (isHashtagEqualsTo ('#VisitSubmit')) (
+  S.ifElse (isVisitSubmit) (
     S.pipe ([
       getMessageFromRequest,
       S.chain (getUserInput),
