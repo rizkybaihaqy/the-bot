@@ -83,12 +83,10 @@ const getVisitDataLocationAndSalesId = S.pipe ([
   ]),
 ])
 
-// Req -> Future Error Axios
-const visitStart = S.pipe ([
-  getMessageFromRequest,
-  S.chain (getChatIdFromMessage),
-  eitherToFuture,
-  S.chain ((chatId) =>
+// Locals -> Req -> Future Error Axios
+const visitStart = (locals) =>
+  S.pipe ([
+    (_) => 'Which visit you want to report',
     sendMessage ({
       inline_keyboard: [
         [
@@ -105,62 +103,54 @@ const visitStart = S.pipe ([
           },
         ],
       ],
-    }) (chatId) ('Which visit you want to report'),
-  ),
-  S.map (JSONData),
-])
+    }) (S.prop ('chatId') (locals)),
+    S.map (JSONData),
+  ])
 
-// Req -> Future Error Axios
-const visitReport = S.pipe ([
-  getMessageFromRequest,
-  (msg) =>
-    S.lift2 ((x) => (y) => [ x, y ]) (
-      S.pipe ([
-        S.chain (getTextFromMessage),
-        S.map ((text) =>
-          text.replace ('#VisitReport', '#VisitSubmit'),
-        ),
-      ]) (msg),
-    ) (S.pipe ([S.chain (getChatIdFromMessage)]) (msg)),
-  eitherToFuture,
-  S.chain (([ text, chatId ]) =>
-    sendMessage ({
-      keyboard: [
-        [
-          {
-            text: 'Send Location',
-            request_location: true,
-          },
-        ],
-      ],
-    }) (chatId) (text),
-  ),
-  S.map (JSONData),
-])
-
-// Req -> Future Error Axios
-const visitSubmit = S.pipe ([
-  getMessageFromRequest,
-  eitherToFuture,
-  S.chain ((msg) =>
-    F.both (getVisitDataLocationAndSalesId (msg)) (
-      S.pipe ([ getChatIdFromMessage, eitherToFuture ]) (msg),
+// Locals -> Req -> Future Error Axios
+const visitReport = (locals) =>
+  S.pipe ([
+    getMessageFromRequest,
+    S.chain (getTextFromMessage),
+    S.map ((text) =>
+      text.replace ('#VisitReport', '#VisitSubmit'),
     ),
-  ),
-  S.chain (([ data, chatId ]) =>
-    F.both (insertOneToVisits (data)) (F.resolve (chatId)),
-  ),
-  S.chain (([ data, chatId ]) =>
-    sendMessage ({remove_keyboard: true}) (chatId) (data),
-  ),
-  S.map (JSONData),
-])
+    eitherToFuture,
+    S.chain (
+      sendMessage ({
+        keyboard: [
+          [
+            {
+              text: 'Send Location',
+              request_location: true,
+            },
+          ],
+        ],
+      }) (S.prop ('chatId') (locals)),
+    ),
+    S.map (JSONData),
+  ])
+
+// Locals -> Req -> Future Error Axios
+const visitSubmit = (locals) =>
+  S.pipe ([
+    getMessageFromRequest,
+    eitherToFuture,
+    S.chain (getVisitDataLocationAndSalesId),
+    S.chain (insertOneToVisits),
+    S.chain (
+      sendMessage ({remove_keyboard: true}) (
+        S.prop ('chatId') (locals),
+      ),
+    ),
+    S.map (JSONData),
+  ])
 
 export default (locals) => (req) =>
   isVisitStart (req)
-    ? visitStart (req)
+    ? visitStart (locals) (req)
     : isVisitReport (req)
-    ? visitReport (req)
+    ? visitReport (locals) (req)
     : isVisitSubmit (req)
-    ? visitSubmit (req)
+    ? visitSubmit (locals) (req)
     : F.resolve (Next (locals))
