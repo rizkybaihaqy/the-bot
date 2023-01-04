@@ -4,19 +4,11 @@ import {JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
   getEntityFromMessage,
-  getEntityTextFromMessage,
   getMessageFromRequest,
   getTextFromMessage,
 } from '../lib/telegram/getter'
+import {isCommandEqualsTo} from '../lib/telegram/predicate'
 import {isEmptyString} from '../lib/utils/predicate'
-
-// Req -> Boolean
-const isEcho = S.pipe ([
-  getMessageFromRequest,
-  S.chain (getEntityTextFromMessage ('bot_command')),
-  S.map (S.equals ('/echo')),
-  S.fromRight (false),
-])
 
 // Message -> Either String String
 const getEchoMessage = S.pipe ([
@@ -36,7 +28,7 @@ const getEchoMessage = S.pipe ([
 ])
 
 export default (locals) => (req) =>
-  S.ifElse (isEcho) (
+  S.ifElse (isCommandEqualsTo ('/echo')) (
     S.pipe ([
       getMessageFromRequest,
       S.chain (getEchoMessage),

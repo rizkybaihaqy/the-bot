@@ -6,6 +6,7 @@ import {
   getEntityTextFromMessage,
   getMessageFromRequest,
 } from '../lib/telegram/getter'
+import {isCommandEqualsTo} from '../lib/telegram/predicate'
 
 const isPing = S.pipe ([
   getMessageFromRequest,
@@ -15,7 +16,7 @@ const isPing = S.pipe ([
 ])
 
 export default (locals) => (req) =>
-  S.ifElse (isPing) (
+  S.ifElse (isCommandEqualsTo ('/ping')) (
     S.pipe ([
       (_) => 'pong',
       locals.sendMessage ({remove_keyboard: true}),

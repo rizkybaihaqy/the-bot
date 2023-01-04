@@ -4,20 +4,12 @@ import {JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
   getEntityFromMessage,
-  getEntityTextFromMessage,
   getMessageFromRequest,
   getTextFromMessage,
 } from '../lib/telegram/getter'
+import {isCommandEqualsTo} from '../lib/telegram/predicate'
 import {fetchTrackId} from '../lib/telegram/request'
 import {isEmptyString} from '../lib/utils/predicate'
-
-// Req -> Boolean
-const isOrder = S.pipe ([
-  getMessageFromRequest,
-  S.chain (getEntityTextFromMessage ('bot_command')),
-  S.map (S.equals ('/order')),
-  S.fromRight (false),
-])
 
 // Message -> Either String String
 const getTrackIdFromMessage = S.pipe ([
@@ -80,7 +72,7 @@ const formatData = (x) => `
       `
 
 export default (locals) => (req) =>
-  S.ifElse (isOrder) (
+  S.ifElse (isCommandEqualsTo ('/order')) (
     S.pipe ([
       getMessageFromRequest,
       S.chain (getTrackIdFromMessage),

@@ -3,21 +3,13 @@ import {Next} from 'fluture-express'
 import {JSONData, eitherToFuture} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {
-  getEntityTextFromMessage,
   getMessageFromRequest,
   getTextFromMessage,
 } from '../../lib/telegram/getter'
-
-// Req -> boolean
-const isVisitReport = S.pipe ([
-  getMessageFromRequest,
-  S.chain (getEntityTextFromMessage ('hashtag')),
-  S.map (S.equals ('#VisitReport')),
-  S.fromRight (false),
-])
+import {isHashtagEqualsTo} from '../../lib/telegram/predicate'
 
 export default (locals) =>
-  S.ifElse (isVisitReport) (
+  S.ifElse (isHashtagEqualsTo ('#VisitReport')) (
     S.pipe ([
       getMessageFromRequest,
       S.chain (getTextFromMessage),
