@@ -30,7 +30,7 @@ app.post (URI, dispatch ('echo'))
 app.post (URI, dispatch ('order'))
 app.post (URI, dispatch ('visit'))
 
-app.post (URI, dispatch ('text'))
+app.post (URI, dispatch ('default'))
 app.use (errorHandler)
 
 export default app
