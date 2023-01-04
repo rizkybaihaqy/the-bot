@@ -9,13 +9,9 @@ export const getMessageFromRequest = S.pipe ([
   ),
 ])
 
-// Request -> Either String Message
-export const getReplyMessageFromRequest = S.pipe ([
-  S.gets (S.is ($.Object)) ([
-    'body',
-    'message',
-    'reply_to_message',
-  ]),
+// Message -> Either String Message
+export const getReplyMessageFromMessage = S.pipe ([
+  S.get (S.is ($.Object)) ('reply_to_message'),
   S.maybeToEither (
     'No Reply Message Found. Did not support updated message',
   ),

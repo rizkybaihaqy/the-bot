@@ -9,7 +9,7 @@ import {
   getEntityTextFromMessage,
   getLocationFromMessage,
   getMessageFromRequest,
-  getReplyMessageFromRequest,
+  getReplyMessageFromMessage,
   getTextFromMessage,
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
@@ -32,15 +32,16 @@ const isVisitReport = S.pipe ([
 
 // Req -> boolean
 const isVisitSubmit = S.pipe ([
-  getReplyMessageFromRequest,
+  getMessageFromRequest,
+  S.chain (getReplyMessageFromMessage),
   S.chain (getEntityTextFromMessage ('hashtag')),
   S.map (S.equals ('#VisitSubmit')),
   S.fromRight (false),
 ])
 
-// Req -> Either String Array
-const getVisitDataFromReply = S.pipe ([
-  getReplyMessageFromRequest,
+// Message -> Either String Array
+const getVisitDataFromReplyMessage = S.pipe ([
+  getReplyMessageFromMessage,
   S.chain (getTextFromMessage),
   S.map (S.lines),
   S.map (S.map (S.splitOn (':'))),
@@ -50,22 +51,15 @@ const getVisitDataFromReply = S.pipe ([
   S.map (S.map (S.trim)),
 ])
 
-// Req -> Either String String
-const getVisitLocationFromMessage = S.pipe ([
-  getMessageFromRequest,
-  S.chain (getLocationFromMessage),
-])
-
-// Req -> Either String Array
-const getVisitDataAndLocation = (req) =>
+// Message -> Either String Array
+const getVisitDataAndLocation = (msg) =>
   S.lift2 ((x) => (y) => [ ...x, y ]) (
-    getVisitDataFromReply (req),
-  ) (getVisitLocationFromMessage (req))
+    getVisitDataFromReplyMessage (msg),
+  ) (getLocationFromMessage (msg))
 
-// Req -> Future Error String
+// Message -> Future Error String
 const getSalesIdFromTelegramId = S.pipe ([
-  getMessageFromRequest,
-  S.chain (getChatIdFromMessage),
+  getChatIdFromMessage,
   eitherToFuture,
   S.chain (getSalesByTelegramId),
   S.chain (
@@ -75,14 +69,14 @@ const getSalesIdFromTelegramId = S.pipe ([
   ),
 ])
 
-// Req -> Future Error Array
+// Message -> Future Error Array
 const getVisitDataLocationAndSalesId = S.pipe ([
-  (req) =>
+  (msg) =>
     F.both (
       S.pipe ([ getVisitDataAndLocation, eitherToFuture ]) (
-        req,
+        msg,
       ),
-    ) (getSalesIdFromTelegramId (req)),
+    ) (getSalesIdFromTelegramId (msg)),
   S.map (([ visitAndLocation, salesId ]) => [
     ...visitAndLocation,
     salesId,
@@ -146,18 +140,18 @@ const visitReport = S.pipe ([
 
 // Req -> Future Error Axios
 const visitSubmit = S.pipe ([
-  (req) =>
-    F.both (getVisitDataLocationAndSalesId (req)) (
-      S.pipe ([
-        getMessageFromRequest,
-        S.chain (getChatIdFromMessage),
-        eitherToFuture,
-      ]) (req),
+  getMessageFromRequest,
+  eitherToFuture,
+  S.chain ((msg) =>
+    F.both (getVisitDataLocationAndSalesId (msg)) (
+      S.pipe ([ getChatIdFromMessage, eitherToFuture ]) (msg),
     ),
+  ),
   S.chain (([ data, chatId ]) =>
-    F.and (
-      sendMessage ({remove_keyboard: true}) (chatId) (data),
-    ) (insertOneToVisits (data)),
+    F.both (insertOneToVisits (data)) (F.resolve (chatId)),
+  ),
+  S.chain (([ data, chatId ]) =>
+    sendMessage ({remove_keyboard: true}) (chatId) (data),
   ),
   S.map (JSONData),
 ])
