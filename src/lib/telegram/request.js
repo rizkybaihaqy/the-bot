@@ -4,7 +4,7 @@ import {flAxios} from '../fluture'
 
 // ReplyMarkup -> String -> String -> Future Error Axios
 export const sendMessage =
-  (replyMarkup) => (chatId) => (text) =>
+  (chatId) => (replyMarkup) => (text) =>
     flAxios (
       ('POST',
       {

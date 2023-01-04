@@ -12,7 +12,6 @@ import {
   getReplyMessageFromMessage,
   getTextFromMessage,
 } from '../lib/telegram/getter'
-import {sendMessage} from '../lib/telegram/request'
 
 // Req -> boolean
 const isVisitStart = S.pipe ([
@@ -87,7 +86,7 @@ const getVisitDataLocationAndSalesId = S.pipe ([
 const visitStart = (locals) =>
   S.pipe ([
     (_) => 'Which visit you want to report',
-    sendMessage ({
+    locals.sendMessage ({
       inline_keyboard: [
         [
           {
@@ -103,7 +102,7 @@ const visitStart = (locals) =>
           },
         ],
       ],
-    }) (S.prop ('chatId') (locals)),
+    }),
     S.map (JSONData),
   ])
 
@@ -117,7 +116,7 @@ const visitReport = (locals) =>
     ),
     eitherToFuture,
     S.chain (
-      sendMessage ({
+      locals.sendMessage ({
         keyboard: [
           [
             {
@@ -126,7 +125,7 @@ const visitReport = (locals) =>
             },
           ],
         ],
-      }) (S.prop ('chatId') (locals)),
+      }),
     ),
     S.map (JSONData),
   ])
@@ -138,11 +137,7 @@ const visitSubmit = (locals) =>
     eitherToFuture,
     S.chain (getVisitDataLocationAndSalesId),
     S.chain (insertOneToVisits),
-    S.chain (
-      sendMessage ({remove_keyboard: true}) (
-        S.prop ('chatId') (locals),
-      ),
-    ),
+    S.chain (locals.sendMessage ({remove_keyboard: true})),
     S.map (JSONData),
   ])
 

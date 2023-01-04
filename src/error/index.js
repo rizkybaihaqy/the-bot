@@ -14,9 +14,9 @@ export const errorHandler = (err, req, res, _) => {
     S.chain (getChatIdFromMessage),
     eitherToFuture,
     S.chain ((chatId) =>
-      sendMessage ({
+      sendMessage (chatId) ({
         remove_keyboard: true,
-      }) (chatId) (`ERROR: ${err}`),
+      }) (`ERROR: ${err}`),
     ),
     S.map (
       (x) => (

@@ -1,20 +1,9 @@
-import {JSONData, eitherToFuture} from '../lib/fluture'
+import {JSONData} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
-import {
-  getChatIdFromMessage,
-  getMessageFromRequest,
-} from '../lib/telegram/getter'
-import {sendMessage} from '../lib/telegram/request'
 
-export default (_) => (req) =>
+export default (locals) => (req) =>
   S.pipe ([
-    getMessageFromRequest,
-    S.chain (getChatIdFromMessage),
-    eitherToFuture,
-    S.chain ((chatId) =>
-      sendMessage ({
-        remove_keyboard: true,
-      }) (chatId) ('Default Handler Only In Dev'),
-    ),
+    (_) => 'Default Handler Only In Dev',
+    locals.sendMessage ({remove_keyboard: true}),
     S.map (JSONData),
   ]) (req)

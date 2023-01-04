@@ -3,16 +3,12 @@ import {Next} from 'fluture-express'
 import {JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
-  getChatIdFromMessage,
   getEntityFromMessage,
   getEntityTextFromMessage,
   getMessageFromRequest,
   getTextFromMessage,
 } from '../lib/telegram/getter'
-import {
-  fetchTrackId,
-  sendMessage,
-} from '../lib/telegram/request'
+import {fetchTrackId} from '../lib/telegram/request'
 import {isEmptyString} from '../lib/utils/predicate'
 
 // Req -> Boolean
@@ -92,11 +88,7 @@ export default (locals) => (req) =>
       S.chain (fetchTrackId),
       S.chain (checkData),
       S.map (formatData),
-      S.chain (
-        sendMessage ({
-          remove_keyboard: true,
-        }) (S.prop ('chatId') (locals)),
-      ),
+      S.chain (locals.sendMessage ({remove_keyboard: true})),
       S.map (JSONData),
     ]),
   ) ((_) => F.resolve (Next (locals))) (req)

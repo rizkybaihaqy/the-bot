@@ -13,7 +13,9 @@ export default (locals) => (req) =>
   S.pipe ([
     getMessageFromRequest,
     S.chain (getChatIdFromMessage),
-    S.map ((chatId) => S.insert ('chatId') (chatId) (locals)),
+    S.map ((chatId) =>
+      S.insert ('sendMessage') (sendMessage (chatId)) (locals),
+    ),
     eitherToFuture,
     S.map (Next),
   ]) (req)
