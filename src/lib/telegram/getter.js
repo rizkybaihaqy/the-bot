@@ -98,3 +98,10 @@ export const getChatIdFromMessage = S.pipe ([
   S.gets (S.is ($.Number)) ([ 'chat', 'id' ]),
   S.maybeToEither ('No Chat Id Found. Who are you?'),
 ])
+
+// Message -> Either String String
+export const getTelegramIdFromMessage = S.pipe ([
+  S.gets (S.is ($.Number)) ([ 'from', 'id' ]),
+  S.map ((telegramId) => telegramId.toString ()),
+  S.maybeToEither ('No Telegram Id Found. Who are you?'),
+])
