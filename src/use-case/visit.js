@@ -2,19 +2,12 @@ import {findOneSales} from '../data-access/sales'
 import {insertOneToVisits} from '../data-access/visits'
 import {F, maybeToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
+import {tailReversed} from '../lib/utils/getter'
 
 // Array String -> Future String String
 export const addVisit = S.pipe ([
   (input) =>
-    F.both (
-      S.pipe ([
-        S.reverse,
-        S.tail,
-        S.fromMaybe ([]),
-        S.reverse,
-        F.resolve,
-      ]) (input),
-    ) (
+    F.both (S.pipe ([ tailReversed, F.resolve ]) (input)) (
       S.pipe ([
         S.last,
         maybeToFuture,
