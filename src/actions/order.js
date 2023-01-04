@@ -3,9 +3,9 @@ import {Next} from 'fluture-express'
 import {JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
-  getEntityTextFromMessage,
   getChatIdFromMessage,
   getEntityFromMessage,
+  getEntityTextFromMessage,
   getMessageFromRequest,
   getTextFromMessage,
 } from '../lib/telegram/getter'
@@ -50,7 +50,7 @@ const checkData = S.pipe ([
 ])
 
 // Data -> String
-const FormatData = (x) => `
+const formatData = (x) => `
       Nama Pelanggan: ${
         x.milestones[0].variables.customerName
       }
@@ -87,25 +87,15 @@ export default (locals) => (req) =>
   S.ifElse (isOrder) (
     S.pipe ([
       getMessageFromRequest,
-      (msg) =>
-        F.both (
-          S.pipe ([
-            S.chain (getTrackIdFromMessage),
-            eitherToFuture,
-            S.chain (fetchTrackId),
-            S.chain (checkData),
-            S.map (FormatData),
-          ]) (msg),
-        ) (
-          S.pipe ([
-            S.chain (getChatIdFromMessage),
-            eitherToFuture,
-          ]) (msg),
-        ),
-      S.chain (([ text, chatId ]) =>
+      S.chain (getTrackIdFromMessage),
+      eitherToFuture,
+      S.chain (fetchTrackId),
+      S.chain (checkData),
+      S.map (formatData),
+      S.chain (
         sendMessage ({
           remove_keyboard: true,
-        }) (chatId) (text),
+        }) (S.prop ('chatId') (locals)),
       ),
       S.map (JSONData),
     ]),

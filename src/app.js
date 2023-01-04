@@ -24,6 +24,7 @@ app.use ('/', indexRouter)
 app.use ('/users', usersRouter)
 app.get ('/json', dispatch ('welcome'))
 
+app.post (URI, dispatch ('identify'))
 app.post (URI, dispatch ('ping'))
 app.post (URI, dispatch ('echo'))
 app.post (URI, dispatch ('order'))

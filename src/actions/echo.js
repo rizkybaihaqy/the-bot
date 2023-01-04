@@ -3,9 +3,9 @@ import {Next} from 'fluture-express'
 import {JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
-  getEntityTextFromMessage,
   getChatIdFromMessage,
   getEntityFromMessage,
+  getEntityTextFromMessage,
   getMessageFromRequest,
   getTextFromMessage,
 } from '../lib/telegram/getter'
@@ -41,16 +41,12 @@ export default (locals) => (req) =>
   S.ifElse (isEcho) (
     S.pipe ([
       getMessageFromRequest,
-      S.chain ((msg) =>
-        S.lift2 ((text) => (chatId) => [ text, chatId ]) (
-          getEchoMessage (msg),
-        ) (getChatIdFromMessage (msg)),
-      ),
+      S.chain (getEchoMessage),
       eitherToFuture,
-      S.chain (([ text, chatId ]) =>
+      S.chain (
         sendMessage ({
           remove_keyboard: true,
-        }) (chatId) (text),
+        }) (S.prop ('chatId') (locals)),
       ),
       S.map (JSONData),
     ]),
