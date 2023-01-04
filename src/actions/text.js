@@ -9,7 +9,6 @@ import {sendMessage} from '../lib/telegram/request'
 export default (_) => (req) =>
   S.pipe ([
     getMessageFromRequest,
-    S.map ((x) => (console.log (x), x)),
     S.chain (getChatIdFromMessage),
     eitherToFuture,
     S.chain ((chatId) =>
