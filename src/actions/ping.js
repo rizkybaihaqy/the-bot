@@ -17,7 +17,7 @@ const isPing = S.pipe ([
 export default (locals) => (req) =>
   S.ifElse (isPing) (
     S.pipe ([
-      (_) => 'ping',
+      (_) => 'pong',
       locals.sendMessage ({remove_keyboard: true}),
       S.map (JSONData),
     ]),
