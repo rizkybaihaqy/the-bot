@@ -3,7 +3,7 @@ import {pgFlQuery} from '../db/instance'
 import Sales from '../models/Sales'
 
 // String -> Future Error pg.Result
-export const getSalesByTelegramId = (telegramId) =>
+export const findOneSales = (telegramId) =>
   pgFlQuery ({
     name: 'select one sales by telegram id',
     text: 'SELECT id FROM sales WHERE telegram_id=$1',
