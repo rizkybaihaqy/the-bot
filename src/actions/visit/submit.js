@@ -1,6 +1,6 @@
+import {snakeCase} from 'change-case'
 import F from 'fluture'
 import {Next} from 'fluture-express'
-import {toSnakeCase} from 'js-convert-case'
 import {JSONData, eitherToFuture} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {
@@ -28,18 +28,18 @@ const isVisitSubmit = S.pipe ([
 const validateUserInput = S.pipe ([
   S.ap ({
     track_id: S.tagBy (S.complement (isEmptyString)),
-    nama_pelanggan: S.tagBy (S.complement (isEmptyString)),
-    email: S.tagBy (S.complement (isEmptyString)),
-    cp_pelanggan: S.tagBy (S.complement (isEmptyString)),
-    cp_alternative: S.tagBy (S.complement (isEmptyString)),
+    customer_name: S.tagBy (S.complement (isEmptyString)),
+    customer_email: S.tagBy (S.complement (isEmptyString)),
+    customer_cp: S.tagBy (S.complement (isEmptyString)),
+    customer_alt_cp: S.tagBy (S.complement (isEmptyString)),
     odp_datek: S.tagBy (S.complement (isEmptyString)),
     odp_alternative_1: S.tagBy (S.complement (isEmptyString)),
     odp_alternative_2: S.tagBy (S.complement (isEmptyString)),
     id_pln: S.tagBy (S.complement (isEmptyString)),
-    alamat: S.tagBy (S.complement (isEmptyString)),
-    keterangan_paket: S.tagBy (S.complement (isEmptyString)),
-    status_rumah: S.tagBy (S.complement (isEmptyString)),
-    keterangan: S.tagBy (S.complement (isEmptyString)),
+    address: S.tagBy (S.complement (isEmptyString)),
+    package_desc: S.tagBy (S.complement (isEmptyString)),
+    home_state: S.tagBy (S.complement (isEmptyString)),
+    additional_desc: S.tagBy (S.complement (isEmptyString)),
   }),
   S.sequence (S.Either),
 ])
@@ -53,7 +53,7 @@ const getVisitDataFromReplyMessage = S.pipe ([
   S.map (S.filter ((x) => x.length === 2)),
   S.map (
     S.map (([ key, value ]) =>
-      S.Pair (toSnakeCase (key)) (S.trim (value)),
+      S.Pair (snakeCase (key)) (S.trim (value)),
     ),
   ),
   S.map (S.fromPairs),

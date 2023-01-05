@@ -1,8 +1,19 @@
+import {headerCase} from 'change-case'
 import F from 'fluture'
 import {Next} from 'fluture-express'
 import {JSONData} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {isCommandEqualsTo} from '../../lib/telegram/predicate'
+import Visit from '../../models/Visit'
+
+// Array String -> String
+const field = S.pipe ([
+  S.dropLast (2),
+  S.fromMaybe ([]),
+  S.map ((x) => headerCase (x, {delimiter: ' '})),
+  S.joinWith (':\n'),
+  (x) => x + ':',
+])
 
 // Locals -> Req -> Future Error Axios
 export default (locals) =>
@@ -15,7 +26,7 @@ export default (locals) =>
             {
               text: 'Report Visits',
               switch_inline_query_current_chat:
-                '\n#VisitReport\nTrackID:\nNama Pelanggan:\nEmail:\nCP Pelanggan:\nCP Alternative:\nODP Datek:\nODP Alternative 1:\nODP Alternative 2:\nID PLN:\nAlamat:\nKeterangan Paket:\nStatus Rumah:\nKeterangan:',
+                '\n#VisitReport\n' + field (Visit),
             },
           ],
           [
