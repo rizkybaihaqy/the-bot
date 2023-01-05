@@ -15,7 +15,7 @@ export default (locals) =>
             {
               text: 'Report Visits',
               switch_inline_query_current_chat:
-                '\n#VisitReport\nTrackID:\nNama Pelanggan:\nE-Mail:\nCP Pelanggan:\nCP Alternative:\nODP Datek:\nODP Alternative 1:\nODP Alternative 2:\nID PLN:\nAlamat:\nKeterangan Paket:\nStatus Rumah:\nKeterangan:',
+                '\n#VisitReport\nTrackID:\nNama Pelanggan:\nEmail:\nCP Pelanggan:\nCP Alternative:\nODP Datek:\nODP Alternative 1:\nODP Alternative 2:\nID PLN:\nAlamat:\nKeterangan Paket:\nStatus Rumah:\nKeterangan:',
             },
           ],
           [

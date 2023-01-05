@@ -1,5 +1,6 @@
 import F from 'fluture'
 import {Next} from 'fluture-express'
+import {toSnakeCase} from 'js-convert-case'
 import {JSONData, eitherToFuture} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {
@@ -11,6 +12,7 @@ import {
   getTextFromMessage,
 } from '../../lib/telegram/getter'
 import {sendMessageToAdmin} from '../../lib/telegram/request'
+import {isEmptyString} from '../../lib/utils/predicate'
 import {addVisit} from '../../use-case/visit'
 
 // Req -> boolean
@@ -22,6 +24,26 @@ const isVisitSubmit = S.pipe ([
   S.fromRight (false),
 ])
 
+// StrMap -> Either String StrMap
+const validateUserInput = S.pipe ([
+  S.ap ({
+    track_id: S.tagBy (S.complement (isEmptyString)),
+    nama_pelanggan: S.tagBy (S.complement (isEmptyString)),
+    email: S.tagBy (S.complement (isEmptyString)),
+    cp_pelanggan: S.tagBy (S.complement (isEmptyString)),
+    cp_alternative: S.tagBy (S.complement (isEmptyString)),
+    odp_datek: S.tagBy (S.complement (isEmptyString)),
+    odp_alternative_1: S.tagBy (S.complement (isEmptyString)),
+    odp_alternative_2: S.tagBy (S.complement (isEmptyString)),
+    id_pln: S.tagBy (S.complement (isEmptyString)),
+    alamat: S.tagBy (S.complement (isEmptyString)),
+    keterangan_paket: S.tagBy (S.complement (isEmptyString)),
+    status_rumah: S.tagBy (S.complement (isEmptyString)),
+    keterangan: S.tagBy (S.complement (isEmptyString)),
+  }),
+  S.sequence (S.Either),
+])
+
 // Message -> Either String Array String
 const getVisitDataFromReplyMessage = S.pipe ([
   getReplyMessageFromMessage,
@@ -29,9 +51,15 @@ const getVisitDataFromReplyMessage = S.pipe ([
   S.map (S.lines),
   S.map (S.map (S.splitOn (':'))),
   S.map (S.filter ((x) => x.length === 2)),
-  S.map (S.map ((x) => S.Pair (x[0]) (x[1]))),
+  S.map (
+    S.map (([ key, value ]) =>
+      S.Pair (toSnakeCase (key)) (S.trim (value)),
+    ),
+  ),
+  S.map (S.fromPairs),
+  S.chain (validateUserInput),
+  S.map (S.pairs),
   S.map (S.map (S.snd)),
-  S.map (S.map (S.trim)),
 ])
 
 // Message -> Either String Array String
@@ -52,7 +80,9 @@ export default (locals) =>
       S.chain (addVisit),
       S.chain ((msg) =>
         F.both (
-          locals.sendMessage ({remove_keyboard: true}) ('Data Berhasil di input'),
+          locals.sendMessage ({remove_keyboard: true}) (
+            'Data Berhasil di input',
+          ),
         ) (sendMessageToAdmin ('Ada inputan baru')),
       ),
       S.map ((x) => x[1]),

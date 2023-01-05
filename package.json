@@ -24,6 +24,7 @@
     "fluture": "^14.0.0",
     "fluture-express": "^6.0.1",
     "fluture-sanctuary-types": "^7.1.0",
+    "js-convert-case": "^4.2.0",
     "morgan": "~1.9.1",
     "node-pg-format": "^1.3.5",
     "node-pg-migrate": "^6.2.2",
