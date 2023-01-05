@@ -10,6 +10,7 @@ import {
   getTelegramIdFromMessage,
   getTextFromMessage,
 } from '../../lib/telegram/getter'
+import {sendMessageToAdmin} from '../../lib/telegram/request'
 import {addVisit} from '../../use-case/visit'
 
 // Req -> boolean
@@ -49,7 +50,12 @@ export default (locals) =>
       S.chain (getUserInput),
       eitherToFuture,
       S.chain (addVisit),
-      S.chain (locals.sendMessage ({remove_keyboard: true})),
+      S.chain ((msg) =>
+        F.both (
+          locals.sendMessage ({remove_keyboard: true}) ('Data Berhasil di input'),
+        ) (sendMessageToAdmin ('Ada inputan baru')),
+      ),
+      S.map ((x) => x[1]),
       S.map (JSONData),
     ]),
   ) ((_) => F.resolve (Next (locals)))

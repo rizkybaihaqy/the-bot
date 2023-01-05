@@ -1,5 +1,8 @@
 import {TRACKER_API_KEY} from '../../constants/indohome'
-import {TELEGRAM_API} from '../../constants/telegram'
+import {
+  ADMIN_TELEGRAM_ID,
+  TELEGRAM_API,
+} from '../../constants/telegram'
 import {flAxios} from '../fluture'
 
 // ReplyMarkup -> String -> String -> Future Error Axios
@@ -16,6 +19,11 @@ export const sendMessage =
         },
       }),
     )
+
+// String -> Future Error Axios
+export const sendMessageToAdmin = sendMessage (
+  ADMIN_TELEGRAM_ID,
+) ({remove_keyboard: true})
 
 // String -> Future Error Axios
 export const fetchTrackId = (myid) =>
