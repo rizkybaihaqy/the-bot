@@ -1,17 +1,17 @@
 import {findOneSales} from '../data-access/sales'
 import {insertOneToVisits} from '../data-access/visits'
-import {F, maybeToFuture} from '../lib/fluture'
+import {F} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
-import {tailReversed} from '../lib/utils/getter'
 
-// Array String -> Future String String
+// StrMap String -> Future String String
 export const addVisit = S.pipe ([
   (input) =>
-    F.both (S.pipe ([ tailReversed, F.resolve ]) (input)) (
+    F.both (
+      S.pipe ([ S.remove ('telegram_id'), F.resolve ]) (input),
+    ) (
       S.pipe ([
-        S.last,
-        maybeToFuture,
-        S.chain (findOneSales),
+        S.prop ('telegram_id'),
+        findOneSales,
         S.chain (
           S.ifElse ((x) => x.rowCount === 0) ((_) =>
             F.reject (
@@ -21,6 +21,6 @@ export const addVisit = S.pipe ([
         ),
       ]) (input),
     ),
-  S.map ((x) => [ ...x[0], x[1] ]),
-  S.chain (insertOneToVisits),
+  S.map ((x) => ({...x[0], sales_id: x[1]})),
+  S.chain ((x) => insertOneToVisits (S.keys (x)) (S.values (x))),
 ])

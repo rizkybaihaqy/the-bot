@@ -21,3 +21,8 @@ export const arrayDiff = (base) => (comparator) =>
 // StrMap -> StrMap -> Array String
 export const objDiff = (base) => (comparator) =>
   arrayDiff (S.keys (base)) (S.keys (comparator))
+
+// Array String -> Array String -> Boolean
+export const sameValues = (arr) => (brr) =>
+  arr.length === brr.length &&
+  arr.every ((item) => brr.includes (item))

@@ -1,4 +1,4 @@
-import {capitalCase, snakeCase} from 'change-case'
+import {snakeCase} from 'change-case'
 import {Next} from 'fluture-express'
 import {
   F,
@@ -11,10 +11,10 @@ import {
   getMessageFromRequest,
   getTextFromMessage,
 } from '../../lib/telegram/getter'
-import {objDiff} from '../../lib/utils/getter'
+import {validate} from '../../lib/utils/validator'
 import {visitRules} from '../../rules/visit'
 
-// StrMap
+// StrMap a
 const visitRulesWithoutLocationTelegramId = S.pipe ([
   S.remove ('location'),
   S.remove ('telegram_id'),
@@ -42,28 +42,14 @@ const getVisitDataFromMessage = S.pipe ([
   S.map (S.fromPairs),
 ])
 
-// StrMap -> Either String StrMap String
-const validateUserInput = (rules) =>
-  S.ifElse (S.pipe ([ objDiff (rules), (x) => x.length === 0 ])) (
-    S.pipe ([ S.ap (rules), S.sequence (S.Either) ]),
-  ) (
-    S.pipe ([
-      objDiff (rules),
-      S.map (capitalCase),
-      (x) => 'Missing Field ' + x,
-      S.Left,
-    ]),
-  )
-
+// Locals -> Req -> Future Error Axios
 export default (locals) =>
   S.ifElse (isVisitReport) (
     S.pipe ([
       getMessageFromRequest,
       S.chain (getVisitDataFromMessage),
       S.chain (
-        validateUserInput (
-          visitRulesWithoutLocationTelegramId,
-        ),
+        validate (visitRulesWithoutLocationTelegramId),
       ),
       S.map (S.pairs),
       S.map (S.map ((x) => S.fst (x) + ':' + S.snd (x))),

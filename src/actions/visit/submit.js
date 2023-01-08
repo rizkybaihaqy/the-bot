@@ -1,4 +1,4 @@
-import {capitalCase, snakeCase} from 'change-case'
+import {snakeCase} from 'change-case'
 import {Next} from 'fluture-express'
 import {
   F,
@@ -15,7 +15,7 @@ import {
   getTextFromMessage,
 } from '../../lib/telegram/getter'
 import {sendMessageToAdmin} from '../../lib/telegram/request'
-import {objDiff} from '../../lib/utils/getter'
+import {validate} from '../../lib/utils/validator'
 import {visitRules} from '../../rules/visit'
 import {addVisit} from '../../use-case/visit'
 
@@ -27,18 +27,6 @@ const isVisitSubmit = S.pipe ([
   S.map (S.equals ('#VisitSubmit')),
   S.fromRight (false),
 ])
-
-// StrMap -> Either String StrMap String
-const validateUserInput = S.ifElse (
-  S.pipe ([ objDiff (visitRules), (x) => x.length === 0 ]),
-) (S.pipe ([ S.ap (visitRules), S.sequence (S.Either) ])) (
-  S.pipe ([
-    objDiff (visitRules),
-    S.map (capitalCase),
-    (x) => 'Missing Field ' + x,
-    S.Left,
-  ]),
-)
 
 // Message -> Either String StrMap String
 const getVisitDataFromReplyMessage = S.pipe ([
@@ -71,8 +59,7 @@ export default (locals) =>
     S.pipe ([
       getMessageFromRequest,
       S.chain (getUserInput),
-      S.chain (validateUserInput),
-      S.map (S.values),
+      S.chain (validate (visitRules)),
       eitherToFuture,
       S.chain (addVisit),
       S.chain ((msg) =>
