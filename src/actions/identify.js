@@ -1,10 +1,8 @@
-import F from 'fluture'
 import {Next} from 'fluture-express'
-import {JSONData, eitherToFuture} from '../lib/fluture'
+import {eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
   getChatIdFromMessage,
-  getEntityTextFromMessage,
   getMessageFromRequest,
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'

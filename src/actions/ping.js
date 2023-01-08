@@ -1,6 +1,5 @@
-import F from 'fluture'
 import {Next} from 'fluture-express'
-import {JSONData} from '../lib/fluture'
+import {F, JSONData} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
   getEntityTextFromMessage,
