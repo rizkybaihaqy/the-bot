@@ -13,7 +13,7 @@ import {
 } from '../../lib/telegram/getter'
 import {sendMessageToAdmin} from '../../lib/telegram/request'
 import {objDiff} from '../../lib/utils/getter'
-import {isEmptyString} from '../../lib/utils/predicate'
+import {visitRules} from '../../rules/visit'
 import {addVisit} from '../../use-case/visit'
 
 // Req -> boolean
@@ -25,35 +25,19 @@ const isVisitSubmit = S.pipe ([
   S.fromRight (false),
 ])
 
-const validator = {
-  track_id: S.tagBy (S.complement (isEmptyString)),
-  customer_name: S.tagBy (S.complement (isEmptyString)),
-  customer_email: S.tagBy (S.complement (isEmptyString)),
-  customer_cp: S.tagBy (S.complement (isEmptyString)),
-  customer_alt_cp: S.tagBy (S.complement (isEmptyString)),
-  odp_datek: S.tagBy (S.complement (isEmptyString)),
-  odp_alternative_1: S.tagBy (S.complement (isEmptyString)),
-  odp_alternative_2: S.tagBy (S.complement (isEmptyString)),
-  id_pln: S.tagBy (S.complement (isEmptyString)),
-  address: S.tagBy (S.complement (isEmptyString)),
-  package_desc: S.tagBy (S.complement (isEmptyString)),
-  home_state: S.tagBy (S.complement (isEmptyString)),
-  additional_desc: S.tagBy (S.complement (isEmptyString)),
-}
-
-// StrMap -> Either String StrMap
+// StrMap -> Either String StrMap String
 const validateUserInput = S.ifElse (
-  S.pipe ([ objDiff (validator), (x) => x.length === 0 ]),
-) (S.pipe ([ S.ap (validator), S.sequence (S.Either) ])) (
+  S.pipe ([ objDiff (visitRules), (x) => x.length === 0 ]),
+) (S.pipe ([ S.ap (visitRules), S.sequence (S.Either) ])) (
   S.pipe ([
-    objDiff (validator),
+    objDiff (visitRules),
     S.map (capitalCase),
     (x) => 'Missing Field ' + x,
     S.Left,
   ]),
 )
 
-// Message -> Either String Array String
+// Message -> Either String StrMap String
 const getVisitDataFromReplyMessage = S.pipe ([
   getReplyMessageFromMessage,
   S.chain (getTextFromMessage),
@@ -66,17 +50,17 @@ const getVisitDataFromReplyMessage = S.pipe ([
     ),
   ),
   S.map (S.fromPairs),
-  S.chain (validateUserInput),
-  S.map (S.values),
 ])
 
 // Message -> Either String Array String
 const getUserInput = (msg) =>
-  S.lift3 ((x) => (y) => (z) => [ ...x, y, z ]) (
-    getVisitDataFromReplyMessage (msg),
-  ) (getLocationFromMessage (msg)) (
-    getTelegramIdFromMessage (msg),
-  )
+  S.lift3 ((visitData) => (location) => (telegramId) => ({
+    ...visitData,
+    location,
+    telegram_id: telegramId,
+  })) (getVisitDataFromReplyMessage (msg)) (
+    getLocationFromMessage (msg),
+  ) (getTelegramIdFromMessage (msg))
 
 // Locals -> Req -> Future Error Axios
 export default (locals) =>
@@ -84,6 +68,8 @@ export default (locals) =>
     S.pipe ([
       getMessageFromRequest,
       S.chain (getUserInput),
+      S.chain (validateUserInput),
+      S.map (S.values),
       eitherToFuture,
       S.chain (addVisit),
       S.chain ((msg) =>
