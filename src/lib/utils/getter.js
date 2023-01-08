@@ -13,3 +13,11 @@ export const tailReversed = S.pipe ([
   S.fromMaybe ([]),
   S.reverse,
 ])
+
+// Array a -> Array a -> Array a
+export const arrayDiff = (base) => (comparator) =>
+  S.filter (S.complement (S.flip (S.elem) (comparator))) (base)
+
+// StrMap -> StrMap -> Array String
+export const objDiff = (base) => (comparator) =>
+  arrayDiff (S.keys (base)) (S.keys (comparator))

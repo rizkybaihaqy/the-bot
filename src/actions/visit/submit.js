@@ -1,4 +1,4 @@
-import {snakeCase} from 'change-case'
+import {capitalCase, snakeCase} from 'change-case'
 import F from 'fluture'
 import {Next} from 'fluture-express'
 import {JSONData, eitherToFuture} from '../../lib/fluture'
@@ -12,6 +12,7 @@ import {
   getTextFromMessage,
 } from '../../lib/telegram/getter'
 import {sendMessageToAdmin} from '../../lib/telegram/request'
+import {objDiff} from '../../lib/utils/getter'
 import {isEmptyString} from '../../lib/utils/predicate'
 import {addVisit} from '../../use-case/visit'
 
@@ -24,25 +25,33 @@ const isVisitSubmit = S.pipe ([
   S.fromRight (false),
 ])
 
+const validator = {
+  track_id: S.tagBy (S.complement (isEmptyString)),
+  customer_name: S.tagBy (S.complement (isEmptyString)),
+  customer_email: S.tagBy (S.complement (isEmptyString)),
+  customer_cp: S.tagBy (S.complement (isEmptyString)),
+  customer_alt_cp: S.tagBy (S.complement (isEmptyString)),
+  odp_datek: S.tagBy (S.complement (isEmptyString)),
+  odp_alternative_1: S.tagBy (S.complement (isEmptyString)),
+  odp_alternative_2: S.tagBy (S.complement (isEmptyString)),
+  id_pln: S.tagBy (S.complement (isEmptyString)),
+  address: S.tagBy (S.complement (isEmptyString)),
+  package_desc: S.tagBy (S.complement (isEmptyString)),
+  home_state: S.tagBy (S.complement (isEmptyString)),
+  additional_desc: S.tagBy (S.complement (isEmptyString)),
+}
+
 // StrMap -> Either String StrMap
-const validateUserInput = S.pipe ([
-  S.ap ({
-    track_id: S.tagBy (S.complement (isEmptyString)),
-    customer_name: S.tagBy (S.complement (isEmptyString)),
-    customer_email: S.tagBy (S.complement (isEmptyString)),
-    customer_cp: S.tagBy (S.complement (isEmptyString)),
-    customer_alt_cp: S.tagBy (S.complement (isEmptyString)),
-    odp_datek: S.tagBy (S.complement (isEmptyString)),
-    odp_alternative_1: S.tagBy (S.complement (isEmptyString)),
-    odp_alternative_2: S.tagBy (S.complement (isEmptyString)),
-    id_pln: S.tagBy (S.complement (isEmptyString)),
-    address: S.tagBy (S.complement (isEmptyString)),
-    package_desc: S.tagBy (S.complement (isEmptyString)),
-    home_state: S.tagBy (S.complement (isEmptyString)),
-    additional_desc: S.tagBy (S.complement (isEmptyString)),
-  }),
-  S.sequence (S.Either),
-])
+const validateUserInput = S.ifElse (
+  S.pipe ([ objDiff (validator), (x) => x.length === 0 ]),
+) (S.pipe ([ S.ap (validator), S.sequence (S.Either) ])) (
+  S.pipe ([
+    objDiff (validator),
+    S.map (capitalCase),
+    (x) => 'Missing Field ' + x,
+    S.Left,
+  ]),
+)
 
 // Message -> Either String Array String
 const getVisitDataFromReplyMessage = S.pipe ([
