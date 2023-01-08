@@ -67,8 +67,7 @@ const getVisitDataFromReplyMessage = S.pipe ([
   ),
   S.map (S.fromPairs),
   S.chain (validateUserInput),
-  S.map (S.pairs),
-  S.map (S.map (S.snd)),
+  S.map (S.values),
 ])
 
 // Message -> Either String Array String
