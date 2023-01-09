@@ -29,7 +29,7 @@ app.post (URI, dispatch ('ping'))
 app.post (URI, dispatch ('echo'))
 app.post (URI, dispatch ('order'))
 
-app.post (URI, dispatch ('visit/start'))
+app.post (URI, dispatch ('visit'))
 app.post (URI, dispatch ('visit/report'))
 app.post (URI, dispatch ('visit/submit'))
 

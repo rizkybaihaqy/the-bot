@@ -1,9 +1,9 @@
 import {headerCase} from 'change-case'
 import {Next} from 'fluture-express'
-import {F, JSONData} from '../../lib/fluture'
-import {S} from '../../lib/sanctuary'
-import {isCommandEqualsTo} from '../../lib/telegram/predicate'
-import Visit from '../../models/Visit'
+import {F, JSONData} from '../lib/fluture'
+import {S} from '../lib/sanctuary'
+import {isCommandEqualsTo} from '../lib/telegram/predicate'
+import Visit from '../models/Visit'
 
 // Array String -> String
 const field = S.pipe ([
