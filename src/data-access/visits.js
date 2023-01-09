@@ -26,3 +26,11 @@ export const insertManyToVisits = (data) =>
       data,
     ),
   })
+
+// String -> Future Error pg.Result
+export const findAllTodayVisits = (date) =>
+  pgFlQuery ({
+    name: 'Get visits data by created at',
+    text: "SELECT * FROM visits WHERE created_at > date($1) - interval '1 day'",
+    values: [date],
+  })
