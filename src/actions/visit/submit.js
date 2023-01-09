@@ -17,7 +17,10 @@ import {
 import {sendMessageToAdmin} from '../../lib/telegram/request'
 import {validate} from '../../lib/utils/validator'
 import {visitRules} from '../../rules/visit'
-import {addVisit} from '../../use-case/visit'
+import {
+  addVisit,
+  getVisitUpdate,
+} from '../../use-case/visit'
 
 // Req -> boolean
 const isVisitSubmit = S.pipe ([
@@ -62,12 +65,17 @@ export default (locals) =>
       S.chain (validate (visitRules)),
       eitherToFuture,
       S.chain (addVisit),
-      S.chain ((msg) =>
+      S.chain (getVisitUpdate),
+      S.chain (({user, todayVisit}) =>
         F.both (
           locals.sendMessage ({remove_keyboard: true}) (
             'Data Berhasil di input',
           ),
-        ) (sendMessageToAdmin ('Ada inputan baru')),
+        ) (
+          sendMessageToAdmin (
+            `Ada inputan baru dari ${user.name} (${user.id})\nTotal input hari ini: ${todayVisit}`,
+          ),
+        ),
       ),
       S.map ((x) => x[1]),
       S.map (JSONData),
