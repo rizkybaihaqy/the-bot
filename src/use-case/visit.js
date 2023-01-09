@@ -35,11 +35,12 @@ export const addVisit = S.pipe ([
       S.head,
       S.fromMaybe ({}),
       S.prop ('sales_id'),
+      (x) => x.toString (),
     ]),
   ),
 ])
 
-// String -> Future String String
+// String -> Future String Object
 export const getVisitUpdate = S.pipe ([
   (salesId) =>
     F.both (
