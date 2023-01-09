@@ -1,6 +1,5 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
-import {pgFlQuery} from '../instance'
-import {insertTo} from '../query'
+import {insertManyToSales} from '../../data-access/sales'
 
 const fakeSales = (n) =>
   [...Array (n)].map ((_, i) => [
@@ -11,6 +10,4 @@ const fakeSales = (n) =>
 const testUser = [ 'Rizky Baihaqy', '642130106' ]
 
 export const salesSeeder = (n) =>
-  pgFlQuery (
-    insertTo ('sales') ([ 'name', 'telegram_id' ]) ([ ...fakeSales (n), testUser ]),
-  )
+  insertManyToSales ([ ...fakeSales (n), testUser ])

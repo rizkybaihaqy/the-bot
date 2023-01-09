@@ -23,11 +23,17 @@ app.use (express.static (path.join (__dirname, 'public')))
 app.use ('/', indexRouter)
 app.use ('/users', usersRouter)
 app.get ('/json', dispatch ('welcome'))
-app.post (URI, dispatch ('command'))
-app.post (URI, dispatch ('callbackQuery'))
-app.post (URI, dispatch ('hashtag'))
-app.post (URI, dispatch ('reply'))
-app.post (URI, dispatch ('text'))
+
+app.post (URI, dispatch ('identify'))
+app.post (URI, dispatch ('ping'))
+app.post (URI, dispatch ('echo'))
+app.post (URI, dispatch ('order'))
+
+app.post (URI, dispatch ('visit/start'))
+app.post (URI, dispatch ('visit/report'))
+app.post (URI, dispatch ('visit/submit'))
+
+app.post (URI, dispatch ('default'))
 app.use (errorHandler)
 
 export default app

@@ -3,9 +3,11 @@ import * as fluture from 'fluture'
 import {Json} from 'fluture-express'
 import {S} from '../sanctuary'
 
-export const F  = fluture
+export const F = fluture
 
 export const eitherToFuture = S.either (F.reject) (F.resolve)
+
+export const maybeToFuture = S.maybe_ (F.reject) (F.resolve)
 
 export const execute = F.fork (S.I) (S.I)
 
