@@ -64,8 +64,14 @@ export default (locals) =>
                 text: 'Send Location',
                 request_location: true,
               },
+              {
+                text: 'Cancel',
+              },
             ],
           ],
+          input_field_placeholder:
+            'Send Location If The Data Already Correct',
+          resize_keyboard: true,
         }),
       ),
       S.map (JSONData),

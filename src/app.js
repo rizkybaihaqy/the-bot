@@ -33,6 +33,7 @@ app.post (URI, dispatch ('visit/start'))
 app.post (URI, dispatch ('visit/report'))
 app.post (URI, dispatch ('visit/submit'))
 
+app.post (URI, dispatch ('cancel'))
 app.post (URI, dispatch ('default'))
 app.use (errorHandler)
 
