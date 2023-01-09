@@ -29,6 +29,14 @@ export const addVisit = S.pipe ([
     ),
   S.map ((x) => ({...x[0], sales_id: x[1]})),
   S.chain ((x) => insertOneToVisits (S.keys (x)) (S.values (x))),
+  S.map (
+    S.pipe ([
+      S.prop ('rows'),
+      S.head,
+      S.fromMaybe ({}),
+      S.prop ('sales_id'),
+    ]),
+  ),
 ])
 
 // String -> Future String String
