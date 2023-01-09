@@ -1,5 +1,5 @@
 import {Pool} from 'pg'
-import { flQuery } from '.'
+import {flQuery} from '.'
 
 require ('dotenv').config ()
 
