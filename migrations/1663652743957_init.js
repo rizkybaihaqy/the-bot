@@ -6,7 +6,7 @@ exports.up = (pgm) => {
     name: {type: 'varchar(1000)', notNull: true},
     telegram_id: {type: 'varchar(1000)', notNull: true},
     created_at: {
-      type: 'timestamp',
+      type: 'timestamp with time zone',
       notNull: true,
       default: pgm.func ('current_timestamp'),
     },
@@ -56,7 +56,7 @@ exports.up = (pgm) => {
         onDelete: 'cascade',
       },
       created_at: {
-        type: 'timestamp',
+        type: 'timestamp with time zone',
         notNull: true,
         default: pgm.func ('current_timestamp'),
       },
