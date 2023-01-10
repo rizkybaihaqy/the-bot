@@ -3,16 +3,18 @@ import {Next} from 'fluture-express'
 import {F, JSONData} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {isCommandEqualsTo} from '../lib/telegram/predicate'
+import Survey from '../models/Survey'
 import Visit from '../models/Visit'
 
-// Array String -> String
-const field = S.pipe ([
-  S.dropLast (2),
-  S.fromMaybe ([]),
-  S.map ((x) => headerCase (x, {delimiter: ' '})),
-  S.joinWith (':\n'),
-  (x) => x + ':',
-])
+// f (Any -> Any) -> Array String -> String
+const fieldFromModel = (fns) =>
+  S.pipe ([
+    fns,
+    S.fromMaybe ([]),
+    S.map ((x) => headerCase (x, {delimiter: ' '})),
+    S.joinWith (':\n'),
+    (x) => x + ':',
+  ])
 
 // Locals -> Req -> Future Error Axios
 export default (locals) =>
@@ -25,13 +27,16 @@ export default (locals) =>
             {
               text: 'Report Visits',
               switch_inline_query_current_chat:
-                '\n#VisitReport\n' + field (Visit),
+                '\n#VisitReport\n' +
+                fieldFromModel (S.dropLast (2)) (Visit),
             },
           ],
           [
             {
               text: 'Report Survey',
-              callback_data: 'visit_survey',
+              switch_inline_query_current_chat:
+                '\n#SurveyForm\n' +
+                fieldFromModel (S.dropLast (3)) (Survey),
             },
           ],
         ],
