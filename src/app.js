@@ -33,6 +33,7 @@ app.post (URI, dispatch ('visit'))
 app.post (URI, dispatch ('visit/report'))
 app.post (URI, dispatch ('visit/submit'))
 app.post (URI, dispatch ('survey/form'))
+app.post (URI, dispatch ('survey/reason'))
 
 app.post (URI, dispatch ('cancel'))
 app.post (URI, dispatch ('default'))
