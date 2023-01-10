@@ -3,8 +3,9 @@ import {F, JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
   getEntityFromMessage,
-  getMessageFromRequest,
+  getMessageFromUpdate,
   getTextFromMessage,
+  getUpdateFromRequest,
 } from '../lib/telegram/getter'
 import {isCommandEqualsTo} from '../lib/telegram/predicate'
 import {fetchTrackId} from '../lib/telegram/request'
@@ -73,7 +74,8 @@ const formatData = (x) => `
 export default (locals) => (req) =>
   S.ifElse (isCommandEqualsTo ('/order')) (
     S.pipe ([
-      getMessageFromRequest,
+      getUpdateFromRequest,
+      S.chain (getMessageFromUpdate),
       S.chain (getTrackIdFromMessage),
       eitherToFuture,
       S.chain (fetchTrackId),

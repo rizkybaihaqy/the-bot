@@ -3,8 +3,9 @@ import {F, JSONData, eitherToFuture} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
   getEntityFromMessage,
-  getMessageFromRequest,
+  getMessageFromUpdate,
   getTextFromMessage,
+  getUpdateFromRequest,
 } from '../lib/telegram/getter'
 import {isCommandEqualsTo} from '../lib/telegram/predicate'
 import {isEmptyString} from '../lib/utils/predicate'
@@ -29,7 +30,8 @@ const getEchoMessage = S.pipe ([
 export default (locals) => (req) =>
   S.ifElse (isCommandEqualsTo ('/echo')) (
     S.pipe ([
-      getMessageFromRequest,
+      getUpdateFromRequest,
+      S.chain (getMessageFromUpdate),
       S.chain (getEchoMessage),
       eitherToFuture,
       S.chain (locals.sendMessage ({remove_keyboard: true})),

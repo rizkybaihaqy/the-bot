@@ -2,12 +2,14 @@ import {Next} from 'fluture-express'
 import {F, JSONData} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
-  getMessageFromRequest,
+  getMessageFromUpdate,
   getTextFromMessage,
+  getUpdateFromRequest,
 } from '../lib/telegram/getter'
 
 const isCancel = S.pipe ([
-  getMessageFromRequest,
+  getUpdateFromRequest,
+  S.chain (getMessageFromUpdate),
   S.chain (getTextFromMessage),
   S.map ((x) => S.equals ('cancel') (S.toLower (x))),
   S.fromRight (false),

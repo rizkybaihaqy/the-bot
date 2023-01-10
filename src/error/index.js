@@ -2,7 +2,8 @@ import {eitherToFuture, execute} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
   getChatIdFromMessage,
-  getMessageFromRequest,
+  getMessageFromUpdate,
+  getUpdateFromRequest,
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
 
@@ -10,7 +11,8 @@ import {sendMessage} from '../lib/telegram/request'
 export const errorHandler = (err, req, res, _) => {
   console.log ('ERROR:', err)
   S.pipe ([
-    getMessageFromRequest,
+    getUpdateFromRequest,
+    S.chain (getMessageFromUpdate),
     S.chain (getChatIdFromMessage),
     eitherToFuture,
     S.chain ((chatId) =>

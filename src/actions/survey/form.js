@@ -8,8 +8,9 @@ import {
 import {S} from '../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
-  getMessageFromRequest,
+  getMessageFromUpdate,
   getTextFromMessage,
+  getUpdateFromRequest,
 } from '../../lib/telegram/getter'
 import {validate} from '../../lib/utils/validator'
 import {surveyRules} from '../../rules/survey'
@@ -24,7 +25,8 @@ const visitRulesWithoutLocationReasonAdditionalDesc =
 
 // Req -> boolean
 const isSurveyForm = S.pipe ([
-  getMessageFromRequest,
+  getUpdateFromRequest,
+  S.chain (getMessageFromUpdate),
   S.chain (getEntityTextFromMessage ('hashtag')),
   S.map (S.equals ('#SurveyForm')),
   S.fromRight (false),
@@ -48,7 +50,8 @@ const getSurveyDataFromMessage = S.pipe ([
 export default (locals) =>
   S.ifElse (isSurveyForm) (
     S.pipe ([
-      getMessageFromRequest,
+      getUpdateFromRequest,
+      S.chain (getMessageFromUpdate),
       S.chain (getSurveyDataFromMessage),
       S.chain (
         validate (

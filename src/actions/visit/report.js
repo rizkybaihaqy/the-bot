@@ -8,8 +8,9 @@ import {
 import {S} from '../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
-  getMessageFromRequest,
+  getMessageFromUpdate,
   getTextFromMessage,
+  getUpdateFromRequest,
 } from '../../lib/telegram/getter'
 import {validate} from '../../lib/utils/validator'
 import {visitRules} from '../../rules/visit'
@@ -22,7 +23,8 @@ const visitRulesWithoutLocationTelegramId = S.pipe ([
 
 // Req -> boolean
 const isVisitReport = S.pipe ([
-  getMessageFromRequest,
+  getUpdateFromRequest,
+  S.chain (getMessageFromUpdate),
   S.chain (getEntityTextFromMessage ('hashtag')),
   S.map (S.equals ('#VisitReport')),
   S.fromRight (false),
@@ -46,7 +48,8 @@ const getVisitDataFromMessage = S.pipe ([
 export default (locals) =>
   S.ifElse (isVisitReport) (
     S.pipe ([
-      getMessageFromRequest,
+      getUpdateFromRequest,
+      S.chain (getMessageFromUpdate),
       S.chain (getVisitDataFromMessage),
       S.chain (
         validate (visitRulesWithoutLocationTelegramId),

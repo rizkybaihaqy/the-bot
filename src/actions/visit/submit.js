@@ -9,10 +9,11 @@ import {S} from '../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
   getLocationFromMessage,
-  getMessageFromRequest,
+  getMessageFromUpdate,
   getReplyMessageFromMessage,
   getTelegramIdFromMessage,
   getTextFromMessage,
+  getUpdateFromRequest,
 } from '../../lib/telegram/getter'
 import {sendMessageToAdmin} from '../../lib/telegram/request'
 import {validate} from '../../lib/utils/validator'
@@ -24,7 +25,8 @@ import {
 
 // Req -> boolean
 const isVisitSubmit = S.pipe ([
-  getMessageFromRequest,
+  getUpdateFromRequest,
+  S.chain (getMessageFromUpdate),
   S.chain (getReplyMessageFromMessage),
   S.chain (getEntityTextFromMessage ('hashtag')),
   S.map (S.equals ('#VisitSubmit')),
@@ -60,7 +62,8 @@ const getUserInput = (msg) =>
 export default (locals) =>
   S.ifElse (isVisitSubmit) (
     S.pipe ([
-      getMessageFromRequest,
+      getUpdateFromRequest,
+      S.chain (getMessageFromUpdate),
       S.chain (getUserInput),
       S.chain (validate (visitRules)),
       eitherToFuture,

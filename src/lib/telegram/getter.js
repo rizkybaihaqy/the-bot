@@ -1,9 +1,17 @@
 import $ from 'sanctuary-def'
 import {S} from '../sanctuary'
 
-// Request -> Either String Message
-export const getMessageFromRequest = S.pipe ([
-  S.gets (S.is ($.Object)) ([ 'body', 'message' ]),
+// Request -> Either String Update
+export const getUpdateFromRequest = S.pipe ([
+  S.get (S.is ($.Object)) ('body'),
+  S.maybeToEither (
+    'No Update Found. Req May Not Be Telegram Update',
+  ),
+])
+
+// Update -> Either String Message
+export const getMessageFromUpdate = S.pipe ([
+  S.get (S.is ($.Object)) ('message'),
   S.maybeToEither (
     'No Message Found. Did not support updated message',
   ),
