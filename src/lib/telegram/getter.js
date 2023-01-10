@@ -17,6 +17,22 @@ export const getMessageFromUpdate = S.pipe ([
   ),
 ])
 
+// Update -> Either String Callback Query
+export const getCallbackQueryFromUpdate = S.pipe ([
+  S.get (S.is ($.Object)) ('callback_query'),
+  S.maybeToEither (
+    'No Callback Query Found. Maybe it is a normal message',
+  ),
+])
+
+// Callback Query -> Either String String
+export const getDataFromCallbackQuery = S.pipe ([
+  S.get (S.is ($.String)) ('data'),
+  S.maybeToEither (
+    'No Callback Query Data Found. Maybe it does not contain data',
+  ),
+])
+
 // Message -> Either String Message
 export const getReplyMessageFromMessage = S.pipe ([
   S.get (S.is ($.Object)) ('reply_to_message'),

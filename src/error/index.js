@@ -1,6 +1,7 @@
 import {eitherToFuture, execute} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {
+  getCallbackQueryFromUpdate,
   getChatIdFromMessage,
   getMessageFromUpdate,
   getUpdateFromRequest,
@@ -12,8 +13,14 @@ export const errorHandler = (err, req, res, _) => {
   console.log ('ERROR:', err)
   S.pipe ([
     getUpdateFromRequest,
-    S.chain (getMessageFromUpdate),
-    S.chain (getChatIdFromMessage),
+    S.chain ((update) =>
+      S.alt (getMessageFromUpdate (update)) (
+        S.pipe ([
+          getCallbackQueryFromUpdate,
+          S.chain (getMessageFromUpdate),
+        ]) (update),
+      ),
+    ),
     eitherToFuture,
     S.chain ((chatId) =>
       sendMessage (chatId) ({
