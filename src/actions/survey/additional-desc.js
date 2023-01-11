@@ -91,26 +91,42 @@ export default (locals) =>
         ),
       ),
       S.chain (validate (surveyAdditionalDescRules)),
-      S.map (getTextFromFormData),
-      S.map (S.concat ('#SurveyLocation\n')),
       eitherToFuture,
       S.chain (
-        locals.sendMessage ({
-          keyboard: [
-            [
-              {
-                text: 'Send Location',
-                request_location: true,
-              },
-              {
-                text: 'Cancel',
-              },
-            ],
-          ],
-          input_field_placeholder:
-            'Send Location If The Data Already Correct',
-          resize_keyboard: true,
-        }),
+        S.ifElse (
+          (survey) => survey.additional_desc === 'other',
+        ) (
+          S.pipe ([
+            getTextFromFormData,
+            S.concat ('#SurveyOtherAdditionalDesc\n'),
+            locals.sendMessage ({
+              force_reply: true,
+              input_field_placeholder:
+                'Please provide more information',
+            }),
+          ]),
+        ) (
+          S.pipe ([
+            getTextFromFormData,
+            S.concat ('#SurveyLocation\n'),
+            locals.sendMessage ({
+              keyboard: [
+                [
+                  {
+                    text: 'Send Location',
+                    request_location: true,
+                  },
+                  {
+                    text: 'Cancel',
+                  },
+                ],
+              ],
+              input_field_placeholder:
+                'Send Location If The Data Already Correct',
+              resize_keyboard: true,
+            }),
+          ]),
+        ),
       ),
       S.map (JSONData),
     ]),

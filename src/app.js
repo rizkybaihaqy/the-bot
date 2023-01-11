@@ -35,6 +35,7 @@ app.post (URI, dispatch ('visit/submit'))
 app.post (URI, dispatch ('survey/form'))
 app.post (URI, dispatch ('survey/reason'))
 app.post (URI, dispatch ('survey/additional-desc'))
+app.post (URI, dispatch ('survey/other-additional-desc'))
 app.post (URI, dispatch ('survey/location'))
 
 app.post (URI, dispatch ('cancel'))
