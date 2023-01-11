@@ -21,6 +21,7 @@ export const errorHandler = (err, req, res, _) => {
         ]) (update),
       ),
     ),
+    S.chain (getChatIdFromMessage),
     eitherToFuture,
     S.chain ((chatId) =>
       sendMessage (chatId) ({
