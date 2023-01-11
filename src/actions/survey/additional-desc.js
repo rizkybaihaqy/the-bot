@@ -20,11 +20,11 @@ import {validate} from '../../lib/utils/validator'
 import {surveyRules} from '../../rules/survey'
 
 // StrMap a
-const surveyAdditionalInfoRules =
+const surveyAdditionalDescRules =
   S.remove ('location') (surveyRules)
 
 // Req -> boolean
-const isSurveyAdditionalInfo = S.pipe ([
+const isSurveyAdditionalDesc = S.pipe ([
   getUpdateFromRequest,
   S.chain ((update) =>
     S.alt (
@@ -40,11 +40,11 @@ const isSurveyAdditionalInfo = S.pipe ([
     ),
   ),
   S.chain (getEntityTextFromMessage ('hashtag')),
-  S.map (S.equals ('#SurveyAdditionalInfo')),
+  S.map (S.equals ('#SurveyAdditionalDesc')),
   S.fromRight (false),
 ])
 
-const getAdditionalInfoFromMessage = (update) =>
+const getAdditionalDescFromMessage = (update) =>
   S.lift2 ((survey) => (additional_desc) => ({
     ...survey,
     additional_desc,
@@ -62,7 +62,7 @@ const getAdditionalInfoFromMessage = (update) =>
     ]) (update),
   )
 
-const getAdditionalInfoFromCallbackData = (update) =>
+const getAdditionalDescFromCallbackData = (update) =>
   S.lift2 ((survey) => (additional_desc) => ({
     ...survey,
     additional_desc,
@@ -82,15 +82,15 @@ const getAdditionalInfoFromCallbackData = (update) =>
 
 // Locals -> Req -> Future Error Axios
 export default (locals) =>
-  S.ifElse (isSurveyAdditionalInfo) (
+  S.ifElse (isSurveyAdditionalDesc) (
     S.pipe ([
       getUpdateFromRequest,
       S.chain ((update) =>
-        S.alt (getAdditionalInfoFromMessage (update)) (
-          getAdditionalInfoFromCallbackData (update),
+        S.alt (getAdditionalDescFromMessage (update)) (
+          getAdditionalDescFromCallbackData (update),
         ),
       ),
-      S.chain (validate (surveyAdditionalInfoRules)),
+      S.chain (validate (surveyAdditionalDescRules)),
       S.map (getTextFromFormData),
       S.map (S.concat ('#SurveyLocation\n')),
       eitherToFuture,

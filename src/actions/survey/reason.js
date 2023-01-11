@@ -38,7 +38,7 @@ const isSurveyReason = S.pipe ([
 const surveyReasonTextGenerator = ({reason, ...survey}) =>
   (reason === 'no_need_for_internet'
     ? '#SurveyLocation'
-    : '#SurveyAdditionalInfo') +
+    : '#SurveyAdditionalDesc') +
   '\n' +
   getTextFromFormData ({...survey, reason}) +
   '\n' +
