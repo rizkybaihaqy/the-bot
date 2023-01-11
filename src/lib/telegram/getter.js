@@ -1,3 +1,4 @@
+import {headerCase, snakeCase} from 'change-case'
 import $ from 'sanctuary-def'
 import {S} from '../sanctuary'
 
@@ -128,4 +129,22 @@ export const getTelegramIdFromMessage = S.pipe ([
   S.gets (S.is ($.Number)) ([ 'from', 'id' ]),
   S.map ((telegramId) => telegramId.toString ()),
   S.maybeToEither ('No Telegram Id Found. Who are you?'),
+])
+
+// String -> StrMap String
+export const getFormDataFromText = S.pipe ([
+  S.lines,
+  S.map (S.splitOn (':')),
+  S.filter ((x) => x.length === 2),
+  S.map (([ key, value ]) =>
+    S.Pair (snakeCase (key)) (S.trim (value)),
+  ),
+  S.fromPairs,
+])
+
+// StrMap String -> String
+export const getTextFromFormData = S.pipe ([
+  S.pairs,
+  S.map ((x) => headerCase (S.fst (x), {delimiter: " "}) + ': ' + S.snd (x)),
+  S.unlines,
 ])

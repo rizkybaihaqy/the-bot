@@ -1,4 +1,3 @@
-import {snakeCase} from 'change-case'
 import {Next} from 'fluture-express'
 import {
   F,
@@ -8,7 +7,9 @@ import {
 import {S} from '../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
+  getFormDataFromText,
   getMessageFromUpdate,
+  getTextFromFormData,
   getTextFromMessage,
   getUpdateFromRequest,
 } from '../../lib/telegram/getter'
@@ -16,12 +17,11 @@ import {validate} from '../../lib/utils/validator'
 import {surveyRules} from '../../rules/survey'
 
 // StrMap a
-const visitRulesWithoutLocationReasonAdditionalDesc =
-  S.pipe ([
-    S.remove ('location'),
-    S.remove ('reason'),
-    S.remove ('additional_desc'),
-  ]) (surveyRules)
+const surveyFormRules = S.pipe ([
+  S.remove ('location'),
+  S.remove ('reason'),
+  S.remove ('additional_desc'),
+]) (surveyRules)
 
 // Req -> boolean
 const isSurveyForm = S.pipe ([
@@ -32,35 +32,16 @@ const isSurveyForm = S.pipe ([
   S.fromRight (false),
 ])
 
-// Message -> Either String StrMap String
-const getSurveyDataFromMessage = S.pipe ([
-  getTextFromMessage,
-  S.map (S.lines),
-  S.map (S.map (S.splitOn (':'))),
-  S.map (S.filter ((x) => x.length === 2)),
-  S.map (
-    S.map (([ key, value ]) =>
-      S.Pair (snakeCase (key)) (S.trim (value)),
-    ),
-  ),
-  S.map (S.fromPairs),
-])
-
 // Locals -> Req -> Future Error Axios
 export default (locals) =>
   S.ifElse (isSurveyForm) (
     S.pipe ([
       getUpdateFromRequest,
       S.chain (getMessageFromUpdate),
-      S.chain (getSurveyDataFromMessage),
-      S.chain (
-        validate (
-          visitRulesWithoutLocationReasonAdditionalDesc,
-        ),
-      ),
-      S.map (S.pairs),
-      S.map (S.map ((x) => S.fst (x) + ':' + S.snd (x))),
-      S.map (S.unlines),
+      S.chain (getTextFromMessage),
+      S.map (getFormDataFromText),
+      S.chain (validate (surveyFormRules)),
+      S.map (getTextFromFormData),
       S.map ((x) => '#SurveyReason\n' + x),
       eitherToFuture,
       S.chain (

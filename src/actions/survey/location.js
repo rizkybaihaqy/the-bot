@@ -8,12 +8,15 @@ import {
 import {S} from '../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
+  getFormDataFromText,
   getLocationFromMessage,
   getMessageFromUpdate,
   getReplyMessageFromMessage,
   getTextFromMessage,
   getUpdateFromRequest,
 } from '../../lib/telegram/getter'
+import {validate} from '../../lib/utils/validator'
+import {surveyRules} from '../../rules/survey'
 
 // Req -> boolean
 const isSurveyLocation = S.pipe ([
@@ -29,15 +32,7 @@ const isSurveyLocation = S.pipe ([
 const getSurveyData = S.pipe ([
   getReplyMessageFromMessage,
   S.chain (getTextFromMessage),
-  S.map (S.lines),
-  S.map (S.map (S.splitOn (':'))),
-  S.map (S.filter ((x) => x.length === 2)),
-  S.map (
-    S.map (([ key, value ]) =>
-      S.Pair (snakeCase (key)) (S.trim (value)),
-    ),
-  ),
-  S.map (S.fromPairs),
+  S.map (getFormDataFromText),
 ])
 
 // Message -> Either String Array String
@@ -54,7 +49,7 @@ export default (locals) =>
       getUpdateFromRequest,
       S.chain (getMessageFromUpdate),
       S.chain (getUserInput),
-      S.map ((x) => (console.log (x), x)),
+      S.chain (validate (surveyRules)),
       eitherToFuture,
       S.chain ((_) =>
         locals.sendMessage ({remove_keyboard: true}) (

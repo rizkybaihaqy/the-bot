@@ -9,11 +9,19 @@ import {
   getCallbackQueryFromUpdate,
   getDataFromCallbackQuery,
   getEntityTextFromMessage,
+  getFormDataFromText,
   getMessageFromUpdate,
   getReplyMessageFromMessage,
+  getTextFromFormData,
   getTextFromMessage,
   getUpdateFromRequest,
 } from '../../lib/telegram/getter'
+import {validate} from '../../lib/utils/validator'
+import {surveyRules} from '../../rules/survey'
+
+// StrMap a
+const surveyAdditionalInfoRules =
+  S.remove ('location') (surveyRules)
 
 // Req -> boolean
 const isSurveyAdditionalInfo = S.pipe ([
@@ -37,14 +45,15 @@ const isSurveyAdditionalInfo = S.pipe ([
 ])
 
 const getAdditionalInfoFromMessage = (update) =>
-  S.lift2 ((txt) => (additionalDesc) => ({
-    txt,
-    additionalDesc,
+  S.lift2 ((survey) => (additional_desc) => ({
+    ...survey,
+    additional_desc,
   })) (
     S.pipe ([
       getMessageFromUpdate,
       S.chain (getReplyMessageFromMessage),
       S.chain (getTextFromMessage),
+      S.map (getFormDataFromText),
     ]) (update),
   ) (
     S.pipe ([
@@ -54,14 +63,15 @@ const getAdditionalInfoFromMessage = (update) =>
   )
 
 const getAdditionalInfoFromCallbackData = (update) =>
-  S.lift2 ((txt) => (additionalDesc) => ({
-    txt,
-    additionalDesc,
+  S.lift2 ((survey) => (additional_desc) => ({
+    ...survey,
+    additional_desc,
   })) (
     S.pipe ([
       getCallbackQueryFromUpdate,
       S.chain (getMessageFromUpdate),
       S.chain (getTextFromMessage),
+      S.map (getFormDataFromText),
     ]) (update),
   ) (
     S.pipe ([
@@ -80,15 +90,9 @@ export default (locals) =>
           getAdditionalInfoFromCallbackData (update),
         ),
       ),
-      S.map (
-        ({txt, additionalDesc}) =>
-          txt.replace (
-            '#SurveyAdditionalInfo',
-            '#SurveyLocation',
-          ) +
-          '\nadditional desc:' +
-          additionalDesc,
-      ),
+      S.chain (validate (surveyAdditionalInfoRules)),
+      S.map (getTextFromFormData),
+      S.map (S.concat ('#SurveyLocation\n')),
       eitherToFuture,
       S.chain (
         locals.sendMessage ({

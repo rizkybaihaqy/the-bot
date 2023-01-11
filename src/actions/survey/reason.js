@@ -9,10 +9,20 @@ import {
   getCallbackQueryFromUpdate,
   getDataFromCallbackQuery,
   getEntityTextFromMessage,
+  getFormDataFromText,
   getMessageFromUpdate,
+  getTextFromFormData,
   getTextFromMessage,
   getUpdateFromRequest,
 } from '../../lib/telegram/getter'
+import {validate} from '../../lib/utils/validator'
+import {surveyRules} from '../../rules/survey'
+
+// StrMap a
+const surveyReasonRules = S.pipe ([
+  S.remove ('location'),
+  S.remove ('additional_desc'),
+]) (surveyRules)
 
 // Req -> boolean
 const isSurveyReason = S.pipe ([
@@ -23,6 +33,22 @@ const isSurveyReason = S.pipe ([
   S.map (S.equals ('#SurveyReason')),
   S.fromRight (false),
 ])
+
+// StrMap SurveyReason -> String
+const surveyReasonTextGenerator = ({reason, ...survey}) =>
+  (reason === 'no_need_for_internet'
+    ? '#SurveyLocation'
+    : '#SurveyAdditionalInfo') +
+  '\n' +
+  getTextFromFormData ({...survey, reason}) +
+  '\n' +
+  (reason === 'no_need_for_internet'
+    ? 'additional_desc: -'
+    : reason === 'already_subscribe_to_competitor'
+    ? 'Who is the competitor ?'
+    : reason === 'need_cheaper_package'
+    ? 'What is the price range ?'
+    : 'Add more description !')
 
 // String -> ReplyMarkup
 const replyMarkup = (reason) =>
@@ -105,26 +131,20 @@ export default (locals) =>
       getUpdateFromRequest,
       S.chain (getCallbackQueryFromUpdate),
       S.chain ((cbq) =>
-        S.lift2 ((txt) => (reason) => ({txt, reason})) (
+        S.lift2 ((txt) => (reason) => ({...txt, reason})) (
           S.pipe ([
             getMessageFromUpdate,
             S.chain (getTextFromMessage),
+            S.map (getFormDataFromText),
           ]) (cbq),
         ) (getDataFromCallbackQuery (cbq)),
       ),
+      S.chain (validate (surveyReasonRules)),
       eitherToFuture,
-      S.chain (({txt, reason}) =>
-        locals.sendMessage (replyMarkup (reason)) (
-          txt.replace (
-            '#SurveyReason',
-            reason === 'no_need_for_internet'
-              ? '#SurveyLocation'
-              : '#SurveyAdditionalInfo',
-          ) +
-            '\nreason:' +
-            reason +
-            '\n\nTambahkan Alasan!',
-        ),
+      S.chain ((survey) =>
+        locals.sendMessage (
+          replyMarkup (S.prop ('reason') (survey)),
+        ) (surveyReasonTextGenerator (survey)),
       ),
       S.map (JSONData),
     ]),
