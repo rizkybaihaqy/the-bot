@@ -17,6 +17,7 @@ import {
 } from '../../lib/telegram/getter'
 import {validate} from '../../lib/utils/validator'
 import {surveyRules} from '../../rules/survey'
+import { addSurvey } from '../../use-case/survey'
 
 // Req -> boolean
 const isSurveyLocation = S.pipe ([
@@ -51,6 +52,7 @@ export default (locals) =>
       S.chain (getUserInput),
       S.chain (validate (surveyRules)),
       eitherToFuture,
+      S.chain (addSurvey),
       S.chain ((_) =>
         locals.sendMessage ({remove_keyboard: true}) (
           'Data Berhasil di input',

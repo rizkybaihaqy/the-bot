@@ -1,14 +1,15 @@
 import {format} from 'node-pg-format'
 import {pgFlQuery} from '../db/instance'
+import {sameValues} from '../lib/utils/getter'
 import Survey from '../models/Survey'
 
 // Array String -> Array String -> Future Error pg.Result
 export const insertOneToSurveys = (cols) => (data) =>
-  sameValues (cols) (Visit)
+  sameValues (cols) (Survey)
     ? pgFlQuery ({
         name: 'Insert one record to visits table',
         text: format (
-          'INSERT INTO visits (%I) VALUES (%L) RETURNING *',
+          'INSERT INTO surveys (%I) VALUES (%L) RETURNING *',
           cols,
           data,
         ),
