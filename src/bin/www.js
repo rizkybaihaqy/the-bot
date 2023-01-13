@@ -11,8 +11,6 @@ import app from '../app'
 
 require ('dotenv').config ()
 
-const debug = require ('debug') ('the-bot:server')
-
 const {TOKEN, SERVER_URL} = process.env
 
 const init = async () => {
@@ -24,7 +22,7 @@ const init = async () => {
       drop_pending_updates: true,
     },
   })
-  debug (res.data)
+  console.log (res.data)
 }
 
 /**
@@ -99,7 +97,7 @@ const onListening = () => {
     typeof addr === 'string'
       ? `pipe ${addr}`
       : `port ${addr.port}`
-  debug (`Listening on ${bind}`)
+  console.log (`Listening on ${bind}`)
 }
 
 /**
