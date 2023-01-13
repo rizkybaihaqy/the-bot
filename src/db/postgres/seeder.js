@@ -9,8 +9,8 @@ import {fakeVisits} from '../seeder/visits'
 
 const salesSeeder = (n) =>
   insertManyToSales ([ ...fakeSales (n), testSales ])
-const visitsSeeder = (nVisits) => (nSales) =>
-  insertManyToVisits (fakeVisits (nVisits) (nSales))
+const visitsSeeder = (nVisits) => (salesCodes) =>
+  insertManyToVisits (fakeVisits (nVisits) (salesCodes))
 const surveysSeeder = (n) =>
   insertManyToSurveys (fakeSurveys (n))
 
@@ -18,7 +18,7 @@ const seed = (nSales) => (nVisits) => (nSurveys) =>
   S.pipe ([
     (x) => (console.log ('Seeding'), x),
     salesSeeder,
-    S.map ((x) => x.length),
+    S.map (S.map (S.prop ('sales_code'))),
     S.chain (visitsSeeder (nVisits)),
     S.map ((_) => nSurveys),
     S.chain (surveysSeeder),

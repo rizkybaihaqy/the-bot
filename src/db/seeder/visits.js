@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
 
-export const fakeVisits = (n) => (nSales) =>
+export const fakeVisits = (n) => (salesCodes) =>
   [...Array (n)].map ((_, i) => ({
     track_id: `MYID-${faker.random.numeric (13)}`,
     customer_name: faker.name.fullName (),
@@ -30,7 +30,5 @@ export const fakeVisits = (n) => (nSales) =>
     location: faker.address
       .nearbyGPSCoordinate ([ -7.057418, 110.44067 ], 1, true)
       .toString (),
-    sales_id: faker.datatype
-      .number ({min: 1, max: nSales})
-      .toString (),
+    sales_id: faker.helpers.arrayElement (salesCodes),
   }))
