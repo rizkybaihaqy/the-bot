@@ -18,7 +18,7 @@ const seed = (nSales) => (nVisits) => (nSurveys) =>
   S.pipe ([
     (x) => (console.log ('Seeding'), x),
     salesSeeder,
-    S.map ((x) => x.length),
+    S.map (S.map (S.prop ('sales_code'))),
     S.chain (visitsSeeder (nVisits)),
     S.chain ((_) => surveysSeeder (nSurveys)),
   ]) (nSales)

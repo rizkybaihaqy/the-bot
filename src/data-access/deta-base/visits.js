@@ -13,10 +13,16 @@ export const insertOneToVisits = (data) =>
 // Array StrMap String -> Future Error Array Visit
 export const insertManyToVisits = (data) =>
   S.all ((x) => sameValues (Visit) (S.keys (x))) (data)
-    ? flDetaBase ('visit') ('putMany') (data)
+    ? S.pipe ([
+        flDetaBase ('visit') ('putMany'),
+        S.map (S.props ([ 'processed', 'items' ])),
+      ]) (data)
     : F.reject ('Wrong query columns on Visit')
 
 // TODO: Find By Date (Currently GetAll)
 // String -> Future Error Array Visit
 export const findAllTodayVisits = (date) =>
-  flDetaBase ('visit') ('fetch') ()
+  S.pipe ([
+    flDetaBase ('visit') ('fetch'),
+    S.map (S.prop ('items')),
+  ]) ()

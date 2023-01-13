@@ -12,5 +12,8 @@ export const insertOneToSurveys = (data) =>
 // Array StrMap String -> Future Error Array Survey
 export const insertManyToSurveys = (data) =>
   S.all ((x) => sameValues (Survey) (S.keys (x))) (data)
-    ? flDetaBase ('survey') ('putMany') (data)
+    ? S.pipe ([
+        flDetaBase ('survey') ('putMany'),
+        S.map (S.props ([ 'processed', 'items' ])),
+      ]) (data)
     : F.reject ('Wrong query columns Survey')
