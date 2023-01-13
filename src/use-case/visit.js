@@ -1,19 +1,9 @@
-// import {
-//   findOneSalesById,
-//   findOneSalesByTelegramId,
-// } from '../data-access/sales'
-// import {
-//   findAllTodayVisits,
-//   insertOneToVisits,
-// } from '../data-access/visits'
-import {
-  findOneSalesById,
-  findOneSalesByTelegramId,
-} from '../data-access/deta-base/sales'
 import {
   findAllTodayVisits,
+  findOneSalesById,
+  findOneSalesByTelegramId,
   insertOneToVisits,
-} from '../data-access/deta-base/visits'
+} from '../data-access'
 import {F} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 

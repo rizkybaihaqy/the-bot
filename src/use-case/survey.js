@@ -1,5 +1,4 @@
-// import {insertOneToSurveys} from '../data-access/surveys'
-import {insertOneToSurveys} from '../data-access/deta-base/surveys'
+import {insertOneToSurveys} from '../data-access'
 
 // StrMap String -> Future String Survey
 export const addSurvey = insertOneToSurveys
