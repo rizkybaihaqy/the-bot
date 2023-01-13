@@ -1,12 +1,20 @@
+// import {
+//   findOneSalesById,
+//   findOneSalesByTelegramId,
+// } from '../data-access/sales'
+// import {
+//   findAllTodayVisits,
+//   insertOneToVisits,
+// } from '../data-access/visits'
 import {
   findOneSalesById,
   findOneSalesByTelegramId,
-} from '../data-access/sales'
+} from '../data-access/deta-base/sales'
 import {
   findAllTodayVisits,
   insertOneToVisits,
-} from '../data-access/visits'
-import {F, maybeToFuture} from '../lib/fluture'
+} from '../data-access/deta-base/visits'
+import {F} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 
 // StrMap String -> Future String String
@@ -18,43 +26,27 @@ export const addVisit = S.pipe ([
       S.pipe ([
         S.prop ('telegram_id'),
         findOneSalesByTelegramId,
-        S.chain (
-          S.ifElse ((x) => x.rowCount === 0) ((_) =>
-            F.reject (
-              'No Sales Found With This Telegram Account',
-            ),
-          ) ((x) => F.resolve (x.rows[0].id.toString ())),
+        S.chain ((sales) =>
+          sales.sales_code
+            ? F.resolve (sales.sales_code)
+            : F.reject (
+                'No Sales Found With This Telegram Account',
+              ),
         ),
       ]) (input),
     ),
   S.map ((x) => ({...x[0], sales_id: x[1]})),
-  S.chain ((x) => insertOneToVisits (S.keys (x)) (S.values (x))),
-  S.map (
-    S.pipe ([
-      S.prop ('rows'),
-      S.head,
-      S.fromMaybe ({}),
-      S.prop ('sales_id'),
-      (x) => x.toString (),
-    ]),
-  ),
+  S.chain ((x) => insertOneToVisits (x)),
+  S.map (S.pipe ([ S.prop ('sales_id'), (x) => x.toString () ])),
 ])
 
 // String -> Future String Object
 export const getVisitUpdate = S.pipe ([
   (salesId) =>
-    F.both (
-      S.pipe ([
-        findOneSalesById,
-        S.map (S.prop ('rows')),
-        S.map (S.head),
-        S.chain (maybeToFuture),
-      ]) (salesId),
-    ) (
-      S.pipe ([
-        findAllTodayVisits,
-        S.map (S.prop ('rowCount')),
-      ]) (new Date (Date.now ()).toISOString ()),
+    F.both (findOneSalesById (salesId)) (
+      S.pipe ([ findAllTodayVisits, S.map ((x) => x.length) ]) (
+        new Date (Date.now ()).toISOString (),
+      ),
     ),
   S.map ((x) => ({user: x[0], todayVisit: x[1]})),
 ])

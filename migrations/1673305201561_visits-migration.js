@@ -35,9 +35,9 @@ exports.up = (pgm) => {
     },
     location: {type: 'point', notNull: true},
     sales_id: {
-      type: 'integer',
+      type: 'varchar(1000)',
       notNull: true,
-      references: '"sales"',
+      references: 'sales(sales_code)',
       onDelete: 'cascade',
     },
     created_at: {
