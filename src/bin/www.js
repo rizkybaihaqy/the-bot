@@ -7,7 +7,6 @@ import 'regenerator-runtime/runtime'
 /**
  * Module dependencies.
  */
-import S from 'sanctuary'
 import app from '../app'
 
 require ('dotenv').config ()
@@ -15,24 +14,38 @@ require ('dotenv').config ()
 const debug = require ('debug') ('the-bot:server')
 
 const {TOKEN, SERVER_URL} = process.env
-const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`
-const URI = `/webhook/${TOKEN}`
-const WEBHOOK_URL = SERVER_URL + URI
 
 const init = async () => {
-  const res = await axios.get (
-    `${TELEGRAM_API}/setWebhook?url=${WEBHOOK_URL}`,
-  )
+  const res = await axios ({
+    method: 'GET',
+    url: `https://api.telegram.org/bot${TOKEN}/setWebhook`,
+    data: {
+      url: `${SERVER_URL}/webhook/${TOKEN}`,
+      drop_pending_updates: true,
+    },
+  })
   debug (res.data)
 }
 
 /**
- * Normalize a port into a number
+ * Normalize a port into a number, string, or false.
  */
 
-const normalizePort = S.compose (S.fromMaybe (3000)) (
-  S.parseInt (10),
-)
+const normalizePort = (val) => {
+  const port = parseInt (val, 10)
+
+  if (Number.isNaN (port)) {
+    // named pipe
+    return val
+  }
+
+  if (port >= 0) {
+    // port number
+    return port
+  }
+
+  return false
+}
 
 /**
  * Get port from environment and store in Express.
@@ -59,7 +72,7 @@ const onError = (error) => {
   const bind =
     typeof port === 'string'
       ? `Pipe ${port}`
-      : `Port ${port}`
+      : `Port ${pipe}`
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
