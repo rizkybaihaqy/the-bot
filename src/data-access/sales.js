@@ -10,7 +10,7 @@ export const findOneSalesByTelegramId = S.pipe ([
   (telegramId) =>
     pgFlQuery ({
       name: 'select one sales by telegram id',
-      text: 'SELECT id FROM sales WHERE telegram_id=$1',
+      text: 'SELECT * FROM sales WHERE telegram_id=$1',
       values: [telegramId],
     }),
   S.map (S.prop ('rows')),

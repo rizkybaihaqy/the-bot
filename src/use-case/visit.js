@@ -1,19 +1,19 @@
-// import {
-//   findOneSalesById,
-//   findOneSalesByTelegramId,
-// } from '../data-access/sales'
-// import {
-//   findAllTodayVisits,
-//   insertOneToVisits,
-// } from '../data-access/visits'
 import {
   findOneSalesById,
   findOneSalesByTelegramId,
-} from '../data-access/deta-base/sales'
+} from '../data-access/sales'
 import {
   findAllTodayVisits,
   insertOneToVisits,
-} from '../data-access/deta-base/visits'
+} from '../data-access/visits'
+// import {
+//   findOneSalesById,
+//   findOneSalesByTelegramId,
+// } from '../data-access/deta-base/sales'
+// import {
+//   findAllTodayVisits,
+//   insertOneToVisits,
+// } from '../data-access/deta-base/visits'
 import {F} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 
@@ -26,9 +26,9 @@ export const addVisit = S.pipe ([
       S.pipe ([
         S.prop ('telegram_id'),
         findOneSalesByTelegramId,
-        S.chain ((x) =>
-          x.id
-            ? F.resolve (x.id.toString ())
+        S.chain ((sales) =>
+          sales.sales_code
+            ? F.resolve (sales.sales_code)
             : F.reject (
                 'No Sales Found With This Telegram Account',
               ),
