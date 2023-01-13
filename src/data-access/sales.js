@@ -1,5 +1,6 @@
 import {format} from 'node-pg-format'
 import {pgFlQuery} from '../db/instance'
+import {F} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
 import {sameValues} from '../lib/utils/getter'
 import Sales from '../models/Sales'
