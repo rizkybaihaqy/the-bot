@@ -21,8 +21,7 @@ export const insertManyToVisits = (data) =>
 
 // TODO: Find By Date (Currently GetAll)
 // String -> Future Error Array Visit
-export const findAllTodayVisits = (date) =>
-  S.pipe ([
-    flDetaBase ('visit') ('fetch'),
-    S.map (S.prop ('items')),
-  ]) ()
+export const findAllTodayVisits = S.pipe ([
+  () => flDetaBase ('visit') ('fetch') (),
+  S.map (S.prop ('items')),
+])

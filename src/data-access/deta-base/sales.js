@@ -13,14 +13,12 @@ export const findOneSalesByTelegramId = S.pipe ([
 ])
 
 // String -> Future Error Sales
-export const findOneSalesById = (salesId) =>
-  S.pipe ([
-    (sId) =>
-      flDetaBase ('sales') ('fetch') ({sales_code: sId}),
-    S.map (S.prop ('items')),
-    S.map (S.head),
-    S.map (S.fromMaybe ({})),
-  ])
+export const findOneSalesById = S.pipe ([
+  (sId) => flDetaBase ('sales') ('fetch') ({sales_code: sId}),
+  S.map (S.prop ('items')),
+  S.map (S.head),
+  S.map (S.fromMaybe ({})),
+])
 
 // StrMap String -> Future Error Array Sales
 export const insertManyToSales = (data) =>
