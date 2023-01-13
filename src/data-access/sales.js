@@ -22,8 +22,8 @@ export const findOneSalesByTelegramId = S.pipe ([
 export const findOneSalesById = S.pipe ([
   (salesId) =>
     pgFlQuery ({
-      name: 'select one sales by sales id',
-      text: 'SELECT id::text, name::text FROM sales WHERE id=$1',
+      name: 'select one sales by sales sales_code',
+      text: 'SELECT sales_code::text, name::text FROM sales WHERE sales_code=$1',
       values: [salesId],
     }),
   S.map (S.prop ('rows')),
