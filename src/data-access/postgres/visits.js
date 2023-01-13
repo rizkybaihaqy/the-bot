@@ -1,8 +1,9 @@
 import {format} from 'node-pg-format'
-import {pgFlQuery} from '../db/instance'
-import {S} from '../lib/sanctuary'
-import {sameValues} from '../lib/utils/getter'
-import Visit from '../models/Visit'
+import {pgFlQuery} from '../../db/postgres'
+import {F} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
+import {sameValues} from '../../lib/utils/getter'
+import Visit from '../../models/Visit'
 
 // StrMap String -> Future Error Visit
 export const insertOneToVisits = (data) =>

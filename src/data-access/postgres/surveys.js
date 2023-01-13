@@ -1,8 +1,9 @@
 import {format} from 'node-pg-format'
-import {pgFlQuery} from '../db/instance'
-import {S} from '../lib/sanctuary'
-import {sameValues} from '../lib/utils/getter'
-import Survey from '../models/Survey'
+import {pgFlQuery} from '../../db/postgres'
+import {F} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
+import {sameValues} from '../../lib/utils/getter'
+import Survey from '../../models/Survey'
 
 // StrMap String -> Future Error Survey
 export const insertOneToSurveys = (data) =>
