@@ -25,20 +25,22 @@ export const insertOneToVisits = (data) =>
 
 // Array StrMap String -> Future Error Array Visit
 export const insertManyToVisits = (data) =>
-  sameValues (S.keys (data)) (Visit)
+  S.all ((x) => sameValues (Visit) (S.keys (x))) (data)
     ? S.pipe ([
         (x) =>
           pgFlQuery ({
             name: 'Insert many record to visits table',
             text: format (
               'INSERT INTO visits (%I) VALUES %L RETURNING *',
-              S.keys (x),
-              S.values (x),
+              Visit,
+              S.reduce ((b) => (a) => [ ...b, S.values (a) ]) (
+                [],
+              ) (x),
             ),
           }),
         S.map (S.prop ('rows')),
       ]) (data)
-    : F.reject ('Wrong query columns')
+    : F.reject ('Wrong query columns Visit')
 
 // String -> Future Error Array Visit
 export const findAllTodayVisits = S.pipe ([

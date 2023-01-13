@@ -32,17 +32,19 @@ export const findOneSalesById = S.pipe ([
 
 // Array StrMap String -> Future Error Array Sales
 export const insertManyToSales = (data) =>
-  sameValues (S.keys (data)) (Sales)
+  S.all ((x) => sameValues (Sales) (S.keys (x))) (data)
     ? S.pipe ([
         (x) =>
           pgFlQuery ({
             name: 'Insert many record to sales table',
             text: format (
               'INSERT INTO sales (%I) VALUES %L RETURNING *',
-              S.keys (x),
-              S.values (x),
+              Sales,
+              S.reduce ((b) => (a) => [ ...b, S.values (a) ]) (
+                [],
+              ) (x),
             ),
           }),
         S.map (S.prop ('rows')),
       ]) (data)
-    : F.reject ('Wrong query columns')
+    : F.reject ('Wrong query columns Sales')

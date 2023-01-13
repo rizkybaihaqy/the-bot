@@ -11,7 +11,8 @@
     "prod": "npm run build && node ./dist/bin/www.js",
     "format": "prettier-eslint --write $PWD/\"src/**/*.js\"",
     "migrate": "node-pg-migrate",
-    "migrate-fresh-seed": "npm run migrate down 0 && npm run migrate up && babel-node ./src/db/seeder/index.js",
+    "migrate-fresh-seed": "npm run migrate down 0 && npm run migrate up && babel-node ./src/db/postgres/seeder.js",
+    "seed-deta": "npx babel-node ./src/db/deta-base/seeder.js",
     "test": "jest"
   },
   "dependencies": {

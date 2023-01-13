@@ -25,17 +25,19 @@ export const insertOneToSurveys = (data) =>
 
 // Array StrMap String -> Future Error Array Survey
 export const insertManyToSurveys = (data) =>
-  sameValues (S.keys (data)) (Survey)
+  S.all ((x) => sameValues (Survey) (S.keys (x))) (data)
     ? S.pipe ([
         (x) =>
           pgFlQuery ({
             name: 'Insert many record to surveys table',
             text: format (
               'INSERT INTO surveys (%I) VALUES %L RETURNING *',
-              S.keys (x),
-              S.values (x),
+              Survey,
+              S.reduce ((b) => (a) => [ ...b, S.values (a) ]) (
+                [],
+              ) (x),
             ),
           }),
         S.map (S.prop ('rows')),
-      ])
-    : F.reject ('Wrong query columns')
+      ]) (data)
+    : F.reject ('Wrong query columns Survey')
