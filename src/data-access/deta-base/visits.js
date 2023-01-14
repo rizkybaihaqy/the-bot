@@ -1,5 +1,6 @@
+import {formatISO9075} from 'date-fns'
 import {flDetaBase} from '../../db/deta-base'
-import {F} from '../../lib/fluture'
+import {F, maybeToFuture} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {sameValues} from '../../lib/utils/getter'
 import Visit from '../../models/Visit'
@@ -25,9 +26,18 @@ export const insertManyToVisits = (data) =>
       ]) (data)
     : F.reject ('Wrong query columns on Visit')
 
-// TODO: Find By Date (Currently GetAll)
 // String -> Future Error Array Visit
 export const findAllTodayVisits = S.pipe ([
-  () => flDetaBase ('fetch') (),
+  S.parseDate,
+  maybeToFuture,
+  S.map ((date) =>
+    formatISO9075 (date, {representation: 'date'}),
+  ),
+  S.chain ((date) =>
+    flDetaBase ('fetch') ({
+      'data.created_at?contains': date,
+      'type': 'visits',
+    }),
+  ),
   S.map (S.prop ('items')),
 ])
