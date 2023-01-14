@@ -14,4 +14,5 @@ export default [
   'additional_desc',
   'location',
   'sales_id',
+  'created_at',
 ]

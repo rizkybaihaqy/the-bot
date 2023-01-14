@@ -16,9 +16,8 @@ exports.up = (pgm) => {
     },
     location: {type: 'point', notNull: true},
     created_at: {
-      type: 'timestamp with time zone',
+      type: 'timestamp',
       notNull: true,
-      default: pgm.func ('current_timestamp'),
     },
   })
 }

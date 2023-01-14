@@ -1,4 +1,7 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
+import sub from 'date-fns/sub'
+
+const date = new Date ()
 
 export const fakeVisits = (n) => (salesCodes) =>
   [...Array (n)].map ((_, i) => ({
@@ -31,4 +34,10 @@ export const fakeVisits = (n) => (salesCodes) =>
       .nearbyGPSCoordinate ([ -7.057418, 110.44067 ], 1, true)
       .toString (),
     sales_id: faker.helpers.arrayElement (salesCodes),
+    created_at: faker.date
+      .between (
+        sub (date, {days: 3}).toISOString (),
+        date.toISOString (),
+      )
+      .toISOString (),
   }))

@@ -6,4 +6,5 @@ export default [
   'reason',
   'additional_desc',
   'location',
+  'created_at',
 ]
