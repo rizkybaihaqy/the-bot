@@ -1,5 +1,6 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
 import sub from 'date-fns/sub'
+import {dateToStringWithTZ} from '../../lib/utils/getter'
 
 const date = new Date ()
 
@@ -26,10 +27,10 @@ export const fakeSurveys = (n) =>
     location: faker.address
       .nearbyGPSCoordinate ([ -7.057418, 110.44067 ], 1, true)
       .toString (),
-    created_at: faker.date
-      .between (
+    created_at: dateToStringWithTZ (
+      faker.date.between (
         sub (date, {days: 3}).toISOString (),
         date.toISOString (),
-      )
-      .toISOString (),
+      ),
+    ),
   }))
