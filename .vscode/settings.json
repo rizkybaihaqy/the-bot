@@ -1,11 +1,15 @@
 {
-  "editor.formatOnSave": true,
+  // "editor.formatOnSave": true,
   "[javascript]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["deta", "fluture"],
-  "dotenv.enableAutocloaking": false
+  "eslint.run": "onSave",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "dotenv.enableAutocloaking": false,
+  "cSpell.words": ["deta", "fluture"]
 }
