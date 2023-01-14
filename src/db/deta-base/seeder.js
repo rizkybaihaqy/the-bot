@@ -25,4 +25,4 @@ const seed = (nSales) => (nVisits) => (nSurveys) =>
 
 fork ((x) => (console.log (x), x)) (
   (x) => (console.log ('seeding complete'), x),
-) (seed (3) (18) (22))
+) (seed (1) (1) (1))
