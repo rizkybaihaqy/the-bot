@@ -6,7 +6,7 @@ import {
 } from './getter'
 
 // String -> Request -> Boolean
-export const isCommandEqualsTo = (cmd) =>
+export const isCommandEqualsTo = cmd =>
   S.pipe ([
     getUpdateFromRequest,
     S.chain (getMessageFromUpdate),

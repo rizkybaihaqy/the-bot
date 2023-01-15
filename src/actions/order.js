@@ -13,15 +13,15 @@ import {isEmptyString} from '../lib/utils/predicate'
 
 // Message -> Either String String
 const getTrackIdFromMessage = S.pipe ([
-  (msg) =>
+  msg =>
     S.lift2 (
-      (text) => (entity) =>
+      text => entity =>
         text.slice (
           S.prop ('offset') (entity) +
-            S.prop ('length') (entity),
-        ),
+            S.prop ('length') (entity)
+        )
     ) (getTextFromMessage (msg)) (
-      getEntityFromMessage ('bot_command') (msg),
+      getEntityFromMessage ('bot_command') (msg)
     ),
   S.map (S.trim),
   S.chain (S.tagBy (S.complement (isEmptyString))),
@@ -31,14 +31,14 @@ const getTrackIdFromMessage = S.pipe ([
 // Res -> Future String Data
 const checkData = S.pipe ([
   S.prop ('data'),
-  S.ifElse (S.pipe ([ S.prop ('info'), S.equals ('OK') ])) (
-    F.resolve,
-  ) (S.pipe ([ S.prop ('info'), F.reject ])),
+  S.ifElse (S.pipe ([S.prop ('info'), S.equals ('OK')])) (
+    F.resolve
+  ) (S.pipe ([S.prop ('info'), F.reject])),
   S.map (S.prop ('data')),
 ])
 
 // Data -> String
-const formatData = (x) => `
+const formatData = x => `
       Nama Pelanggan: ${
         x.milestones[0].variables.customerName
       }
@@ -71,7 +71,7 @@ const formatData = (x) => `
 }
       `
 
-export default (locals) => (req) =>
+export default locals => req =>
   S.ifElse (isCommandEqualsTo ('/order')) (
     S.pipe ([
       getUpdateFromRequest,
@@ -83,5 +83,5 @@ export default (locals) => (req) =>
       S.map (formatData),
       S.chain (locals.sendMessage ({remove_keyboard: true})),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals))) (req)
+    ])
+  ) (_ => F.resolve (Next (locals))) (req)

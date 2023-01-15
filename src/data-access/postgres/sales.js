@@ -7,7 +7,7 @@ import Sales from '../../models/Sales'
 
 // String -> Future Error Sales
 export const findOneSalesByTelegramId = S.pipe ([
-  (telegramId) =>
+  telegramId =>
     pgFlQuery ({
       name: 'select one sales by telegram id',
       text: 'SELECT * FROM sales WHERE telegram_id=$1',
@@ -20,7 +20,7 @@ export const findOneSalesByTelegramId = S.pipe ([
 
 // String -> Future Error Sales
 export const findOneSalesById = S.pipe ([
-  (salesId) =>
+  salesId =>
     pgFlQuery ({
       name: 'select one sales by sales sales_code',
       text: 'SELECT sales_code::text, name::text FROM sales WHERE sales_code=$1',
@@ -32,18 +32,18 @@ export const findOneSalesById = S.pipe ([
 ])
 
 // Array StrMap String -> Future Error Array Sales
-export const insertManyToSales = (data) =>
-  S.all ((x) => sameValues (Sales) (S.keys (x))) (data)
+export const insertManyToSales = data =>
+  S.all (x => sameValues (Sales) (S.keys (x))) (data)
     ? S.pipe ([
-        (x) =>
+        x =>
           pgFlQuery ({
             name: 'Insert many record to sales table',
             text: format (
               'INSERT INTO sales (%I) VALUES %L RETURNING *',
               Sales,
-              S.reduce ((b) => (a) => [ ...b, S.values (a) ]) (
-                [],
-              ) (x),
+              S.reduce (b => a => [...b, S.values (a)]) (
+                []
+              ) (x)
             ),
           }),
         S.map (S.prop ('rows')),

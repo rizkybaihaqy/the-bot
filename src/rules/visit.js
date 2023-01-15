@@ -1,5 +1,5 @@
 import {S} from '../lib/sanctuary'
-import { isEmptyString } from '../lib/utils/predicate'
+import {isEmptyString} from '../lib/utils/predicate'
 
 export const visitRules = {
   track_id: S.tagBy (S.complement (isEmptyString)),

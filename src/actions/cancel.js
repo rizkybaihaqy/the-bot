@@ -11,15 +11,15 @@ const isCancel = S.pipe ([
   getUpdateFromRequest,
   S.chain (getMessageFromUpdate),
   S.chain (getTextFromMessage),
-  S.map ((x) => S.equals ('cancel') (S.toLower (x))),
+  S.map (x => S.equals ('cancel') (S.toLower (x))),
   S.fromRight (false),
 ])
 
-export default (locals) => (req) =>
+export default locals => req =>
   S.ifElse (isCancel) (
     S.pipe ([
-      (_) => 'Operation Canceled',
+      _ => 'Operation Canceled',
       locals.sendMessage ({remove_keyboard: true}),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals))) (req)
+    ])
+  ) (_ => F.resolve (Next (locals))) (req)

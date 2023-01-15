@@ -4,7 +4,7 @@ import {dateToStringWithTZ} from '../../lib/utils/getter'
 
 const date = new Date ()
 
-export const fakeVisits = (n) => (salesCodes) =>
+export const fakeVisits = n => salesCodes =>
   [...Array (n)].map ((_, i) => ({
     track_id: `MYID-${faker.random.numeric (13)}`,
     customer_name: faker.name.fullName (),
@@ -32,13 +32,13 @@ export const fakeVisits = (n) => (salesCodes) =>
     ]),
     additional_desc: faker.lorem.text (),
     location: faker.address
-      .nearbyGPSCoordinate ([ -7.057418, 110.44067 ], 1, true)
+      .nearbyGPSCoordinate ([-7.057418, 110.44067], 1, true)
       .toString (),
     sales_id: faker.helpers.arrayElement (salesCodes),
     created_at: dateToStringWithTZ (
       faker.date.between (
         sub (date, {days: 3}).toISOString (),
-        date.toISOString (),
-      ),
+        date.toISOString ()
+      )
     ),
   }))

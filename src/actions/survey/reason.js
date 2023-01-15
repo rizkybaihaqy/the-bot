@@ -51,7 +51,7 @@ const surveyReasonTextGenerator = ({reason, ...survey}) =>
     : 'Add more description !')
 
 // String -> ReplyMarkup
-const replyMarkup = (reason) =>
+const replyMarkup = reason =>
   reason === 'no_need_for_internet'
     ? {
         keyboard: [
@@ -125,27 +125,27 @@ const replyMarkup = (reason) =>
     : {remove_keyboard: true}
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isSurveyReason) (
     S.pipe ([
       getUpdateFromRequest,
       S.chain (getCallbackQueryFromUpdate),
-      S.chain ((cbq) =>
-        S.lift2 ((txt) => (reason) => ({...txt, reason})) (
+      S.chain (cbq =>
+        S.lift2 (txt => reason => ({...txt, reason})) (
           S.pipe ([
             getMessageFromUpdate,
             S.chain (getTextFromMessage),
             S.map (getFormDataFromText),
-          ]) (cbq),
-        ) (getDataFromCallbackQuery (cbq)),
+          ]) (cbq)
+        ) (getDataFromCallbackQuery (cbq))
       ),
       S.chain (validate (surveyReasonRules)),
       eitherToFuture,
-      S.chain ((survey) =>
+      S.chain (survey =>
         locals.sendMessage (
-          replyMarkup (S.prop ('reason') (survey)),
-        ) (surveyReasonTextGenerator (survey)),
+          replyMarkup (S.prop ('reason') (survey))
+        ) (surveyReasonTextGenerator (survey))
       ),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

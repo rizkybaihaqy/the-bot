@@ -10,38 +10,38 @@ import {now} from '../lib/utils/getter'
 
 // StrMap String -> Future String String
 export const addVisit = S.pipe ([
-  (input) =>
+  input =>
     F.both (
-      S.pipe ([ S.remove ('telegram_id'), F.resolve ]) (input),
+      S.pipe ([S.remove ('telegram_id'), F.resolve]) (input)
     ) (
       S.pipe ([
         S.prop ('telegram_id'),
         findOneSalesByTelegramId,
-        S.chain ((sales) =>
+        S.chain (sales =>
           sales.sales_code
             ? F.resolve (sales.sales_code)
             : F.reject (
-                'No Sales Found With This Telegram Account',
-              ),
+                'No Sales Found With This Telegram Account'
+              )
         ),
-      ]) (input),
+      ]) (input)
     ),
-  S.map ((x) => ({
+  S.map (x => ({
     ...x[0],
     sales_id: x[1],
     created_at: now,
   })),
-  S.chain ((x) => insertOneToVisits (x)),
-  S.map (S.pipe ([ S.prop ('sales_id'), (x) => x.toString () ])),
+  S.chain (x => insertOneToVisits (x)),
+  S.map (S.pipe ([S.prop ('sales_id'), x => x.toString ()])),
 ])
 
 // String -> Future String Object
 export const getVisitUpdate = S.pipe ([
-  (salesId) =>
+  salesId =>
     F.both (findOneSalesById (salesId)) (
-      S.pipe ([ findAllTodayVisits, S.map ((x) => x.length) ]) (
-        now,
-      ),
+      S.pipe ([findAllTodayVisits, S.map (x => x.length)]) (
+        now
+      )
     ),
-  S.map ((x) => ({user: x[0], todayVisit: x[1]})),
+  S.map (x => ({user: x[0], todayVisit: x[1]})),
 ])

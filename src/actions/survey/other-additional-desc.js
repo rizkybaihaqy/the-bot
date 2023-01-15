@@ -33,8 +33,8 @@ const isSurveyOtherAdditionalDesc = S.pipe ([
   S.fromRight (false),
 ])
 
-const getAdditionalDescFromMessage = (update) =>
-  S.lift2 ((survey) => (additional_desc) => ({
+const getAdditionalDescFromMessage = update =>
+  S.lift2 (survey => additional_desc => ({
     ...survey,
     additional_desc,
   })) (
@@ -44,16 +44,16 @@ const getAdditionalDescFromMessage = (update) =>
       S.chain (getTextFromMessage),
       S.map (getFormDataFromText),
       S.map (S.remove ('additional_desc')),
-    ]) (update),
+    ]) (update)
   ) (
     S.pipe ([
       getMessageFromUpdate,
       S.chain (getTextFromMessage),
-    ]) (update),
+    ]) (update)
   )
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isSurveyOtherAdditionalDesc) (
     S.pipe ([
       getUpdateFromRequest,
@@ -78,8 +78,8 @@ export default (locals) =>
           input_field_placeholder:
             'Send Location If The Data Already Correct',
           resize_keyboard: true,
-        }),
+        })
       ),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

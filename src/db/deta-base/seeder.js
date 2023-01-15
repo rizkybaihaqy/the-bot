@@ -7,22 +7,22 @@ import {fakeSales, testSales} from '../seeder/sales'
 import {fakeSurveys} from '../seeder/surveys'
 import {fakeVisits} from '../seeder/visits'
 
-const salesSeeder = (n) =>
-  insertManyToSales ([ ...fakeSales (n), testSales ])
-const visitsSeeder = (nVisits) => (nSales) =>
+const salesSeeder = n =>
+  insertManyToSales ([...fakeSales (n), testSales])
+const visitsSeeder = nVisits => nSales =>
   insertManyToVisits (fakeVisits (nVisits) (nSales))
-const surveysSeeder = (n) =>
+const surveysSeeder = n =>
   insertManyToSurveys (fakeSurveys (n))
 
-const seed = (nSales) => (nVisits) => (nSurveys) =>
+const seed = nSales => nVisits => nSurveys =>
   S.pipe ([
-    (x) => (console.log ('Seeding'), x),
+    x => (console.log ('Seeding'), x),
     salesSeeder,
     S.map (S.map (S.prop ('sales_code'))),
     S.chain (visitsSeeder (nVisits)),
-    S.chain ((_) => surveysSeeder (nSurveys)),
+    S.chain (_ => surveysSeeder (nSurveys)),
   ]) (nSales)
 
-fork ((x) => (console.log (x), x)) (
-  (x) => (console.log ('seeding complete'), x),
+fork (x => (console.log (x), x)) (
+  x => (console.log ('seeding complete'), x)
 ) (seed (1) (1) (1))

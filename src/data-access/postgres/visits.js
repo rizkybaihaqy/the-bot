@@ -6,16 +6,16 @@ import {sameValues} from '../../lib/utils/getter'
 import Visit from '../../models/Visit'
 
 // StrMap String -> Future Error Visit
-export const insertOneToVisits = (data) =>
+export const insertOneToVisits = data =>
   sameValues (S.keys (data)) (Visit)
     ? S.pipe ([
-        (x) =>
+        x =>
           pgFlQuery ({
             name: 'Insert one record to visits table',
             text: format (
               'INSERT INTO visits (%I) VALUES (%L) RETURNING *',
               S.keys (x),
-              S.values (x),
+              S.values (x)
             ),
           }),
         S.map (S.prop ('rows')),
@@ -25,18 +25,18 @@ export const insertOneToVisits = (data) =>
     : F.reject ('Wrong query columns')
 
 // Array StrMap String -> Future Error Array Visit
-export const insertManyToVisits = (data) =>
-  S.all ((x) => sameValues (Visit) (S.keys (x))) (data)
+export const insertManyToVisits = data =>
+  S.all (x => sameValues (Visit) (S.keys (x))) (data)
     ? S.pipe ([
-        (x) =>
+        x =>
           pgFlQuery ({
             name: 'Insert many record to visits table',
             text: format (
               'INSERT INTO visits (%I) VALUES %L RETURNING *',
               Visit,
-              S.reduce ((b) => (a) => [ ...b, S.values (a) ]) (
-                [],
-              ) (x),
+              S.reduce (b => a => [...b, S.values (a)]) (
+                []
+              ) (x)
             ),
           }),
         S.map (S.prop ('rows')),
@@ -45,7 +45,7 @@ export const insertManyToVisits = (data) =>
 
 // String -> Future Error Array Visit
 export const findAllTodayVisits = S.pipe ([
-  (date) =>
+  date =>
     pgFlQuery ({
       name: 'Get visits data by created at',
       text: "SELECT * FROM visits WHERE created_at > date($1) - interval '1 day'",

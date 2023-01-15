@@ -32,7 +32,7 @@ describe ('fetchTrackId', () => {
 describe ('reply', () => {
   it ('Should return future of request send Message from request', () => {
     const ret = reply ('test') (
-      mockBody ({chat: mockChat, text: 'test'}),
+      mockBody ({chat: mockChat, text: 'test'})
     )
     expect (JSON.stringify (ret)).toIncludeMultiple ([
       '"type":"resolve"',
@@ -43,10 +43,10 @@ describe ('reply', () => {
 })
 
 describe ('replyTo', () => {
-  let spy = jest.spyOn (request, 'reply')
+  const spy = jest.spyOn (request, 'reply')
   it ('Should return future of request send Message from request', () => {
     const ret = replyTo (
-      mockBody ({chat: mockChat, text: 'test'}),
+      mockBody ({chat: mockChat, text: 'test'})
     ) ('test')
     expect (JSON.stringify (ret)).toIncludeMultiple ([
       '"type":"resolve"',

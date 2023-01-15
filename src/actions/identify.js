@@ -9,20 +9,20 @@ import {
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
 
-export default (locals) => (req) =>
+export default locals => req =>
   S.pipe ([
     getUpdateFromRequest,
-    S.chain ((update) =>
+    S.chain (update =>
       S.alt (getMessageFromUpdate (update)) (
         S.pipe ([
           getCallbackQueryFromUpdate,
           S.chain (getMessageFromUpdate),
-        ]) (update),
-      ),
+        ]) (update)
+      )
     ),
     S.chain (getChatIdFromMessage),
-    S.map ((chatId) =>
-      S.insert ('sendMessage') (sendMessage (chatId)) (locals),
+    S.map (chatId =>
+      S.insert ('sendMessage') (sendMessage (chatId)) (locals)
     ),
     eitherToFuture,
     S.map (Next),

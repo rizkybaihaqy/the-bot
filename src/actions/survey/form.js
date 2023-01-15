@@ -33,7 +33,7 @@ const isSurveyForm = S.pipe ([
 ])
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isSurveyForm) (
     S.pipe ([
       getUpdateFromRequest,
@@ -42,7 +42,7 @@ export default (locals) =>
       S.map (getFormDataFromText),
       S.chain (validate (surveyFormRules)),
       S.map (getTextFromFormData),
-      S.map ((x) => '#SurveyReason\n' + x),
+      S.map (x => '#SurveyReason\n' + x),
       eitherToFuture,
       S.chain (
         locals.sendMessage ({
@@ -79,8 +79,8 @@ export default (locals) =>
               },
             ],
           ],
-        }),
+        })
       ),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

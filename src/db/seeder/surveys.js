@@ -4,7 +4,7 @@ import {dateToStringWithTZ} from '../../lib/utils/getter'
 
 const date = new Date ()
 
-export const fakeSurveys = (n) =>
+export const fakeSurveys = n =>
   [...Array (n)].map ((_, i) => ({
     respondent_name: faker.name.fullName (),
     age: faker.datatype
@@ -25,12 +25,12 @@ export const fakeSurveys = (n) =>
     ]),
     additional_desc: faker.lorem.text (),
     location: faker.address
-      .nearbyGPSCoordinate ([ -7.057418, 110.44067 ], 1, true)
+      .nearbyGPSCoordinate ([-7.057418, 110.44067], 1, true)
       .toString (),
     created_at: dateToStringWithTZ (
       faker.date.between (
         sub (date, {days: 3}).toISOString (),
-        date.toISOString (),
-      ),
+        date.toISOString ()
+      )
     ),
   }))

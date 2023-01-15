@@ -7,20 +7,20 @@ import Survey from '../models/Survey'
 import Visit from '../models/Visit'
 
 // f (Any -> Any) -> Array String -> String
-const fieldFromModel = (fns) =>
+const fieldFromModel = fns =>
   S.pipe ([
     fns,
     S.fromMaybe ([]),
-    S.map ((x) => headerCase (x, {delimiter: ' '})),
+    S.map (x => headerCase (x, {delimiter: ' '})),
     S.joinWith (':\n'),
-    (x) => x + ':',
+    x => x + ':',
   ])
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isCommandEqualsTo ('/visit')) (
     S.pipe ([
-      (_) => 'Which visit you want to report ?',
+      _ => 'Which visit you want to report ?',
       locals.sendMessage ({
         inline_keyboard: [
           [
@@ -42,5 +42,5 @@ export default (locals) =>
         ],
       }),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

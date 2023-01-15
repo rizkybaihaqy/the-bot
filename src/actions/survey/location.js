@@ -17,7 +17,7 @@ import {
 } from '../../lib/telegram/getter'
 import {validate} from '../../lib/utils/validator'
 import {surveyRules} from '../../rules/survey'
-import { addSurvey } from '../../use-case/survey'
+import {addSurvey} from '../../use-case/survey'
 
 // Req -> boolean
 const isSurveyLocation = S.pipe ([
@@ -37,14 +37,14 @@ const getSurveyData = S.pipe ([
 ])
 
 // Message -> Either String Array String
-const getUserInput = (msg) =>
-  S.lift2 ((visitData) => (location) => ({
+const getUserInput = msg =>
+  S.lift2 (visitData => location => ({
     ...visitData,
     location,
   })) (getSurveyData (msg)) (getLocationFromMessage (msg))
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isSurveyLocation) (
     S.pipe ([
       getUpdateFromRequest,
@@ -53,11 +53,11 @@ export default (locals) =>
       S.chain (validate (surveyRules)),
       eitherToFuture,
       S.chain (addSurvey),
-      S.chain ((_) =>
+      S.chain (_ =>
         locals.sendMessage ({remove_keyboard: true}) (
-          'Data Berhasil di input',
-        ),
+          'Data Berhasil di input'
+        )
       ),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

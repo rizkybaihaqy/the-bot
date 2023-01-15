@@ -4,7 +4,7 @@ import {dateToStringWithTZ} from '../../lib/utils/getter'
 
 const date = new Date ()
 
-export const fakeSales = (n) =>
+export const fakeSales = n =>
   [...Array (n)].map ((_, i) => ({
     sales_code: faker.random.numeric (4),
     name: faker.name.fullName (),
@@ -12,8 +12,8 @@ export const fakeSales = (n) =>
     created_at: dateToStringWithTZ (
       faker.date.between (
         sub (date, {days: 3}).toISOString (),
-        date.toISOString (),
-      ),
+        date.toISOString ()
+      )
     ),
   }))
 

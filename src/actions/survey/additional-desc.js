@@ -26,26 +26,26 @@ const surveyAdditionalDescRules =
 // Req -> boolean
 const isSurveyAdditionalDesc = S.pipe ([
   getUpdateFromRequest,
-  S.chain ((update) =>
+  S.chain (update =>
     S.alt (
       S.pipe ([
         getMessageFromUpdate,
         S.chain (getReplyMessageFromMessage),
-      ]) (update),
+      ]) (update)
     ) (
       S.pipe ([
         getCallbackQueryFromUpdate,
         S.chain (getMessageFromUpdate),
-      ]) (update),
-    ),
+      ]) (update)
+    )
   ),
   S.chain (getEntityTextFromMessage ('hashtag')),
   S.map (S.equals ('#SurveyAdditionalDesc')),
   S.fromRight (false),
 ])
 
-const getAdditionalDescFromMessage = (update) =>
-  S.lift2 ((survey) => (additional_desc) => ({
+const getAdditionalDescFromMessage = update =>
+  S.lift2 (survey => additional_desc => ({
     ...survey,
     additional_desc,
   })) (
@@ -54,16 +54,16 @@ const getAdditionalDescFromMessage = (update) =>
       S.chain (getReplyMessageFromMessage),
       S.chain (getTextFromMessage),
       S.map (getFormDataFromText),
-    ]) (update),
+    ]) (update)
   ) (
     S.pipe ([
       getMessageFromUpdate,
       S.chain (getTextFromMessage),
-    ]) (update),
+    ]) (update)
   )
 
-const getAdditionalDescFromCallbackData = (update) =>
-  S.lift2 ((survey) => (additional_desc) => ({
+const getAdditionalDescFromCallbackData = update =>
+  S.lift2 (survey => additional_desc => ({
     ...survey,
     additional_desc,
   })) (
@@ -72,29 +72,29 @@ const getAdditionalDescFromCallbackData = (update) =>
       S.chain (getMessageFromUpdate),
       S.chain (getTextFromMessage),
       S.map (getFormDataFromText),
-    ]) (update),
+    ]) (update)
   ) (
     S.pipe ([
       getCallbackQueryFromUpdate,
       S.chain (getDataFromCallbackQuery),
-    ]) (update),
+    ]) (update)
   )
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isSurveyAdditionalDesc) (
     S.pipe ([
       getUpdateFromRequest,
-      S.chain ((update) =>
+      S.chain (update =>
         S.alt (getAdditionalDescFromMessage (update)) (
-          getAdditionalDescFromCallbackData (update),
-        ),
+          getAdditionalDescFromCallbackData (update)
+        )
       ),
       S.chain (validate (surveyAdditionalDescRules)),
       eitherToFuture,
       S.chain (
         S.ifElse (
-          (survey) => survey.additional_desc === 'other',
+          survey => survey.additional_desc === 'other'
         ) (
           S.pipe ([
             getTextFromFormData,
@@ -104,7 +104,7 @@ export default (locals) =>
               input_field_placeholder:
                 'Please provide more information',
             }),
-          ]),
+          ])
         ) (
           S.pipe ([
             getTextFromFormData,
@@ -125,9 +125,9 @@ export default (locals) =>
                 'Send Location If The Data Already Correct',
               resize_keyboard: true,
             }),
-          ]),
-        ),
+          ])
+        )
       ),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

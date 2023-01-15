@@ -35,29 +35,29 @@ const getVisitDataFromMessage = S.pipe ([
   getTextFromMessage,
   S.map (S.lines),
   S.map (S.map (S.splitOn (':'))),
-  S.map (S.filter ((x) => x.length === 2)),
+  S.map (S.filter (x => x.length === 2)),
   S.map (
-    S.map (([ key, value ]) =>
-      S.Pair (snakeCase (key)) (S.trim (value)),
-    ),
+    S.map (([key, value]) =>
+      S.Pair (snakeCase (key)) (S.trim (value))
+    )
   ),
   S.map (S.fromPairs),
 ])
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isVisitReport) (
     S.pipe ([
       getUpdateFromRequest,
       S.chain (getMessageFromUpdate),
       S.chain (getVisitDataFromMessage),
       S.chain (
-        validate (visitRulesWithoutLocationTelegramId),
+        validate (visitRulesWithoutLocationTelegramId)
       ),
       S.map (S.pairs),
-      S.map (S.map ((x) => S.fst (x) + ':' + S.snd (x))),
+      S.map (S.map (x => S.fst (x) + ':' + S.snd (x))),
       S.map (S.unlines),
-      S.map ((x) => '#VisitSubmit\n' + x),
+      S.map (x => '#VisitSubmit\n' + x),
       eitherToFuture,
       S.chain (
         locals.sendMessage ({
@@ -75,8 +75,8 @@ export default (locals) =>
           input_field_placeholder:
             'Send Location If The Data Already Correct',
           resize_keyboard: true,
-        }),
+        })
       ),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

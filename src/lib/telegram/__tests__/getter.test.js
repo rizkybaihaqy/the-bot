@@ -21,7 +21,7 @@ import {
 describe ('getMessageFromRequest', () => {
   it ('Should return Right with message from request', () => {
     const msg = getMessageFromRequest (
-      mockBody ({chat: mockChat}),
+      mockBody ({chat: mockChat})
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toStartWith ('Right ({')
@@ -32,7 +32,7 @@ describe ('getMessageFromRequest', () => {
     const msg = getMessageFromRequest (null)
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("No Message Found. Did not support updated message")',
+      'Left ("No Message Found. Did not support updated message")'
     )
   })
 })
@@ -40,7 +40,7 @@ describe ('getMessageFromRequest', () => {
 describe ('getChatIdFromRequest', () => {
   it ('Should return Right with chat_id from request', () => {
     const msg = getChatIdFromRequest (
-      mockBody ({chat: mockChat}),
+      mockBody ({chat: mockChat})
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toBe ('Right (642130106)')
@@ -50,7 +50,7 @@ describe ('getChatIdFromRequest', () => {
     const msg = getChatIdFromRequest (mockBody ({chat: null}))
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("No Chat Id Found. Who are you?")',
+      'Left ("No Chat Id Found. Who are you?")'
     )
   })
 })
@@ -58,11 +58,11 @@ describe ('getChatIdFromRequest', () => {
 describe ('getTextFromRequest', () => {
   it ('Should return Right with text from request', () => {
     const msg = getTextFromRequest (
-      mockBody ({text: mockText}),
+      mockBody ({text: mockText})
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Right ("/visit 1 deal mip jl_padi")',
+      'Right ("/visit 1 deal mip jl_padi")'
     )
   })
 
@@ -70,7 +70,7 @@ describe ('getTextFromRequest', () => {
     const msg = getTextFromRequest (mockBody ({text: null}))
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("No Text Found. Did not support other chat type other than text")',
+      'Left ("No Text Found. Did not support other chat type other than text")'
     )
   })
 })
@@ -78,7 +78,7 @@ describe ('getTextFromRequest', () => {
 describe ('getEntityFromRequest', () => {
   it ('Should return Right with entity object from request', () => {
     const msg = getEntityFromRequest (
-      mockBody ({entities: mockEntities}),
+      mockBody ({entities: mockEntities})
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toStartWith ('Right ({')
@@ -91,11 +91,11 @@ describe ('getEntityFromRequest', () => {
 
   it ('Should return Left with error message', () => {
     const msg = getEntityFromRequest (
-      mockBody ({entities: []}),
+      mockBody ({entities: []})
     )
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("No Entities Found, Maybe Its A Plain Text")',
+      'Left ("No Entities Found, Maybe Its A Plain Text")'
     )
   })
 })
@@ -103,7 +103,7 @@ describe ('getEntityFromRequest', () => {
 describe ('getEntityOffset', () => {
   it ('Should return number from entity object', () => {
     const msg = getEntityOffset (
-      mockBody ({entities: [{offset: 1}]}),
+      mockBody ({entities: [{offset: 1}]})
     )
     expect (msg).toBe (1)
   })
@@ -112,7 +112,7 @@ describe ('getEntityOffset', () => {
 describe ('getEntityLength', () => {
   it ('Should return number from entity object', () => {
     const msg = getEntityLength (
-      mockBody ({entities: [{length: 6}]}),
+      mockBody ({entities: [{length: 6}]})
     )
     expect (msg).toBe (6)
   })
@@ -121,7 +121,7 @@ describe ('getEntityLength', () => {
 describe ('getBotCommandFromRequest', () => {
   it ('Should return Right with bot command string from request', () => {
     const msg = getBotCommandFromRequest (
-      mockBody ({text: mockText, entities: mockEntities}),
+      mockBody ({text: mockText, entities: mockEntities})
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toBe ('Right ("/visit")')
@@ -129,32 +129,32 @@ describe ('getBotCommandFromRequest', () => {
 
   it ('Should return Left with error message if no text found', () => {
     const msg = getBotCommandFromRequest (
-      mockBody ({text: null, entities: mockEntities}),
+      mockBody ({text: null, entities: mockEntities})
     )
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("No Text Found. Did not support other chat type other than text")',
+      'Left ("No Text Found. Did not support other chat type other than text")'
     )
   })
 
   it ('Should return Left with error message if no entities found', () => {
     const msg = getBotCommandFromRequest (
-      mockBody ({text: mockText, entities: null}),
+      mockBody ({text: mockText, entities: null})
     )
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("Not A Bot Command, Maybe Its A Plain Text")',
+      'Left ("Not A Bot Command, Maybe Its A Plain Text")'
     )
   })
 })
 
 describe ('getBotCommandArgument', () => {
-it ('Should return Right with bot command argument string from request', () => {
+  it ('Should return Right with bot command argument string from request', () => {
     const msg = getBotCommandArgument (
       mockBody ({
         text: '/order MYID-2122202231153',
         entities: [{offset: 0, length: 6}],
-      }),
+      })
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toBe ('Right ("MYID-2122202231153")')
@@ -165,11 +165,11 @@ it ('Should return Right with bot command argument string from request', () => {
       mockBody ({
         text: '/order',
         entities: [{offset: 0, length: 6}],
-      }),
+      })
     )
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("This Command Need At Least One Or More Argument")',
+      'Left ("This Command Need At Least One Or More Argument")'
     )
   })
 })
@@ -180,11 +180,11 @@ describe ('getNBotCommandArgumentsBySpace', () => {
       mockBody ({
         text: '/visit\n1\ndeal\nmip\njl_padi',
         entities: mockEntities,
-      }),
+      })
     )
     expect (S.isRight (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Right (["1", "deal", "mip", "jl_padi"])',
+      'Right (["1", "deal", "mip", "jl_padi"])'
     )
   })
 
@@ -193,11 +193,11 @@ describe ('getNBotCommandArgumentsBySpace', () => {
       mockBody ({
         text: '/visit 1 mip deal',
         entities: mockEntities,
-      }),
+      })
     )
     expect (S.isLeft (msg)).toBe (true)
     expect (S.show (msg)).toBe (
-      'Left ("Command Expect 4 Argument")',
+      'Left ("Command Expect 4 Argument")'
     )
   })
 })

@@ -12,22 +12,22 @@ import {isEmptyString} from '../lib/utils/predicate'
 
 // Message -> Either String String
 const getEchoMessage = S.pipe ([
-  (msg) =>
+  msg =>
     S.lift2 (
-      (text) => (entity) =>
+      text => entity =>
         text.slice (
           S.prop ('offset') (entity) +
-            S.prop ('length') (entity),
-        ),
+            S.prop ('length') (entity)
+        )
     ) (getTextFromMessage (msg)) (
-      getEntityFromMessage ('bot_command') (msg),
+      getEntityFromMessage ('bot_command') (msg)
     ),
   S.map (S.trim),
   S.chain (S.tagBy (S.complement (isEmptyString))),
   S.mapLeft (S.K ('Can Not Echo Nothing')),
 ])
 
-export default (locals) => (req) =>
+export default locals => req =>
   S.ifElse (isCommandEqualsTo ('/echo')) (
     S.pipe ([
       getUpdateFromRequest,
@@ -36,5 +36,5 @@ export default (locals) => (req) =>
       eitherToFuture,
       S.chain (locals.sendMessage ({remove_keyboard: true})),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals))) (req)
+    ])
+  ) (_ => F.resolve (Next (locals))) (req)

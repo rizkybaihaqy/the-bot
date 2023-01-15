@@ -39,27 +39,27 @@ const getVisitDataFromReplyMessage = S.pipe ([
   S.chain (getTextFromMessage),
   S.map (S.lines),
   S.map (S.map (S.splitOn (':'))),
-  S.map (S.filter ((x) => x.length === 2)),
+  S.map (S.filter (x => x.length === 2)),
   S.map (
-    S.map (([ key, value ]) =>
-      S.Pair (snakeCase (key)) (S.trim (value)),
-    ),
+    S.map (([key, value]) =>
+      S.Pair (snakeCase (key)) (S.trim (value))
+    )
   ),
   S.map (S.fromPairs),
 ])
 
 // Message -> Either String Array String
-const getUserInput = (msg) =>
-  S.lift3 ((visitData) => (location) => (telegramId) => ({
+const getUserInput = msg =>
+  S.lift3 (visitData => location => telegramId => ({
     ...visitData,
     location,
     telegram_id: telegramId,
   })) (getVisitDataFromReplyMessage (msg)) (
-    getLocationFromMessage (msg),
+    getLocationFromMessage (msg)
   ) (getTelegramIdFromMessage (msg))
 
 // Locals -> Req -> Future Error Axios
-export default (locals) =>
+export default locals =>
   S.ifElse (isVisitSubmit) (
     S.pipe ([
       getUpdateFromRequest,
@@ -72,15 +72,15 @@ export default (locals) =>
       S.chain (({user, todayVisit}) =>
         F.both (
           locals.sendMessage ({remove_keyboard: true}) (
-            'Data Berhasil di input',
-          ),
+            'Data Berhasil di input'
+          )
         ) (
           sendMessageToAdmin (
-            `Ada inputan baru dari ${user.name} (${user.sales_code})\nTotal input hari ini: ${todayVisit}`,
-          ),
-        ),
+            `Ada inputan baru dari ${user.name} (${user.sales_code})\nTotal input hari ini: ${todayVisit}`
+          )
+        )
       ),
-      S.map ((x) => x[1]),
+      S.map (x => x[1]),
       S.map (JSONData),
-    ]),
-  ) ((_) => F.resolve (Next (locals)))
+    ])
+  ) (_ => F.resolve (Next (locals)))

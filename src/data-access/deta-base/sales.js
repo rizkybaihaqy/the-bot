@@ -6,7 +6,7 @@ import Sales from '../../models/Sales'
 
 // String -> Future Error Sales
 export const findOneSalesByTelegramId = S.pipe ([
-  (tId) =>
+  tId =>
     flDetaBase ('fetch') ({'data.telegram_id?contains': tId}),
   S.map (S.prop ('items')),
   S.map (S.head),
@@ -16,7 +16,7 @@ export const findOneSalesByTelegramId = S.pipe ([
 
 // String -> Future Error Sales
 export const findOneSalesById = S.pipe ([
-  (sId) =>
+  sId =>
     flDetaBase ('fetch') ({'data.sales_code?contains': sId}),
   S.map (S.prop ('items')),
   S.map (S.head),
@@ -25,12 +25,12 @@ export const findOneSalesById = S.pipe ([
 ])
 
 // StrMap String -> Future Error Array Sales
-export const insertManyToSales = (data) =>
-  S.all ((x) => sameValues (Sales) (S.keys (x))) (data)
+export const insertManyToSales = data =>
+  S.all (x => sameValues (Sales) (S.keys (x))) (data)
     ? S.pipe ([
-        S.map ((data) => ({type: 'sales', data})),
+        S.map (data => ({type: 'sales', data})),
         flDetaBase ('putMany'),
-        S.map (S.props ([ 'processed', 'items' ])),
+        S.map (S.props (['processed', 'items'])),
         S.map (S.map (S.prop ('data'))),
       ]) (data)
     : F.reject ('Wrong query columns Sales')

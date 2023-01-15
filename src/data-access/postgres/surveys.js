@@ -6,16 +6,16 @@ import {sameValues} from '../../lib/utils/getter'
 import Survey from '../../models/Survey'
 
 // StrMap String -> Future Error Survey
-export const insertOneToSurveys = (data) =>
+export const insertOneToSurveys = data =>
   sameValues (S.keys (data)) (Survey)
     ? S.pipe ([
-        (x) =>
+        x =>
           pgFlQuery ({
             name: 'Insert one record to visits table',
             text: format (
               'INSERT INTO surveys (%I) VALUES (%L) RETURNING *',
               S.keys (x),
-              S.values (x),
+              S.values (x)
             ),
           }),
         S.map (S.prop ('rows')),
@@ -25,18 +25,18 @@ export const insertOneToSurveys = (data) =>
     : F.reject ('Wrong query columns')
 
 // Array StrMap String -> Future Error Array Survey
-export const insertManyToSurveys = (data) =>
-  S.all ((x) => sameValues (Survey) (S.keys (x))) (data)
+export const insertManyToSurveys = data =>
+  S.all (x => sameValues (Survey) (S.keys (x))) (data)
     ? S.pipe ([
-        (x) =>
+        x =>
           pgFlQuery ({
             name: 'Insert many record to surveys table',
             text: format (
               'INSERT INTO surveys (%I) VALUES %L RETURNING *',
               Survey,
-              S.reduce ((b) => (a) => [ ...b, S.values (a) ]) (
-                [],
-              ) (x),
+              S.reduce (b => a => [...b, S.values (a)]) (
+                []
+              ) (x)
             ),
           }),
         S.map (S.prop ('rows')),

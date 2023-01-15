@@ -11,7 +11,7 @@ import usersRouter from './routes/users'
 const app = express ()
 
 const dispatch = dispatcher (
-  path.resolve (__dirname, 'actions'),
+  path.resolve (__dirname, 'actions')
 )
 
 app.use (logger ('dev'))
