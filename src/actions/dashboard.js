@@ -3,5 +3,5 @@ import {F} from '../lib/fluture'
 
 export default locals => _ => {
   const user = 'you'
-  return F.resolve (Render ('index') ({user}))
+  return F.resolve (Render ('dashboard') ({user}))
 }

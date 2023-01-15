@@ -27,6 +27,7 @@
     "deta": "^1.1.0",
     "dotenv": "^16.0.0",
     "eslint-plugin-jest": "^27.2.1",
+    "eta": "^1.13.0",
     "express": "~4.16.1",
     "fluture": "^14.0.0",
     "fluture-express": "^6.0.1",

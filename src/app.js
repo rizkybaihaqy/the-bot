@@ -1,4 +1,5 @@
 import cookieParser from 'cookie-parser'
+import * as Eta from 'eta'
 import express from 'express'
 import {dispatcher} from 'fluture-express'
 import logger from 'morgan'
@@ -19,8 +20,10 @@ app.use (logger ('dev'))
 app.use (express.json ())
 app.use (express.urlencoded ({extended: false}))
 app.use (cookieParser ())
-app.use (express.static (path.join (__dirname, 'public')))
-app.set ('view engine', 'hbs')
+
+// app.use (express.static (path.join (__dirname, 'public')))
+app.engine ('eta', Eta.renderFile)
+app.set ('view engine', 'eta')
 app.set ('views', path.join (__dirname, 'views'))
 
 app.get ('/json', dispatch ('welcome'))
