@@ -1,9 +1,6 @@
-const axios = require ('axios')
-require ('dotenv').config ()
-
-const app = require ('./dist/app.js')
-
-const {TOKEN, DETA_URL} = process.env
+import axios from 'axios'
+import {DETA_URL, TOKEN} from '../config'
+import app from './dist/app.js'
 
 /* eslint-disable functional/no-expression-statement */
 app.get ('/set-webhook', async (req, res) => {
@@ -31,4 +28,4 @@ app.get ('/reset-webhook', async (req, res) => {
 })
 
 // eslint-disable-next-line functional/immutable-data
-module.exports = app
+export default app

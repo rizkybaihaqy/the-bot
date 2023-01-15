@@ -1,9 +1,6 @@
 import {Deta} from 'deta'
+import {DETA_KEY} from '../../config'
 import {F} from '../../lib/fluture'
-
-require ('dotenv').config ()
-
-const {DETA_KEY} = process.env
 
 export const flDetaBase = method =>
   F.encaseP (Deta (DETA_KEY).Base ('the-bot')[method])

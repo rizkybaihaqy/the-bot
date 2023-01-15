@@ -1,8 +1,8 @@
-import {TRACKER_API_KEY} from '../../constants/indohome'
 import {
   ADMIN_TELEGRAM_ID,
-  TELEGRAM_API,
-} from '../../constants/telegram'
+  TOKEN,
+  TRACKER_API_KEY,
+} from '../../config'
 import {flAxios} from '../fluture'
 
 // ReplyMarkup -> String -> String -> Future Error Axios
@@ -11,7 +11,7 @@ export const sendMessage =
     flAxios (
       ('POST',
       {
-        url: `${TELEGRAM_API}/sendMessage`,
+        url: `https://api.telegram.org/bot${TOKEN}/sendMessage`,
         data: {
           chat_id: chatId,
           text: text,

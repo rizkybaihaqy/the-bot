@@ -3,7 +3,7 @@ import express from 'express'
 import {dispatcher} from 'fluture-express'
 import logger from 'morgan'
 import path from 'path'
-import {URI} from './constants/telegram'
+import {TOKEN} from './config'
 import {errorHandler} from './error'
 import indexRouter from './routes/index'
 import usersRouter from './routes/users'
@@ -13,6 +13,8 @@ const app = express ()
 const dispatch = dispatcher (
   path.resolve (__dirname, 'actions')
 )
+
+const URI = `/webhook/${TOKEN}`
 
 /* eslint-disable functional/no-expression-statement */
 app.use (logger ('dev'))

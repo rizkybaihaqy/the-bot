@@ -1,10 +1,9 @@
+import {DB_CHOICE} from '../config'
 import detaBase from './deta-base'
 import pg from './postgres'
 
-require ('dotenv').config ()
-
 const dbChoice =
-  process.env.DB_CHOICE === 'DETA_BASE' ? detaBase : pg
+  DB_CHOICE === 'DETA_BASE' ? detaBase : pg
 
 export const findOneSalesByTelegramId =
   dbChoice.findOneSalesByTelegramId

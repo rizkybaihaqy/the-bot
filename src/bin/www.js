@@ -10,10 +10,7 @@ import 'regenerator-runtime/runtime'
  * Module dependencies.
  */
 import app from '../app'
-
-require('dotenv').config()
-
-const {TOKEN, SERVER_URL} = process.env
+import { SERVER_URL, TOKEN } from '../config'
 
 const init = async (_) => {
   const res = await axios({
