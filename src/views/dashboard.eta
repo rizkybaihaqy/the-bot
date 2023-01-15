@@ -5,9 +5,22 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-    <title>Welcome</title>
+    <title><%= it.data.first_name %> Bot Manager</title>
   </head>
   <body>
-    Welcome <%= it.user %>
+    <h1><%= it.data.first_name %></h1>
+    <ul>
+      <% Object.keys(it.data).forEach(function(prop) { %>
+      <li><%= prop %> : <%= it.data[prop] %></li>
+      <% }) %>
+    </ul>
+    <form action="/set-reset-webhook" method="post">
+      <button name="toggle" value="set">
+        Turn On Bots
+      </button>
+      <button name="toggle" value="reset">
+        Turn Off Bots
+      </button>
+    </form>
   </body>
 </html>

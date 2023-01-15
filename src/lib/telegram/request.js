@@ -1,9 +1,12 @@
 import {
   ADMIN_TELEGRAM_ID,
+  SERVER_URL,
   TOKEN,
   TRACKER_API_KEY,
 } from '../../config'
 import {flAxios} from '../fluture'
+
+const TELEGRAM_URL = `https://api.telegram.org/bot${TOKEN}`
 
 // ReplyMarkup -> String -> String -> Future Error Axios
 export const sendMessage =
@@ -11,7 +14,7 @@ export const sendMessage =
     flAxios (
       ('POST',
       {
-        url: `https://api.telegram.org/bot${TOKEN}/sendMessage`,
+        url: `${TELEGRAM_URL}/sendMessage`,
         data: {
           chat_id: chatId,
           text: text,
@@ -19,6 +22,38 @@ export const sendMessage =
         },
       })
     )
+
+// Future Error Axios
+export const getWebhookInfo = flAxios ({
+  method: 'POST',
+  url: `${TELEGRAM_URL}/getWebhookInfo`,
+})
+
+// Future Error Axios
+export const setWebhook = flAxios ({
+  method: 'POST',
+  url: `${TELEGRAM_URL}/setWebhook`,
+  data: {
+    url: `${SERVER_URL}/webhook/${TOKEN}`,
+    drop_pending_updates: true,
+  },
+})
+
+// Future Error Axios
+export const deleteWebhook = flAxios ({
+  method: 'POST',
+  url: `${TELEGRAM_URL}/deleteWebhook`,
+  data: {
+    url: `${SERVER_URL}/webhook/${TOKEN}`,
+    drop_pending_updates: true,
+  },
+})
+
+// Future Error Axios
+export const getMe = flAxios ({
+  method: 'POST',
+  url: `${TELEGRAM_URL}/getMe`,
+})
 
 // String -> Future Error Axios
 export const sendMessageToAdmin = sendMessage (
