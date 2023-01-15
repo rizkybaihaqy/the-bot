@@ -4,11 +4,9 @@ import {S} from '../../lib/sanctuary'
 
 require ('dotenv').config ()
 
-const query = db => (text, params, callback) =>
-  db.query (text, params, callback)
+const query = db => db.query
 
-export const flQuery = db =>
-  S.pipe ([query, F.encaseP]) (db)
+export const flQuery = S.pipe ([query, F.encaseP])
 
 const pool = new Pool ()
 

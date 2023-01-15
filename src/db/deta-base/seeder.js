@@ -16,6 +16,7 @@ const surveysSeeder = n =>
 
 const seed = nSales => nVisits => nSurveys =>
   S.pipe ([
+    // eslint-disable-next-line no-sequences
     x => (console.log ('Seeding'), x),
     salesSeeder,
     S.map (S.map (S.prop ('sales_code'))),
@@ -23,6 +24,7 @@ const seed = nSales => nVisits => nSurveys =>
     S.chain (_ => surveysSeeder (nSurveys)),
   ]) (nSales)
 
+/* eslint-disable functional/no-expression-statement, no-sequences */
 fork (x => (console.log (x), x)) (
   x => (console.log ('seeding complete'), x)
 ) (seed (1) (1) (1))

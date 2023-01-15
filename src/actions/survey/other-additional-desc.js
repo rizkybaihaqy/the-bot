@@ -6,8 +6,6 @@ import {
 } from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {
-  getCallbackQueryFromUpdate,
-  getDataFromCallbackQuery,
   getEntityTextFromMessage,
   getFormDataFromText,
   getMessageFromUpdate,

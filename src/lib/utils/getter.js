@@ -27,7 +27,7 @@ export const objDiff = base => comparator =>
 // Array String -> Array String -> Boolean
 export const sameValues = arr => brr =>
   arr.length === brr.length &&
-  arr.every (item => brr.includes (item))
+  arr.every (brr.includes)
 
 export const dateToStringWithTZ = S.compose (formatISO9075) (
   isoDate => utcToZonedTime (isoDate, 'Asia/Jakarta')

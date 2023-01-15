@@ -13,7 +13,6 @@ import {
   getEntityLength,
   getEntityOffset,
   getMessageFromRequest,
-  getNBotCommandArguments,
   getNBotCommandArgumentsBySpace,
   getTextFromRequest,
 } from '../getter'

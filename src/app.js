@@ -14,6 +14,7 @@ const dispatch = dispatcher (
   path.resolve (__dirname, 'actions')
 )
 
+/* eslint-disable functional/no-expression-statement */
 app.use (logger ('dev'))
 app.use (express.json ())
 app.use (express.urlencoded ({extended: false}))
@@ -41,5 +42,6 @@ app.post (URI, dispatch ('survey/location'))
 app.post (URI, dispatch ('cancel'))
 app.post (URI, dispatch ('default'))
 app.use (errorHandler)
+/* eslint-enable functional/no-expression-statement */
 
 export default app

@@ -1,5 +1,6 @@
 import {flDetaBase} from '../../db/deta-base'
 import {S} from '../../lib/sanctuary/'
+import {F} from '../../lib/fluture/'
 import {sameValues} from '../../lib/utils/getter'
 import Survey from '../../models/Survey'
 

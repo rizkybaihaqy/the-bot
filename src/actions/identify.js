@@ -9,7 +9,7 @@ import {
 } from '../lib/telegram/getter'
 import {sendMessage} from '../lib/telegram/request'
 
-export default locals => req =>
+export default locals =>
   S.pipe ([
     getUpdateFromRequest,
     S.chain (update =>
@@ -26,4 +26,4 @@ export default locals => req =>
     ),
     eitherToFuture,
     S.map (Next),
-  ]) (req)
+  ])

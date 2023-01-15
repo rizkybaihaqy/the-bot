@@ -31,7 +31,7 @@ export const addVisit = S.pipe ([
     sales_id: x[1],
     created_at: now,
   })),
-  S.chain (x => insertOneToVisits (x)),
+  S.chain (insertOneToVisits),
   S.map (S.pipe ([S.prop ('sales_id'), x => x.toString ()])),
 ])
 

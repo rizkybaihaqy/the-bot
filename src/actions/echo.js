@@ -27,7 +27,7 @@ const getEchoMessage = S.pipe ([
   S.mapLeft (S.K ('Can Not Echo Nothing')),
 ])
 
-export default locals => req =>
+export default locals =>
   S.ifElse (isCommandEqualsTo ('/echo')) (
     S.pipe ([
       getUpdateFromRequest,
@@ -37,4 +37,4 @@ export default locals => req =>
       S.chain (locals.sendMessage ({remove_keyboard: true})),
       S.map (JSONData),
     ])
-  ) (_ => F.resolve (Next (locals))) (req)
+  ) (_ => F.resolve (Next (locals)))

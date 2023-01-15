@@ -15,11 +15,11 @@ const isCancel = S.pipe ([
   S.fromRight (false),
 ])
 
-export default locals => req =>
+export default locals =>
   S.ifElse (isCancel) (
     S.pipe ([
       _ => 'Operation Canceled',
       locals.sendMessage ({remove_keyboard: true}),
       S.map (JSONData),
     ])
-  ) (_ => F.resolve (Next (locals))) (req)
+  ) (_ => F.resolve (Next (locals)))

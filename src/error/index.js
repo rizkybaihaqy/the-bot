@@ -10,7 +10,10 @@ import {sendMessage} from '../lib/telegram/request'
 
 // TODO Make It Pure
 export const errorHandler = (err, req, res, _) => {
-  console.log ('ERROR:', err)
+  // eslint-disable-next-line functional/no-expression-statement, no-sequences
+  console.log ('ERROR:'), err
+
+  // eslint-disable-next-line functional/no-expression-statement
   S.pipe ([
     getUpdateFromRequest,
     S.chain (update =>
@@ -30,13 +33,16 @@ export const errorHandler = (err, req, res, _) => {
     ),
     S.map (
       x => (
+        // eslint-disable-next-line no-sequences
         res.header ('Content-Type', 'application/json'), x
       )
     ),
     S.map (
+      // eslint-disable-next-line no-sequences
       x => (res.status (200).send (`ERROR: ${err}`), x)
     ),
     S.mapLeft (
+      // eslint-disable-next-line no-sequences
       x => (res.status (200).send (`ERROR: ${err}`), x)
     ),
     execute,

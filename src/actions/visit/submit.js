@@ -76,7 +76,8 @@ export default locals =>
           )
         ) (
           sendMessageToAdmin (
-            `Ada inputan baru dari ${user.name} (${user.sales_code})\nTotal input hari ini: ${todayVisit}`
+            `Ada inputan baru dari ${user.name} (${user.sales_code})\n` +
+              `Total input hari ini: ${todayVisit}`
           )
         )
       ),

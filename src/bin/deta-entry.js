@@ -5,6 +5,7 @@ const app = require ('./dist/app.js')
 
 const {TOKEN, DETA_URL} = process.env
 
+/* eslint-disable functional/no-expression-statement */
 app.get ('/set-webhook', async (req, res) => {
   const hook = await axios ({
     method: 'GET',
@@ -29,4 +30,5 @@ app.get ('/reset-webhook', async (req, res) => {
   res.send (hook.data)
 })
 
+// eslint-disable-next-line functional/immutable-data
 module.exports = app

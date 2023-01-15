@@ -14,15 +14,16 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['src/**/*.js'],
+      files: ['src/**/*.test.js'],
       extends: ['plugin:jest/recommended', 'plugin:jest/style'],
       rules: {
         "functional/no-expression-statement": ['off'],
-        "functional/functional-parameter": ['off']
+        "functional/functional-parameters": ['off']
       }
     },
   ],
   rules: {
     semi: ['error', 'never'],
+    'max-len': ['off'],
   },
 }
