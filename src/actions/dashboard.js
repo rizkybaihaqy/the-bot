@@ -16,7 +16,7 @@ export default locals =>
       webhook: S.fromMaybe ('') (
         S.stripSuffix (`/webhook/${TOKEN}`) (webhook.url)
       ),
-      status: webhook.url === '' ? 'up' : 'down',
+      status: webhook.url === '' ? 'down' : 'up',
     })),
     S.map (data => ({data})),
     S.map (Render ('dashboard')),

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 /* eslint-disable */
-import axios from 'axios'
 import 'core-js/stable'
 import http from 'http'
 import 'regenerator-runtime/runtime'
@@ -10,20 +9,6 @@ import 'regenerator-runtime/runtime'
  * Module dependencies.
  */
 import app from '../app'
-import { SERVER_URL, TOKEN } from '../config'
-
-const init = async (_) => {
-  const res = await axios({
-    method: 'GET',
-    url: `https://api.telegram.org/bot${TOKEN}/setWebhook`,
-    data: {
-      url: `${SERVER_URL}/webhook/${TOKEN}`,
-      drop_pending_updates: true,
-    },
-  })
-  // eslint-disable-next-line functional/no-expression-statement
-  console.log(res.data)
-}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -104,8 +89,6 @@ const onListening = () => {
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, async () => {
-  await init()
-})
+server.listen(port)
 server.on('error', onError)
 server.on('listening', onListening)
