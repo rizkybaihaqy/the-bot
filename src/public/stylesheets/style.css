@@ -1,8 +1,8 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.danger {
+  background-color: #e53935;
+  border-color: #e53935;
 }
-
-a {
-  color: #00B7FF;
+.success {
+  background-color: #43a047;
+  border-color: #43a047;
 }

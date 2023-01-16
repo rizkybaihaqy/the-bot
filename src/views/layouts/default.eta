@@ -5,10 +5,15 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
     <title>Bot Manager</title>
   </head>
   <body>
-    <nav>
+    <nav class="container-fluid">
       <ul>
         <li><a href="/">dashboard</a></li>
         <li><a href="/sales">sales</a></li>
@@ -16,7 +21,9 @@
         <li><a href="/surveys">surveys</a></li>
       </ul>
     </nav>
-    <hr />
-    <%~ it.body %>
+    <main class="container"><%~ it.body %></main>
+    <footer class="container-fluid">
+      <small>Built @ 2023</small>
+    </footer>
   </body>
 </html>

@@ -1,21 +1,23 @@
 <% layout('./layouts/default') %>
 
 <h1><%= it.type %></h1>
-<table>
-  <thead>
-    <tr>
-      <% Object.keys(it.data[0]).forEach((prop) => { %>
-      <th><%= prop %></th>
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <% Object.keys(it.data[0]).forEach((prop) => { %>
+        <th><%= prop %></th>
+        <% }) %>
+      </tr>
+    </thead>
+    <tbody>
+      <% it.data.forEach((d) => { %>
+      <tr>
+        <% Object.keys(d).forEach((key) => { %>
+        <td><%= d[key] %></td>
+        <% }) %>
+      </tr>
       <% }) %>
-    </tr>
-  </thead>
-  <tbody>
-    <% it.data.forEach((d) => { %>
-    <tr>
-      <% Object.keys(d).forEach((key) => { %>
-      <td><%= d[key] %></td>
-      <% }) %>
-    </tr>
-    <% }) %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</figure>

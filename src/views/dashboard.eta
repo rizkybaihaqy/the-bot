@@ -9,8 +9,27 @@
   </tr>
   <% }) %>
 </table>
-<hr />
-<form action="/set-reset-webhook" method="post">
-  <button name="toggle" value="set">Turn On Bots</button>
-  <button name="toggle" value="reset">Turn Off Bots</button>
-</form>
+<article>
+  <h2>Bot Action</h2>
+  <form action="/set-reset-webhook" method="post">
+    <% if (it.data.status === "up") { %>
+    <button
+      name="toggle"
+      value="reset"
+      type="submit"
+      class="danger"
+    >
+      Turn Off Bots
+    </button>
+    <% } else { %>
+    <button
+      name="toggle"
+      value="set"
+      type="submit"
+      class="success"
+    >
+      Turn On Bots
+    </button>
+    <% } %>
+  </form>
+</article>
