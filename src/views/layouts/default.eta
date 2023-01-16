@@ -1,0 +1,22 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Bot Manager</title>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">dashboard</a></li>
+        <li><a href="/sales">sales</a></li>
+        <li><a href="/visits">visits</a></li>
+        <li><a href="/surveys">surveys</a></li>
+      </ul>
+    </nav>
+    <hr />
+    <%~ it.body %>
+  </body>
+</html>

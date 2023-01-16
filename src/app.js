@@ -28,7 +28,13 @@ app.set ('views', path.join (__dirname, 'views'))
 
 app.get ('/json', dispatch ('welcome'))
 app.get ('/', dispatch ('dashboard'))
-app.post ('/set-reset-webhook', dispatch ('set-reset-webhook'))
+app.get ('/sales', dispatch ('sales'))
+app.get ('/surveys', dispatch ('surveys'))
+app.get ('/visits', dispatch ('visits'))
+app.post (
+  '/set-reset-webhook',
+  dispatch ('set-reset-webhook')
+)
 
 app.post (URI, dispatch ('identify'))
 app.post (URI, dispatch ('ping'))
