@@ -1,11 +1,11 @@
 import {Render} from 'fluture-express'
-import {TOKEN} from '../config'
-import {F} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
+import {TOKEN} from '../../config'
+import {F} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
 import {
   getMe,
   getWebhookInfo,
-} from '../lib/telegram/request'
+} from '../../lib/telegram/request'
 
 export default locals =>
   S.pipe ([

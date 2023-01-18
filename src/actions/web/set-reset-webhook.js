@@ -1,11 +1,11 @@
 import {Redirect} from 'fluture-express'
 import $ from 'sanctuary-def'
-import {maybeToFuture} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
+import {maybeToFuture} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
 import {
   deleteWebhook,
   setWebhook,
-} from '../lib/telegram/request'
+} from '../../lib/telegram/request'
 
 export default locals =>
   S.pipe ([

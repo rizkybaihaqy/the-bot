@@ -1,6 +1,6 @@
 import {Render} from 'fluture-express'
-import {F} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
+import {F} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
 
 export default locals =>
   S.pipe ([

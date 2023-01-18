@@ -4,7 +4,7 @@ import path from 'path'
 
 const router = Router ()
 const dispatch = dispatcher (
-  path.resolve (__dirname, '../actions')
+  path.resolve (__dirname, '../actions/web')
 )
 
 /* eslint-disable functional/no-expression-statement */
