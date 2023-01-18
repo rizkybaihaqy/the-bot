@@ -1,11 +1,11 @@
 import {Next} from 'fluture-express'
-import {F, JSONData} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
+import {F, JSONData} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
 import {
   getMessageFromUpdate,
   getTextFromMessage,
   getUpdateFromRequest,
-} from '../lib/telegram/getter'
+} from '../../lib/telegram/getter'
 
 const isCancel = S.pipe ([
   getUpdateFromRequest,

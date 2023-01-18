@@ -1,15 +1,15 @@
 import {Next} from 'fluture-express'
-import {F, JSONData, eitherToFuture} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
+import {F, JSONData, eitherToFuture} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
 import {
   getEntityFromMessage,
   getMessageFromUpdate,
   getTextFromMessage,
   getUpdateFromRequest,
-} from '../lib/telegram/getter'
-import {isCommandEqualsTo} from '../lib/telegram/predicate'
-import {fetchTrackId} from '../lib/telegram/request'
-import {isEmptyString} from '../lib/utils/predicate'
+} from '../../lib/telegram/getter'
+import {isCommandEqualsTo} from '../../lib/telegram/predicate'
+import {fetchTrackId} from '../../lib/telegram/request'
+import {isEmptyString} from '../../lib/utils/predicate'
 
 // Message -> Either String String
 const getTrackIdFromMessage = S.pipe ([

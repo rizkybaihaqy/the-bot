@@ -1,7 +1,7 @@
 import {Next} from 'fluture-express'
-import {F, JSONData} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
-import {isCommandEqualsTo} from '../lib/telegram/predicate'
+import {F, JSONData} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
+import {isCommandEqualsTo} from '../../lib/telegram/predicate'
 
 export default locals =>
   S.ifElse (isCommandEqualsTo ('/ping')) (

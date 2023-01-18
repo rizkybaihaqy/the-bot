@@ -3,8 +3,8 @@ import {
   F,
   JSONData,
   eitherToFuture,
-} from '../../lib/fluture'
-import {S} from '../../lib/sanctuary'
+} from '../../../lib/fluture'
+import {S} from '../../../lib/sanctuary'
 import {
   getCallbackQueryFromUpdate,
   getDataFromCallbackQuery,
@@ -14,9 +14,9 @@ import {
   getTextFromFormData,
   getTextFromMessage,
   getUpdateFromRequest,
-} from '../../lib/telegram/getter'
-import {validate} from '../../lib/utils/validator'
-import {surveyRules} from '../../rules/survey'
+} from '../../../lib/telegram/getter'
+import {validate} from '../../../lib/utils/validator'
+import {surveyRules} from '../../../rules/survey'
 
 // StrMap a
 const surveyReasonRules = S.pipe ([

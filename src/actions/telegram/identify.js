@@ -1,13 +1,13 @@
 import {Next} from 'fluture-express'
-import {eitherToFuture} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
+import {eitherToFuture} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
 import {
   getCallbackQueryFromUpdate,
   getChatIdFromMessage,
   getMessageFromUpdate,
   getUpdateFromRequest,
-} from '../lib/telegram/getter'
-import {sendMessage} from '../lib/telegram/request'
+} from '../../lib/telegram/getter'
+import {sendMessage} from '../../lib/telegram/request'
 
 export default locals =>
   S.pipe ([

@@ -4,16 +4,16 @@ import {
   F,
   JSONData,
   eitherToFuture,
-} from '../../lib/fluture'
-import {S} from '../../lib/sanctuary'
+} from '../../../lib/fluture'
+import {S} from '../../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
   getMessageFromUpdate,
   getTextFromMessage,
   getUpdateFromRequest,
-} from '../../lib/telegram/getter'
-import {validate} from '../../lib/utils/validator'
-import {visitRules} from '../../rules/visit'
+} from '../../../lib/telegram/getter'
+import {validate} from '../../../lib/utils/validator'
+import {visitRules} from '../../../rules/visit'
 
 // StrMap a
 const visitRulesWithoutLocationTelegramId = S.pipe ([

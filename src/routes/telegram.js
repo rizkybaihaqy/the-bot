@@ -6,7 +6,7 @@ import {TOKEN} from '../config'
 const URI = `/webhook/${TOKEN}`
 const router = Router ()
 const dispatch = dispatcher (
-  path.resolve (__dirname, '../actions')
+  path.resolve (__dirname, '../actions/telegram')
 )
 
 /* eslint-disable functional/no-expression-statement */
@@ -18,6 +18,7 @@ router.post (URI, dispatch ('order'))
 router.post (URI, dispatch ('visit'))
 router.post (URI, dispatch ('visit/report'))
 router.post (URI, dispatch ('visit/submit'))
+
 router.post (URI, dispatch ('survey/form'))
 router.post (URI, dispatch ('survey/reason'))
 router.post (URI, dispatch ('survey/additional-desc'))

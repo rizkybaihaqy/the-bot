@@ -1,5 +1,5 @@
-import {JSONData} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
+import {JSONData} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
 
 export default locals =>
   S.pipe ([

@@ -3,8 +3,8 @@ import {
   F,
   JSONData,
   eitherToFuture,
-} from '../../lib/fluture'
-import {S} from '../../lib/sanctuary'
+} from '../../../lib/fluture'
+import {S} from '../../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
   getFormDataFromText,
@@ -13,10 +13,10 @@ import {
   getReplyMessageFromMessage,
   getTextFromMessage,
   getUpdateFromRequest,
-} from '../../lib/telegram/getter'
-import {validate} from '../../lib/utils/validator'
-import {surveyRules} from '../../rules/survey'
-import {addSurvey} from '../../use-case/survey'
+} from '../../../lib/telegram/getter'
+import {validate} from '../../../lib/utils/validator'
+import {surveyRules} from '../../../rules/survey'
+import {addSurvey} from '../../../use-case/survey'
 
 // Req -> boolean
 const isSurveyLocation = S.pipe ([

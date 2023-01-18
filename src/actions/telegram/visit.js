@@ -1,10 +1,10 @@
 import {headerCase} from 'change-case'
 import {Next} from 'fluture-express'
-import {F, JSONData} from '../lib/fluture'
-import {S} from '../lib/sanctuary'
-import {isCommandEqualsTo} from '../lib/telegram/predicate'
-import Survey from '../models/Survey'
-import Visit from '../models/Visit'
+import {F, JSONData} from '../../lib/fluture'
+import {S} from '../../lib/sanctuary'
+import {isCommandEqualsTo} from '../../lib/telegram/predicate'
+import Survey from '../../models/Survey'
+import Visit from '../../models/Visit'
 
 // f (Any -> Any) -> Array String -> String
 const fieldFromModel = fns =>

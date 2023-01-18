@@ -4,8 +4,8 @@ import {
   F,
   JSONData,
   eitherToFuture,
-} from '../../lib/fluture'
-import {S} from '../../lib/sanctuary'
+} from '../../../lib/fluture'
+import {S} from '../../../lib/sanctuary'
 import {
   getEntityTextFromMessage,
   getLocationFromMessage,
@@ -14,14 +14,14 @@ import {
   getTelegramIdFromMessage,
   getTextFromMessage,
   getUpdateFromRequest,
-} from '../../lib/telegram/getter'
-import {sendMessageToAdmin} from '../../lib/telegram/request'
-import {validate} from '../../lib/utils/validator'
-import {visitRules} from '../../rules/visit'
+} from '../../../lib/telegram/getter'
+import {sendMessageToAdmin} from '../../../lib/telegram/request'
+import {validate} from '../../../lib/utils/validator'
+import {visitRules} from '../../../rules/visit'
 import {
   addVisit,
   getVisitUpdate,
-} from '../../use-case/visit'
+} from '../../../use-case/visit'
 
 // Req -> boolean
 const isVisitSubmit = S.pipe ([
