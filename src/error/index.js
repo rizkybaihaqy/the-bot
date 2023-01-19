@@ -11,7 +11,7 @@ import {sendMessage} from '../lib/telegram/request'
 // TODO Make It Pure
 export const errorHandler = (err, req, res, _) => {
   // eslint-disable-next-line functional/no-expression-statement, no-sequences
-  console.log ('ERROR:'), err
+  console.log ('ERROR:', err)
 
   // eslint-disable-next-line functional/no-expression-statement
   S.pipe ([

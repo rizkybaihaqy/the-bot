@@ -25,6 +25,12 @@ router.post (URI, dispatch ('survey/additional-desc'))
 router.post (URI, dispatch ('survey/other-additional-desc'))
 router.post (URI, dispatch ('survey/location'))
 
+router.post (URI, dispatch ('register/index'))
+router.post (URI, dispatch ('register/sales_name/input'))
+router.post (URI, dispatch ('register/sales_name/branching'))
+router.post (URI, dispatch ('register/sales_code/input'))
+router.post (URI, dispatch ('register/sales_code/branching'))
+
 router.post (URI, dispatch ('cancel'))
 router.post (URI, dispatch ('default'))
 /* eslint-enable functional/no-expression-statement */
