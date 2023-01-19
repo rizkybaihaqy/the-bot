@@ -25,7 +25,7 @@ export default locals =>
       S.map (S.lines),
       S.chain (S.head),
       S.map (S.splitOn (':')),
-      S.chain (S.head),
+      S.chain (S.last),
       S.map (
         name =>
           '#InputSalesCode\n' +

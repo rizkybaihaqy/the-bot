@@ -23,10 +23,11 @@ export default locals =>
         'text',
       ]),
       S.map (S.lines),
-      S.chain (S.head),
-      S.map (S.splitOn (':')),
+      S.map (S.map (S.splitOn (':'))),
+      S.map (S.filter (row => row.length === 2)),
+      S.map (Object.fromEntries),
       S.map (
-        ([name, code]) =>
+        ({name, code}) =>
           '#SaveSales\n' +
           `name:${name}\n` +
           `code:${code}\n` +
@@ -34,7 +35,13 @@ export default locals =>
       ),
       S.maybe (
         F.reject ('Failed To Get Data @SaveSalesCodeAction')
-      ) (locals.sendMessage ({force_reply: true})),
+      ) (
+        locals.sendMessage ({
+          inline_keyboard: [
+            [{text: 'yes', callback_data: 'save-sales'}],
+          ],
+        })
+      ),
       S.map (JSONData),
     ])
   ) (_ => F.resolve (Next (locals)))
