@@ -32,6 +32,7 @@ router.post (URI, dispatch ('register/sales_name/save'))
 router.post (URI, dispatch ('register/sales_code/input'))
 router.post (URI, dispatch ('register/sales_code/change'))
 router.post (URI, dispatch ('register/sales_code/save'))
+router.post (URI, dispatch ('register/submit'))
 
 router.post (URI, dispatch ('cancel'))
 router.post (URI, dispatch ('default'))
