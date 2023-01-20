@@ -7,21 +7,16 @@ import {isCommandEqualsTo} from '../../../lib/telegram/predicate'
 export default locals =>
   S.ifElse (isCommandEqualsTo ('/register')) (
     S.pipe ([
-      req =>
+      S.props (['body', 'message']),
+      msg =>
         S.lift2 (S.concat) (
-          S.gets (S.is ($.String)) ([
-            'body',
-            'message',
-            'from',
-            'first_name',
-          ]) (req)
+          S.gets (S.is ($.String)) (['from', 'first_name']) (
+            msg
+          )
         ) (
-          S.gets (S.is ($.String)) ([
-            'body',
-            'message',
-            'from',
-            'last_name',
-          ]) (req)
+          S.gets (S.is ($.String)) (['from', 'last_name']) (
+            msg
+          )
         ),
       S.maybe (
         S.Left (
