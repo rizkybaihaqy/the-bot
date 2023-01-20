@@ -2,9 +2,9 @@ import {DB_CHOICE} from '../config'
 import detaBase from './deta-base'
 import pg from './postgres'
 
-const dbChoice =
-  DB_CHOICE === 'DETA_BASE' ? detaBase : pg
+const dbChoice = DB_CHOICE === 'DETA_BASE' ? detaBase : pg
 
+export const insertOneToSales = dbChoice.insertOneToSales
 export const findOneSalesByTelegramId =
   dbChoice.findOneSalesByTelegramId
 export const findOneSalesById = dbChoice.findOneSalesById

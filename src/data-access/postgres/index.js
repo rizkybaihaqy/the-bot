@@ -2,6 +2,7 @@ import {
   findOneSalesById,
   findOneSalesByTelegramId,
   insertManyToSales,
+  insertOneToSales,
 } from './sales'
 import {
   insertManyToSurveys,
@@ -14,6 +15,7 @@ import {
 } from './visits'
 
 export default {
+  insertOneToSales,
   findOneSalesByTelegramId,
   findOneSalesById,
   insertManyToSales,

@@ -5,6 +5,25 @@ import {S} from '../../lib/sanctuary'
 import {sameValues} from '../../lib/utils/getter'
 import Sales from '../../models/Sales'
 
+// StrMap String -> Future Error Survey
+export const insertOneToSales = data =>
+  sameValues (S.keys (data)) (Sales)
+    ? S.pipe ([
+        x =>
+          pgFlQuery ({
+            name: 'Insert one record to sales table',
+            text: format (
+              'INSERT INTO sales (%I) VALUES (%L) RETURNING *',
+              S.keys (x),
+              S.values (x)
+            ),
+          }),
+        S.map (S.prop ('rows')),
+        S.map (S.head),
+        S.map (S.fromMaybe ({})),
+      ]) (data)
+    : F.reject ('Wrong query columns @insertOneSales')
+
 // String -> Future Error Sales
 export const findOneSalesByTelegramId = S.pipe ([
   telegramId =>

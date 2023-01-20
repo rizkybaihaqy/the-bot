@@ -4,6 +4,16 @@ import {S} from '../../lib/sanctuary'
 import {sameValues} from '../../lib/utils/getter'
 import Sales from '../../models/Sales'
 
+// StrMap String -> Future Error Survey
+export const insertOneToSales = data =>
+  sameValues (S.keys (data)) (Sales)
+    ? S.pipe ([
+        data => ({type: 'sales', data}),
+        flDetaBase ('put'),
+        S.map (S.prop ('data')),
+      ]) (data)
+    : F.reject ('Wrong query columns Sales')
+
 // String -> Future Error Sales
 export const findOneSalesByTelegramId = S.pipe ([
   tId =>
