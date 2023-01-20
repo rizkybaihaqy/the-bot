@@ -1,5 +1,6 @@
 import {
   findAllTodayVisits,
+  findAllVisits,
   findOneSalesById,
   findOneSalesByTelegramId,
   insertOneToVisits,
@@ -45,3 +46,5 @@ export const getVisitUpdate = S.pipe ([
     ),
   S.map (x => ({user: x[0], todayVisit: x[1]})),
 ])
+
+export const getAllVisits = findAllVisits

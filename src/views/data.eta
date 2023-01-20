@@ -2,6 +2,9 @@
 
 <h1><%= it.type %></h1>
 <figure>
+  <% if (it.data.length === 0) { %>
+  <h2>Empty</h2>
+  <% } else { %>
   <table>
     <thead>
       <tr>
@@ -20,4 +23,5 @@
       <% }) %>
     </tbody>
   </table>
+  <% } %>
 </figure>

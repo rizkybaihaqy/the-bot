@@ -1,4 +1,4 @@
-import {insertOneToSurveys} from '../data-access'
+import {findAllSurveys, insertOneToSurveys} from '../data-access'
 import {S} from '../lib/sanctuary'
 import {now} from '../lib/utils/getter'
 
@@ -7,3 +7,5 @@ export const addSurvey = S.pipe ([
   S.insert ('created_at') (now),
   insertOneToSurveys,
 ])
+
+export const getAllSurveys = findAllSurveys

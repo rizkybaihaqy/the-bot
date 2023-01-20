@@ -34,6 +34,13 @@ export const findOneSalesById = S.pipe ([
   S.map (S.fromMaybe ({})),
 ])
 
+// Empty -> Future Error Array Sales
+export const findAllSales = S.pipe ([
+  _ => flDetaBase ('fetch') ({type: 'sales'}),
+  S.map (S.prop ('items')),
+  S.map (S.map (S.prop ('data'))),
+])
+
 // StrMap String -> Future Error Array Sales
 export const insertManyToSales = data =>
   S.all (x => sameValues (Sales) (S.keys (x))) (data)

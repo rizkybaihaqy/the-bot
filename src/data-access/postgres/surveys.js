@@ -24,6 +24,16 @@ export const insertOneToSurveys = data =>
       ]) (data)
     : F.reject ('Wrong query columns')
 
+// Empty -> Future Error Array Survey
+export const findAllSurveys = S.pipe ([
+  _ =>
+    pgFlQuery ({
+      name: 'Get all surveys data',
+      text: 'SELECT * FROM surveys',
+    }),
+  S.map (S.prop ('rows')),
+])
+
 // Array StrMap String -> Future Error Array Survey
 export const insertManyToSurveys = data =>
   S.all (x => sameValues (Survey) (S.keys (x))) (data)

@@ -24,6 +24,16 @@ export const insertOneToVisits = data =>
       ]) (data)
     : F.reject ('Wrong query columns')
 
+// Empty -> Future Error Array Visit
+export const findAllVisits = S.pipe ([
+  _ =>
+    pgFlQuery ({
+      name: 'Get all visits data',
+      text: 'SELECT * FROM visits',
+    }),
+  S.map (S.prop ('rows')),
+])
+
 // Array StrMap String -> Future Error Array Visit
 export const insertManyToVisits = data =>
   S.all (x => sameValues (Visit) (S.keys (x))) (data)

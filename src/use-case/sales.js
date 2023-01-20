@@ -1,4 +1,5 @@
 import {
+  findAllSales,
   findOneSalesByTelegramId,
   insertOneToSales,
 } from '../data-access'
@@ -23,3 +24,5 @@ export const addSales = S.pipe ([
   S.map (S.insert ('created_at') (now)),
   S.chain (insertOneToSales),
 ])
+
+export const getAllSales = findAllSales

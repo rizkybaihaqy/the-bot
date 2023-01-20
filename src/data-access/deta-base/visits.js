@@ -15,6 +15,13 @@ export const insertOneToVisits = data =>
       ]) (data)
     : F.reject ('Wrong query columns Visits')
 
+// Empty -> Future Error Array Visit
+export const findAllVisits = S.pipe ([
+  _ => flDetaBase ('fetch') ({type: 'visits'}),
+  S.map (S.prop ('items')),
+  S.map (S.map (S.prop ('data'))),
+])
+
 // Array StrMap String -> Future Error Array Visit
 export const insertManyToVisits = data =>
   S.all (x => sameValues (Visit) (S.keys (x))) (data)

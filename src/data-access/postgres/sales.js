@@ -24,6 +24,16 @@ export const insertOneToSales = data =>
       ]) (data)
     : F.reject ('Wrong query columns @insertOneSales')
 
+// Empty -> Future Error Array Sales
+export const findAllSales = S.pipe ([
+  _ =>
+    pgFlQuery ({
+      name: 'Get all sales data',
+      text: 'SELECT * FROM sales',
+    }),
+  S.map (S.prop ('rows')),
+])
+
 // String -> Future Error Sales
 export const findOneSalesByTelegramId = S.pipe ([
   telegramId =>

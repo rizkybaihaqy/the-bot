@@ -1,6 +1,6 @@
 import {flDetaBase} from '../../db/deta-base'
-import {S} from '../../lib/sanctuary/'
 import {F} from '../../lib/fluture/'
+import {S} from '../../lib/sanctuary/'
 import {sameValues} from '../../lib/utils/getter'
 import Survey from '../../models/Survey'
 
@@ -13,6 +13,13 @@ export const insertOneToSurveys = data =>
         S.map (S.prop ('data')),
       ]) (data)
     : F.reject ('Wrong query columns Surveys')
+
+// Empty -> Future Error Array Survey
+export const findAllSurveys = S.pipe ([
+  _ => flDetaBase ('fetch') ({type: 'surveys'}),
+  S.map (S.prop ('items')),
+  S.map (S.map (S.prop ('data'))),
+])
 
 // Array StrMap String -> Future Error Array Survey
 export const insertManyToSurveys = data =>
