@@ -1,0 +1,33 @@
+<div
+  id="<%= it.name %>"
+  style="width: 100%; height: 400px"
+></div>
+<div id="<%= it.name %>-data"></div>
+<script>
+  var heatmapLayer = new HeatmapOverlay({
+    radius: 20,
+    maxOpacity: 0.8,
+    scaleRadius: false,
+    useLocalExtrema: true,
+    latField: 'lat',
+    lngField: 'lng',
+    valueField: 'count',
+  })
+  heatmapLayer.setData({
+    max: 8,
+    data: <%~ JSON.stringify(it.data) %>,
+  })
+
+  L.map('<%= it.name %>')
+    .setView([-7.057418, 110.44067], 16)
+    .addLayer(
+      L.tileLayer(
+        'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+        {
+          attribution:
+            '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        },
+      ),
+    )
+    .addLayer(heatmapLayer)
+</script>
