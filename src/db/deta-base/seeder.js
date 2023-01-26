@@ -27,4 +27,4 @@ const seed = nSales => nVisits => nSurveys =>
 /* eslint-disable functional/no-expression-statement, no-sequences */
 fork (x => (console.log (x), x)) (
   x => (console.log ('seeding complete'), x)
-) (seed (1) (1) (1))
+) (seed (1) (25) (25))

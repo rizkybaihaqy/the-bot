@@ -1,4 +1,7 @@
-import {findAllSurveys, insertOneToSurveys} from '../data-access'
+import {
+  findAllSurveysByReason,
+  insertOneToSurveys,
+} from '../data-access'
 import {S} from '../lib/sanctuary'
 import {now} from '../lib/utils/getter'
 
@@ -8,4 +11,16 @@ export const addSurvey = S.pipe ([
   insertOneToSurveys,
 ])
 
-export const getAllSurveys = findAllSurveys
+// String -> Future String Array Object
+export const getSurveysHeatmapDataByReason = S.pipe ([
+  findAllSurveysByReason,
+  S.map (
+    S.map (
+      S.pipe ([
+        S.prop ('location'),
+        S.splitOn (','),
+        ([lat, lng]) => ({lat, lng, value: '1'}),
+      ])
+    )
+  ),
+])

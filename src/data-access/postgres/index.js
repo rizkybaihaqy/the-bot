@@ -7,6 +7,7 @@ import {
 } from './sales'
 import {
   findAllSurveys,
+  findAllSurveysByReason,
   insertManyToSurveys,
   insertOneToSurveys,
 } from './surveys'
@@ -26,6 +27,7 @@ export default {
   insertManyToSurveys,
   insertOneToSurveys,
   findAllSurveys,
+  findAllSurveysByReason,
   findAllVisits,
   findAllTodayVisits,
   insertManyToVisits,

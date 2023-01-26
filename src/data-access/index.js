@@ -15,6 +15,8 @@ export const insertOneToSurveys =
 export const insertManyToSurveys =
   dbChoice.insertManyToSurveys
 export const findAllSurveys = dbChoice.findAllSurveys
+export const findAllSurveysByReason =
+  dbChoice.findAllSurveysByReason
 export const findAllVisits = dbChoice.findAllVisits
 export const insertOneToVisits = dbChoice.insertOneToVisits
 export const insertManyToVisits =
