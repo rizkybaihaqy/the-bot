@@ -9,7 +9,7 @@ const dispatch = dispatcher (
 
 /* eslint-disable functional/no-expression-statement */
 router.get ('/json', dispatch ('welcome'))
-router.get ('/', dispatch ('dashboard'))
+router.get ('/settings', dispatch ('settings'))
 router.get ('/sales', dispatch ('sales'))
 router.get ('/surveys', dispatch ('surveys'))
 router.get ('/visits', dispatch ('visits'))

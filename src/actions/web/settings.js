@@ -19,5 +19,5 @@ export default locals =>
       status: webhook.url === '' ? 'down' : 'up',
     })),
     S.map (data => ({data})),
-    S.map (Render ('dashboard')),
+    S.map (Render ('settings')),
   ])

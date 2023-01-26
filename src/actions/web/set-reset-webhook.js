@@ -15,5 +15,5 @@ export default locals =>
     S.chain (x =>
       x === 'set' ? setWebhook : deleteWebhook
     ),
-    S.map (_ => Redirect ('/')),
+    S.map (_ => Redirect ('/settings')),
   ])
