@@ -32,6 +32,12 @@ export const findAllVisits = S.pipe ([
       text: 'SELECT * FROM visits',
     }),
   S.map (S.prop ('rows')),
+  S.map (
+    S.map (({location, ...rest}) => ({
+      ...rest,
+      location: `${location.x}, ${location.y}`,
+    }))
+  ),
 ])
 
 // Array StrMap String -> Future Error Array Visit

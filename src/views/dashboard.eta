@@ -1,0 +1,6 @@
+<% layout('./layouts/default') %>
+
+<h1>Bot</h1>
+
+<%~ includeFile('./partials/heatmap', {name: 'visit', data:
+it.visits}) %>

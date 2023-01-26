@@ -48,3 +48,17 @@ export const getVisitUpdate = S.pipe ([
 ])
 
 export const getAllVisits = findAllVisits
+
+// Nothing -> Future String Array Object
+export const getVisitsHeatmapData = S.pipe ([
+  getAllVisits,
+  S.map (
+    S.map (
+      S.pipe ([
+        S.prop ('location'),
+        S.splitOn (','),
+        ([lat, lng]) => ({lat, lng, value: '1'}),
+      ])
+    )
+  ),
+])
