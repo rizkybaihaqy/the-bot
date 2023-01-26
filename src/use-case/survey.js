@@ -1,4 +1,5 @@
 import {
+  findAllSurveys,
   findAllSurveysByReason,
   insertOneToSurveys,
 } from '../data-access'
@@ -10,6 +11,9 @@ export const addSurvey = S.pipe ([
   S.insert ('created_at') (now),
   insertOneToSurveys,
 ])
+
+// Nothing -> Future String Array Survey
+export const getAllSurveys = findAllSurveys
 
 // String -> Future String Array Object
 export const getSurveysHeatmapDataByReason = S.pipe ([
