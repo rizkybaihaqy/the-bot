@@ -8,6 +8,8 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+      integrity="sha256-6WY/4blus2uRIb2s60LjQfQixr7kS1sh0N01FwTYvcc="
+      crossorigin=""
     />
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link
@@ -16,19 +18,24 @@
       integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
       crossorigin=""
     />
+
     <script
       src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
       integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
       crossorigin=""
     ></script>
-    <script src="/scripts/heatmap.js"></script>
-    <script src="/scripts/leaflet-heatmap.js"></script>
+    <script
+      src="https://www.unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"
+      integrity="sha256-65UqrlgGoRAnKfKRuriH3eeDrOhZgZo1SCenduc+SGo="
+      crossorigin=""
+    ></script>
+
     <title>Bot Manager</title>
   </head>
   <body>
     <nav class="container-fluid">
       <ul>
-        <li><a href="/">dashboard</a></li>
+        <li><a href="/dashboard">dashboard</a></li>
         <li><a href="/sales">sales</a></li>
         <li><a href="/visits">visits</a></li>
         <li><a href="/surveys">surveys</a></li>
