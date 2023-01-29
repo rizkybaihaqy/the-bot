@@ -1,18 +1,26 @@
 import * as dotenv from 'dotenv'
+import path from 'path'
 
 // eslint-disable-next-line functional/no-expression-statement
-dotenv.config ()
+dotenv.config ({
+  path: path.resolve (
+    process.cwd (),
+    process.env.NODE_ENV + '.env'
+  ),
+})
 
-export const TOKEN = process.env.TOKEN
-export const SERVER_URL = process.env.SERVER_URL
-export const TRACKER_API_KEY = process.env.TRACKER_API_KEY
-export const ADMIN_TELEGRAM_ID =
-  process.env.ADMIN_TELEGRAM_ID
-export const DETA_KEY = process.env.DETA_KEY
-export const DB_CHOICE = process.env.DB_CHOICE
-export const DATABASE_URL = process.env.DATABASE_URL
-export const PGUSER = process.env.PGUSER
-export const PGHOST = process.env.PGHOST
-export const PGPASSWORD = process.env.PGPASSWORD
-export const PGDATABASE = process.env.PGDATABASE
-export const PGPORT = process.env.PGPORT
+export default {
+  TRACKER_API_KEY: process.env.TRACKER_API_KEY,
+
+  DB_CHOICE: process.env.DB_CHOICE,
+  SERVER_URL: process.env.SERVER_URL,
+  TOKEN: process.env.TOKEN,
+  ADMIN_TELEGRAM_ID: process.env.ADMIN_TELEGRAM_ID,
+
+  // dev
+  DATABASE_URL: process.env.DATABASE_URL,
+
+  // testing & staging
+  DETA_KEY: process.env.DETA_KEY,
+  DETA_BASE: process.env.DETA_BASE,
+}
