@@ -63,9 +63,14 @@ typings/
 
 # build forder
 dist
+
 !testing/
 testing/*
 !testing/.deta/
+
+!staging/
+staging/*
+!staging/.deta/
 
 # Scrach Pad File
 pad.js
