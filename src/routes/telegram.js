@@ -1,9 +1,9 @@
 import {Router} from 'express'
 import {dispatcher} from 'fluture-express'
 import path from 'path'
-import {TOKEN} from '../config'
+import config from '../config'
 
-const URI = `/webhook/${TOKEN}`
+const URI = `/webhook/${config.TOKEN}`
 const router = Router ()
 const dispatch = dispatcher (
   path.resolve (__dirname, '../actions/telegram')

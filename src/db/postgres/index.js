@@ -1,11 +1,5 @@
 import {Pool} from 'pg'
-import {
-  PGDATABASE,
-  PGHOST,
-  PGPASSWORD,
-  PGPORT,
-  PGUSER,
-} from '../../config/'
+import config from '../../config/'
 import {F} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 
@@ -16,11 +10,7 @@ const query = db => (text, params, callback) =>
 export const flQuery = S.pipe ([query, F.encaseP])
 
 const pool = new Pool ({
-  user: PGUSER,
-  host: PGHOST,
-  database: PGDATABASE,
-  password: PGPASSWORD,
-  port: PGPORT,
+  connectionString: config.DATABASE_URL,
 })
 
 export const pgFlQuery = flQuery (pool)

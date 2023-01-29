@@ -1,12 +1,7 @@
-import {
-  ADMIN_TELEGRAM_ID,
-  SERVER_URL,
-  TOKEN,
-  TRACKER_API_KEY,
-} from '../../config'
+import config from '../../config'
 import {flAxios} from '../fluture'
 
-const TELEGRAM_URL = `https://api.telegram.org/bot${TOKEN}`
+const TELEGRAM_URL = `https://api.telegram.org/bot${config.TOKEN}`
 
 // ReplyMarkup -> String -> String -> Future Error Axios
 export const sendMessage =
@@ -34,7 +29,7 @@ export const setWebhook = flAxios ({
   method: 'POST',
   url: `${TELEGRAM_URL}/setWebhook`,
   data: {
-    url: `${SERVER_URL}/webhook/${TOKEN}`,
+    url: `${config.SERVER_URL}/webhook/${config.TOKEN}`,
     drop_pending_updates: true,
   },
 })
@@ -44,7 +39,7 @@ export const deleteWebhook = flAxios ({
   method: 'POST',
   url: `${TELEGRAM_URL}/deleteWebhook`,
   data: {
-    url: `${SERVER_URL}/webhook/${TOKEN}`,
+    url: `${config.SERVER_URL}/webhook/${config.TOKEN}`,
     drop_pending_updates: true,
   },
 })
@@ -57,7 +52,7 @@ export const getMe = flAxios ({
 
 // String -> Future Error Axios
 export const sendMessageToAdmin = sendMessage (
-  ADMIN_TELEGRAM_ID
+  config.ADMIN_TELEGRAM_ID
 ) ({remove_keyboard: true})
 
 // String -> Future Error Axios
@@ -69,7 +64,7 @@ export const fetchTrackId = myid =>
       guid: '',
       code: 0,
       data: {
-        pApi: TRACKER_API_KEY,
+        pApi: config.TRACKER_API_KEY,
         trackId: myid,
       },
     },

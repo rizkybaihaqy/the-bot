@@ -1,5 +1,5 @@
 import {Render} from 'fluture-express'
-import {TOKEN} from '../../config'
+import config from '../../config'
 import {F} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
 import {
@@ -14,7 +14,7 @@ export default locals =>
     S.map (([me, webhook]) => ({
       ...me,
       webhook: S.fromMaybe ('') (
-        S.stripSuffix (`/webhook/${TOKEN}`) (webhook.url)
+        S.stripSuffix (`/webhook/${config.TOKEN}`) (webhook.url)
       ),
       status: webhook.url === '' ? 'down' : 'up',
     })),

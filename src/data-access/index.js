@@ -1,8 +1,9 @@
-import {DB_CHOICE} from '../config'
-import detaBase from './deta-base'
-import pg from './postgres'
+import config from '../config'
 
-const dbChoice = DB_CHOICE === 'DETA_BASE' ? detaBase : pg
+const dbChoice =
+  config.DB_CHOICE === 'DETA_BASE'
+    ? require ('./deta-base')
+    : require ('./postgres')
 
 export const insertOneToSales = dbChoice.insertOneToSales
 export const findOneSalesByTelegramId =

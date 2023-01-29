@@ -1,9 +1,11 @@
 import {Deta} from 'deta'
-import {DETA_KEY} from '../../config'
+import config from '../../config'
 import {F} from '../../lib/fluture'
 
-const deta = Deta (DETA_KEY)
+const deta = Deta (config.DETA_KEY)
 
 export const flDetaBase = method =>
   // eslint-disable-next-line functional/prefer-tacit
-  F.encaseP (data => deta.Base ('the-bot')[method] (data))
+  F.encaseP (data =>
+    deta.Base (config.DETA_BASE)[method] (data)
+  )
