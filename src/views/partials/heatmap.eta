@@ -4,7 +4,7 @@
 ></div>
 <script>
   L.map('<%= it.name %>')
-  .setView([-7.057418, 110.44067], 16)
+  .setView([-2.2134244817818147, 113.92042805677664], 16)
   .addLayer(
     L.tileLayer(
       'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
