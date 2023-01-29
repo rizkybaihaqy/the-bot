@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development babel-node ./src/bin/www.js",
+    "clean:testing": "find testing/* -not -path \"testing/.deta/*\" -not -path \"testing/.deta\" -print0 | xargs -0 rm -rf",
+    "build:testing": "npm run clean:testing && cross-env NODE_ENV=testing babel ./src --out-dir testing --copy-files && mv ./testing/app.js ./testing/index.js && cp package.json ./testing/package.json && cp .env.testing ./testing/.env",
+    "deploy:testing": "npm run build:testing && deta deploy ./testing && (cd ./testing && deta update -e .env)",
+    "seed:testing": "npx babel-node ./src/db/deta-base/seeder.js",
     "clean": "rm -rf dist",
     "build": "npm run clean && babel ./src --out-dir dist --copy-files",
     "prod": "npm run build && node ./dist/bin/www.js",
