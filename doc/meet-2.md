@@ -17,4 +17,3 @@ data survei
 
 macho monitoring achivement and oportunity sales
 
-macho_test_bot key: 5850688912:AAHa4cbHFb5hy30KN5RxBzB2BTcXzTaa2Vk
