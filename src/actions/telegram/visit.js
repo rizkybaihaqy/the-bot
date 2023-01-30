@@ -28,7 +28,7 @@ export default locals =>
               text: 'Report Visits',
               switch_inline_query_current_chat:
                 '\n#VisitReport\n' +
-                fieldFromModel (S.dropLast (2)) (Visit),
+                fieldFromModel (S.dropLast (3)) (Visit),
             },
           ],
           [
@@ -36,7 +36,7 @@ export default locals =>
               text: 'Report Survey',
               switch_inline_query_current_chat:
                 '\n#SurveyForm\n' +
-                fieldFromModel (S.dropLast (3)) (Survey),
+                fieldFromModel (S.dropLast (4)) (Survey),
             },
           ],
         ],
