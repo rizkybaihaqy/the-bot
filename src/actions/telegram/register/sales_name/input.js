@@ -21,11 +21,11 @@ export default locals =>
       S.maybe (
         S.Left (
           '#InputSalesName\n' +
-            'You are not providing your name\n' +
-            'Please provide your name'
+            'Tidak ada nama yang dimasukan\n' +
+            'Silahkan masukan nama anda'
         )
       ) (full_name =>
-        S.Right (`${full_name}\nUse this name?`)
+        S.Right (`${full_name}\nGunakan nama ini?`)
       ),
       S.either (locals.sendMessage ({force_reply: true})) (
         locals.sendMessage ({

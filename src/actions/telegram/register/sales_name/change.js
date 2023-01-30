@@ -16,7 +16,7 @@ const isChangeSalesName = S.pipe ([
 export default locals =>
   S.ifElse (isChangeSalesName) (
     S.pipe ([
-      S.K ('#InputSalesName\nPlease provide your name'),
+      S.K ('#InputSalesName\nSilahkan masukan nama anda'),
       locals.sendMessage ({force_reply: true}),
       S.map (JSONData),
     ])

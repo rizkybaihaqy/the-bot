@@ -35,14 +35,14 @@ export default locals =>
       S.maybe (
         S.Left (
           '#InputSalesCode\n' +
-            'You are not providing your sales code\n' +
-            'Please provide your sales code'
+            'anda tidak memasukan kode sales\n' +
+            'silahkan masukan kode sales anda'
         )
       ) (([name, code]) =>
         S.Right (
           `name:${name}\n` +
             `code:${code}\n` +
-            'Use this sales code?'
+            'gunakan kode sales ini?'
         )
       ),
       S.either (locals.sendMessage ({force_reply: true})) (

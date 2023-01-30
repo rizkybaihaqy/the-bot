@@ -28,7 +28,7 @@ export default locals =>
         sales_name =>
           '#InputSalesCode\n' +
           `name: ${sales_name}\n` +
-          'Please provide your sales code'
+          'Silahkan masukan kode sales anda'
       ),
       S.maybe (
         F.reject ('Failed To Get Data @SaveSalesNameAction')

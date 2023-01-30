@@ -25,7 +25,7 @@ const getTrackIdFromMessage = S.pipe ([
     ),
   S.map (S.trim),
   S.chain (S.tagBy (S.complement (isEmptyString))),
-  S.mapLeft (S.K ('Order Id Is Required')),
+  S.mapLeft (S.K ('Order Id harus ada')),
 ])
 
 // Res -> Future String Data

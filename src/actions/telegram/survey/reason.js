@@ -42,12 +42,12 @@ const surveyReasonTextGenerator = ({reason, ...survey}) =>
   '\n' +
   getTextFromFormData ({...survey, reason}) +
   (reason === 'no_need_for_internet'
-    ? 'additional_desc: -'
+    ? 'deskripsi_tambahan: -'
     : reason === 'already_subscribe_to_competitor'
-    ? '\nWho is the competitor ?'
+    ? '\nSiapa Kompetitornya ?'
     : reason === 'need_cheaper_package'
-    ? '\nWhat is the price range ?'
-    : '\nAdd more description !')
+    ? '\nBerapa range harganya ?'
+    : '\nTambahkan deskripsi !')
 
 // String -> ReplyMarkup
 const replyMarkup = reason =>

@@ -89,7 +89,7 @@ export default locals =>
             ],
           ],
           input_field_placeholder:
-            'Send Location If The Data Already Correct',
+            'Share lokasi anda saat ini',
           resize_keyboard: true,
         })
       ),

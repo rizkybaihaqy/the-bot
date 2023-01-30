@@ -10,7 +10,7 @@ export const validate = rules =>
     S.pipe ([
       objDiff (rules),
       S.map (capitalCase),
-      x => 'Missing Field ' + x,
+      x => 'Data ' + x + ' harus ada',
       S.Left,
     ])
   )

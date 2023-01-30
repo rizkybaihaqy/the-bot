@@ -30,7 +30,7 @@ export default locals =>
         name =>
           '#InputSalesCode\n' +
           `name: ${name}\n` +
-          'Please provide your sales code'
+          'Silahkan masukan kode sales anda'
       ),
       S.maybe (
         F.reject (

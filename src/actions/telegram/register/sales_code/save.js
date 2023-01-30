@@ -31,10 +31,10 @@ export default locals =>
           '#SaveSales\n' +
           `name:${name}\n` +
           `code:${code}\n` +
-          'Is your data correct?'
+          'apakah data sudah benar?'
       ),
       S.maybe (
-        F.reject ('Failed To Get Data @SaveSalesCodeAction')
+        F.reject ('gagal mendapatkan data @SaveSalesCodeAction')
       ) (
         locals.sendMessage ({
           inline_keyboard: [

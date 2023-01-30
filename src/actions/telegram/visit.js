@@ -22,7 +22,7 @@ const fieldFromModel = fns =>
 export default locals =>
   S.ifElse (isCommandEqualsTo ('/visit')) (
     S.pipe ([
-      _ => 'Which visit you want to report ?',
+      _ => 'Jenis visit apa yang ingin dilaporkan ?',
       locals.sendMessage ({
         inline_keyboard: [
           [

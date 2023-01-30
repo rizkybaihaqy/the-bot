@@ -20,10 +20,10 @@ export default locals =>
         ),
       S.maybe (
         S.Left (
-          '#InputSalesName\nCannot get your name. Please provide your name'
+          '#InputSalesName\nTidak bisa mendapatkan nama dari Telegram, Silahkan masukan nama'
         )
       ) (full_name =>
-        S.Right (`Hi ${full_name}. Use this name?`)
+        S.Right (`Hi ${full_name}. Gunakan nama ini?`)
       ),
       S.either (locals.sendMessage ({force_reply: true})) (
         locals.sendMessage ({

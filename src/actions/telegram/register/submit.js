@@ -31,7 +31,7 @@ export default locals =>
           S.pipe ([
             S.gets (S.is ($.Number)) (['from', 'id']),
             S.map (id => id.toString ()),
-            S.maybeToEither ('Failed To Get Telegram Id'),
+            S.maybeToEither ('Gagal mendapatkan id telegram'),
           ]) (req)
         ) (
           S.pipe ([
@@ -42,7 +42,7 @@ export default locals =>
             S.map (S.map (S.map (S.trim))),
             S.map (Object.fromEntries),
             S.maybeToEither (
-              'Failed Sales Name and Sales Code'
+              'Gagal mendapatkan nama sales dan kodenya'
             ),
           ]) (req)
         ),
