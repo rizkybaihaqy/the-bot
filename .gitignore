@@ -62,11 +62,11 @@ typings/
 .next
 
 # build forder
-dist
+!dist/
 
-!testing/
-testing/*
-!testing/.deta/
+!dist/testing/
+dist/testing/*
+!dist/testing/.deta/
 
 !staging/
 staging/*
