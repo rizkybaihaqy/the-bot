@@ -5,12 +5,14 @@ import {S} from '../../lib/sanctuary'
 import {isCommandEqualsTo} from '../../lib/telegram/predicate'
 import Survey from '../../models/Survey'
 import Visit from '../../models/Visit'
+import {getTranslation} from '../../translation'
 
-// f (Any -> Any) -> Array String -> String
+// f (Any -> Maybe) -> Array String -> String
 const fieldFromModel = fns =>
   S.pipe ([
     fns,
     S.fromMaybe ([]),
+    S.map (getTranslation),
     S.map (x => headerCase (x, {delimiter: ' '})),
     S.joinWith (':\n'),
     x => x + ':',

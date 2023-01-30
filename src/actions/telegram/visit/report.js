@@ -1,4 +1,4 @@
-import {snakeCase} from 'change-case'
+import {headerCase, snakeCase} from 'change-case'
 import {Next} from 'fluture-express'
 import {
   F,
@@ -14,6 +14,10 @@ import {
 } from '../../../lib/telegram/getter'
 import {validate} from '../../../lib/utils/validator'
 import {visitRules} from '../../../rules/visit'
+import {
+  getOriginal,
+  getTranslation,
+} from '../../../translation'
 
 // StrMap a
 const visitRulesWithoutLocationTelegramId = S.pipe ([
@@ -38,7 +42,9 @@ const getVisitDataFromMessage = S.pipe ([
   S.map (S.filter (x => x.length === 2)),
   S.map (
     S.map (([key, value]) =>
-      S.Pair (snakeCase (key)) (S.trim (value))
+      S.Pair (S.pipe ([snakeCase, getOriginal]) (key)) (
+        S.trim (value)
+      )
     )
   ),
   S.map (S.fromPairs),
@@ -55,7 +61,17 @@ export default locals =>
         validate (visitRulesWithoutLocationTelegramId)
       ),
       S.map (S.pairs),
-      S.map (S.map (x => S.fst (x) + ':' + S.snd (x))),
+      S.map (
+        S.map (
+          x =>
+            S.pipe ([
+              getTranslation,
+              x => headerCase (x, {delimiter: ' '}),
+            ]) (S.fst (x)) +
+            ':' +
+            S.snd (x)
+        )
+      ),
       S.map (S.unlines),
       S.map (x => '#VisitSubmit\n' + x),
       eitherToFuture,

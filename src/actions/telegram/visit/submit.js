@@ -18,6 +18,7 @@ import {
 import {sendMessageToAdmin} from '../../../lib/telegram/request'
 import {validate} from '../../../lib/utils/validator'
 import {visitRules} from '../../../rules/visit'
+import {getOriginal} from '../../../translation'
 import {
   addVisit,
   getVisitUpdate,
@@ -42,7 +43,9 @@ const getVisitDataFromReplyMessage = S.pipe ([
   S.map (S.filter (x => x.length === 2)),
   S.map (
     S.map (([key, value]) =>
-      S.Pair (snakeCase (key)) (S.trim (value))
+      S.Pair (S.pipe ([snakeCase, getOriginal]) (key)) (
+        S.trim (value)
+      )
     )
   ),
   S.map (S.fromPairs),

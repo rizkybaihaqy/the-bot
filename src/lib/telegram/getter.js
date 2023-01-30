@@ -1,5 +1,9 @@
 import {headerCase, snakeCase} from 'change-case'
 import $ from 'sanctuary-def'
+import {
+  getOriginal,
+  getTranslation,
+} from '../../translation'
 import {S} from '../sanctuary'
 
 // Request -> Either String Update
@@ -137,7 +141,9 @@ export const getFormDataFromText = S.pipe ([
   S.map (S.splitOn (':')),
   S.filter (x => x.length === 2),
   S.map (([key, value]) =>
-    S.Pair (snakeCase (key)) (S.trim (value))
+    S.Pair (S.pipe ([snakeCase, getOriginal]) (key)) (
+      S.trim (value)
+    )
   ),
   S.fromPairs,
 ])
@@ -147,7 +153,10 @@ export const getTextFromFormData = S.pipe ([
   S.pairs,
   S.map (
     x =>
-      headerCase (S.fst (x), {delimiter: ' '}) +
+      S.pipe ([
+        getTranslation,
+        x => headerCase (x, {delimiter: ' '}),
+      ]) (S.fst (x)) +
       ': ' +
       S.snd (x)
   ),
