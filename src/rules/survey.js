@@ -1,12 +1,15 @@
-import {S} from '../lib/sanctuary'
-import {isEmptyString} from '../lib/utils/predicate'
+import {notAnEmpty, validator} from '../lib/utils/validator'
 
 export const surveyRules = {
-  respondent_name: S.tagBy (S.complement (isEmptyString)),
-  age: S.tagBy (S.complement (isEmptyString)),
-  job: S.tagBy (S.complement (isEmptyString)),
-  home_state: S.tagBy (S.complement (isEmptyString)),
-  reason: S.tagBy (S.complement (isEmptyString)),
-  additional_desc: S.tagBy (S.complement (isEmptyString)),
-  location: S.tagBy (S.complement (isEmptyString)),
+  respondent_name: validator ('respondent_name') ([
+    notAnEmpty (String),
+  ]),
+  age: validator ('age') ([notAnEmpty (String)]),
+  job: validator ('job') ([notAnEmpty (String)]),
+  home_state: validator ('home_state') ([notAnEmpty (String)]),
+  reason: validator ('reason') ([notAnEmpty (String)]),
+  additional_desc: validator ('additional_desc') ([
+    notAnEmpty (String),
+  ]),
+  location: validator ('location') ([notAnEmpty (String)]),
 }
