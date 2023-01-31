@@ -1,29 +1,22 @@
 import {Next} from 'fluture-express'
-import {eitherToFuture} from '../../lib/fluture'
+import {F} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
-import {
-  getCallbackQueryFromUpdate,
-  getChatIdFromMessage,
-  getMessageFromUpdate,
-  getUpdateFromRequest,
-} from '../../lib/telegram/getter'
 import {sendMessage} from '../../lib/telegram/request'
+import {alt_} from '../../lib/utils/function'
+import {get, gets} from '../../lib/utils/object'
 
 export default locals =>
   S.pipe ([
-    getUpdateFromRequest,
-    S.chain (update =>
-      S.alt (getMessageFromUpdate (update)) (
-        S.pipe ([
-          getCallbackQueryFromUpdate,
-          S.chain (getMessageFromUpdate),
-        ]) (update)
+    get ('body'),
+    S.chain (
+      alt_ (get ('message')) (
+        gets (['callback_query', 'message'])
       )
     ),
-    S.chain (getChatIdFromMessage),
+    S.chain (gets (['chat', 'id'])),
     S.map (chatId =>
       S.insert ('sendMessage') (sendMessage (chatId)) (locals)
     ),
-    eitherToFuture,
+    S.maybe (F.reject ('Cannot Find Chat Id')) (F.resolve),
     S.map (Next),
   ])

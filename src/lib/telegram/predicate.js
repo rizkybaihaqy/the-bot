@@ -1,16 +1,18 @@
 import {S} from '../../lib/sanctuary'
-import {
-  getEntityTextFromMessage,
-  getMessageFromUpdate,
-  getUpdateFromRequest,
-} from './getter'
+import {lift2_} from '../utils/function'
+import {get, gets} from '../utils/object'
+import {getEntity} from './object'
+import {stripCmdArg} from './string'
 
 // String -> Request -> Boolean
 export const isCommandEqualsTo = cmd =>
   S.pipe ([
-    getUpdateFromRequest,
-    S.chain (getMessageFromUpdate),
-    S.chain (getEntityTextFromMessage ('bot_command')),
+    gets (['body', 'message']),
+    S.chain (
+      lift2_ (stripCmdArg) (get ('text')) (
+        getEntity ('bot_command')
+      )
+    ),
     S.map (S.equals (cmd)),
-    S.fromRight (false),
+    S.fromMaybe (false),
   ])

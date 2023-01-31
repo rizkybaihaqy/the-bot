@@ -1,18 +1,13 @@
 import {Next} from 'fluture-express'
 import {F, JSONData} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
-import {
-  getMessageFromUpdate,
-  getTextFromMessage,
-  getUpdateFromRequest,
-} from '../../lib/telegram/getter'
+import {gets} from '../../lib/utils/object'
 
 const isCancel = S.pipe ([
-  getUpdateFromRequest,
-  S.chain (getMessageFromUpdate),
-  S.chain (getTextFromMessage),
-  S.map (x => S.equals ('cancel') (S.toLower (x))),
-  S.fromRight (false),
+  gets (['body', 'message', 'text']),
+  S.map (S.toLower),
+  S.map (S.equals ('cancel')),
+  S.fromMaybe (false),
 ])
 
 export default locals =>
