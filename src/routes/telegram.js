@@ -10,32 +10,31 @@ const dispatch = dispatcher (
 )
 
 /* eslint-disable functional/no-expression-statement */
-router.post (URI, dispatch ('identify'))
-router.post (URI, dispatch ('ping'))
-router.post (URI, dispatch ('echo'))
-router.post (URI, dispatch ('order'))
-
-router.post (URI, dispatch ('visit'))
-router.post (URI, dispatch ('visit/report'))
-router.post (URI, dispatch ('visit/submit'))
-
-router.post (URI, dispatch ('survey/form'))
-router.post (URI, dispatch ('survey/reason'))
-router.post (URI, dispatch ('survey/additional-desc'))
-router.post (URI, dispatch ('survey/other-additional-desc'))
-router.post (URI, dispatch ('survey/location'))
-
-router.post (URI, dispatch ('register/index'))
-router.post (URI, dispatch ('register/sales_name/input'))
-router.post (URI, dispatch ('register/sales_name/change'))
-router.post (URI, dispatch ('register/sales_name/save'))
-router.post (URI, dispatch ('register/sales_code/input'))
-router.post (URI, dispatch ('register/sales_code/change'))
-router.post (URI, dispatch ('register/sales_code/save'))
-router.post (URI, dispatch ('register/submit'))
-
-router.post (URI, dispatch ('cancel'))
-router.post (URI, dispatch ('default'))
+router.post (
+  URI,
+  dispatch ('identify'),
+  dispatch ('ping'),
+  dispatch ('echo'),
+  dispatch ('order'),
+  dispatch ('visit'),
+  dispatch ('visit/report'),
+  dispatch ('visit/submit'),
+  dispatch ('survey/form'),
+  dispatch ('survey/reason'),
+  dispatch ('survey/additional-desc'),
+  dispatch ('survey/other-additional-desc'),
+  dispatch ('survey/location'),
+  dispatch ('register/index'),
+  dispatch ('register/sales_name/input'),
+  dispatch ('register/sales_name/change'),
+  dispatch ('register/sales_name/save'),
+  dispatch ('register/sales_code/input'),
+  dispatch ('register/sales_code/change'),
+  dispatch ('register/sales_code/save'),
+  dispatch ('register/submit'),
+  dispatch ('cancel'),
+  dispatch ('default')
+)
 /* eslint-enable functional/no-expression-statement */
 
 export default router
