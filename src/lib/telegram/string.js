@@ -3,7 +3,7 @@ export const stripEntity =
   ({offset, length}) =>
     text.slice (offset + length)
 
-export const stripCmdArg =
+export const stripText =
   text =>
   ({offset, length}) =>
     text.slice (offset, offset + length)
