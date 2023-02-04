@@ -1,4 +1,3 @@
-import {headerCase} from 'change-case'
 import {Next} from 'fluture-express'
 import {F, JSONData} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
@@ -13,7 +12,6 @@ const fieldFromModel = fns =>
     fns,
     S.fromMaybe ([]),
     S.map (getTranslation),
-    S.map (x => headerCase (x, {delimiter: ' '})),
     S.joinWith (':\n'),
     x => x + ':',
   ])
