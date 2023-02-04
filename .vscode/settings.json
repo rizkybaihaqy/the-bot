@@ -11,5 +11,10 @@
     "source.fixAll.eslint": true
   },
   "dotenv.enableAutocloaking": false,
-  "cSpell.words": ["deta", "fluture"]
+  "cSpell.words": [
+    "deta",
+    "fluture",
+    "strmap",
+    "unlines"
+  ]
 }
