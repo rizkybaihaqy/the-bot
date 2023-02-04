@@ -1,4 +1,3 @@
-import {headerCase, snakeCase} from 'change-case'
 import {Next} from 'fluture-express'
 import {
   F,
@@ -6,18 +5,16 @@ import {
   eitherToFuture,
 } from '../../../lib/fluture'
 import {S} from '../../../lib/sanctuary'
+import {getEntity} from '../../../lib/telegram/object'
 import {
-  getEntityTextFromMessage,
-  getMessageFromUpdate,
-  getTextFromMessage,
-  getUpdateFromRequest,
-} from '../../../lib/telegram/getter'
+  stripText,
+  textFormToStrMap,
+} from '../../../lib/telegram/string'
+import {strMapToTextForm} from '../../../lib/telegram/strmap'
+import {lift2_} from '../../../lib/utils/function'
+import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {visitRules} from '../../../rules/visit'
-import {
-  getOriginal,
-  getTranslation,
-} from '../../../translation'
 
 // StrMap a
 const visitRulesWithoutLocationTelegramId = S.pipe ([
@@ -27,52 +24,25 @@ const visitRulesWithoutLocationTelegramId = S.pipe ([
 
 // Req -> boolean
 const isVisitReport = S.pipe ([
-  getUpdateFromRequest,
-  S.chain (getMessageFromUpdate),
-  S.chain (getEntityTextFromMessage ('hashtag')),
-  S.map (S.equals ('#VisitReport')),
-  S.fromRight (false),
-])
-
-// Message -> Either String StrMap String
-const getVisitDataFromMessage = S.pipe ([
-  getTextFromMessage,
-  S.map (S.lines),
-  S.map (S.map (S.splitOn (':'))),
-  S.map (S.filter (x => x.length === 2)),
-  S.map (
-    S.map (([key, value]) =>
-      S.Pair (S.pipe ([snakeCase, getOriginal]) (key)) (
-        S.trim (value)
-      )
-    )
+  gets (['body', 'message']),
+  S.chain (
+    lift2_ (stripText) (get ('text')) (getEntity ('hashtag'))
   ),
-  S.map (S.fromPairs),
+  S.map (S.equals ('#VisitReport')),
+  S.fromMaybe (false),
 ])
 
 // Locals -> Req -> Future Error Axios
 export default locals =>
   S.ifElse (isVisitReport) (
     S.pipe ([
-      getUpdateFromRequest,
-      S.chain (getMessageFromUpdate),
-      S.chain (getVisitDataFromMessage),
+      gets (['body', 'message', 'text']),
+      S.map (textFormToStrMap),
+      S.maybeToEither ('Cannot get visit report'),
       S.chain (
         validate (visitRulesWithoutLocationTelegramId)
       ),
-      S.map (S.pairs),
-      S.map (
-        S.map (
-          x =>
-            S.pipe ([
-              getTranslation,
-              x => headerCase (x, {delimiter: ' '}),
-            ]) (S.fst (x)) +
-            ':' +
-            S.snd (x)
-        )
-      ),
-      S.map (S.unlines),
+      S.map (strMapToTextForm),
       S.map (x => '#VisitSubmit\n' + x),
       eitherToFuture,
       S.chain (

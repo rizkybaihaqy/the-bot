@@ -5,17 +5,14 @@ import {
   eitherToFuture,
 } from '../../../lib/fluture'
 import {S} from '../../../lib/sanctuary'
+import {getEntity} from '../../../lib/telegram/object'
 import {
-  getCallbackQueryFromUpdate,
-  getDataFromCallbackQuery,
-  getEntityTextFromMessage,
-  getFormDataFromText,
-  getMessageFromUpdate,
-  getReplyMessageFromMessage,
-  getTextFromFormData,
-  getTextFromMessage,
-  getUpdateFromRequest,
-} from '../../../lib/telegram/getter'
+  stripText,
+  textFormToStrMap,
+} from '../../../lib/telegram/string'
+import {strMapToTextForm} from '../../../lib/telegram/strmap'
+import {alt_, lift2_} from '../../../lib/utils/function'
+import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {surveyRules} from '../../../rules/survey'
 
@@ -25,70 +22,68 @@ const surveyAdditionalDescRules =
 
 // Req -> boolean
 const isSurveyAdditionalDesc = S.pipe ([
-  getUpdateFromRequest,
-  S.chain (update =>
-    S.alt (
-      S.pipe ([
-        getMessageFromUpdate,
-        S.chain (getReplyMessageFromMessage),
-      ]) (update)
-    ) (
-      S.pipe ([
-        getCallbackQueryFromUpdate,
-        S.chain (getMessageFromUpdate),
-      ]) (update)
+  get ('body'),
+  S.chain (
+    alt_ (gets (['message', 'reply_to_message'])) (
+      gets (['callback_query', 'message'])
     )
   ),
-  S.chain (getEntityTextFromMessage ('hashtag')),
+  S.chain (
+    lift2_ (stripText) (get ('text')) (getEntity ('hashtag'))
+  ),
   S.map (S.equals ('#SurveyAdditionalDesc')),
-  S.fromRight (false),
+  S.fromMaybe (false),
 ])
 
-const getAdditionalDescFromMessage = update =>
-  S.lift2 (survey => additional_desc => ({
+const getAdditionalDescFromMessage = lift2_ (
+  survey => additional_desc => ({
     ...survey,
     additional_desc,
-  })) (
-    S.pipe ([
-      getMessageFromUpdate,
-      S.chain (getReplyMessageFromMessage),
-      S.chain (getTextFromMessage),
-      S.map (getFormDataFromText),
-    ]) (update)
-  ) (
-    S.pipe ([
-      getMessageFromUpdate,
-      S.chain (getTextFromMessage),
-    ]) (update)
-  )
+  })
+) (
+  S.pipe ([
+    gets (['message', 'reply_to_message', 'text']),
+    S.map (textFormToStrMap),
+  ])
+) (gets (['message', 'text']))
 
-const getAdditionalDescFromCallbackData = update =>
-  S.lift2 (survey => additional_desc => ({
+const getAdditionalDescFromCallbackData = lift2_ (
+  survey => additional_desc => ({
     ...survey,
     additional_desc,
-  })) (
-    S.pipe ([
-      getCallbackQueryFromUpdate,
-      S.chain (getMessageFromUpdate),
-      S.chain (getTextFromMessage),
-      S.map (getFormDataFromText),
-    ]) (update)
-  ) (
-    S.pipe ([
-      getCallbackQueryFromUpdate,
-      S.chain (getDataFromCallbackQuery),
-    ]) (update)
-  )
+  })
+) (
+  S.pipe ([
+    gets (['callback_query', 'message', 'text']),
+    S.map (textFormToStrMap),
+  ])
+) (gets (['callback_query', 'data']))
+
+const surveyAdditionalDescTextGenerator = ({
+  reason,
+  additional_desc,
+  ...survey
+}) =>
+  '#SurveyAdditionalDesc\n' +
+  strMapToTextForm ({...survey, reason}) +
+  (reason === 'already_subscribe_to_competitor'
+    ? '\nSiapa Kompetitornya ?'
+    : reason === 'need_cheaper_package'
+    ? '\nBerapa range harganya ?'
+    : '\nTambahkan deskripsi !')
 
 // Locals -> Req -> Future Error Axios
 export default locals =>
   S.ifElse (isSurveyAdditionalDesc) (
     S.pipe ([
-      getUpdateFromRequest,
-      S.chain (update =>
-        S.alt (getAdditionalDescFromMessage (update)) (
-          getAdditionalDescFromCallbackData (update)
+      get ('body'),
+      S.chain (
+        alt_ (getAdditionalDescFromMessage) (
+          getAdditionalDescFromCallbackData
         )
+      ),
+      S.maybeToEither (
+        'Cannot get survey additional description'
       ),
       S.chain (validate (surveyAdditionalDescRules)),
       eitherToFuture,
@@ -97,8 +92,7 @@ export default locals =>
           survey => survey.additional_desc === 'other'
         ) (
           S.pipe ([
-            getTextFromFormData,
-            S.concat ('#SurveyOtherAdditionalDesc\n'),
+            surveyAdditionalDescTextGenerator,
             locals.sendMessage ({
               force_reply: true,
               input_field_placeholder:
@@ -107,7 +101,7 @@ export default locals =>
           ])
         ) (
           S.pipe ([
-            getTextFromFormData,
+            strMapToTextForm,
             S.concat ('#SurveyLocation\n'),
             locals.sendMessage ({
               keyboard: [

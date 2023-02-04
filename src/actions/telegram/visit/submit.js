@@ -1,4 +1,3 @@
-import {snakeCase} from 'change-case'
 import {Next} from 'fluture-express'
 import {
   F,
@@ -6,19 +5,16 @@ import {
   eitherToFuture,
 } from '../../../lib/fluture'
 import {S} from '../../../lib/sanctuary'
-import {
-  getEntityTextFromMessage,
-  getLocationFromMessage,
-  getMessageFromUpdate,
-  getReplyMessageFromMessage,
-  getTelegramIdFromMessage,
-  getTextFromMessage,
-  getUpdateFromRequest,
-} from '../../../lib/telegram/getter'
+import {getEntity} from '../../../lib/telegram/object'
 import {sendMessageToAdmin} from '../../../lib/telegram/request'
+import {
+  stripText,
+  textFormToStrMap,
+} from '../../../lib/telegram/string'
+import {lift2_, lift3_} from '../../../lib/utils/function'
+import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {visitRules} from '../../../rules/visit'
-import {getOriginal} from '../../../translation'
 import {
   addVisit,
   getVisitUpdate,
@@ -26,48 +22,52 @@ import {
 
 // Req -> boolean
 const isVisitSubmit = S.pipe ([
-  getUpdateFromRequest,
-  S.chain (getMessageFromUpdate),
-  S.chain (getReplyMessageFromMessage),
-  S.chain (getEntityTextFromMessage ('hashtag')),
-  S.map (S.equals ('#VisitSubmit')),
-  S.fromRight (false),
-])
-
-// Message -> Either String StrMap String
-const getVisitDataFromReplyMessage = S.pipe ([
-  getReplyMessageFromMessage,
-  S.chain (getTextFromMessage),
-  S.map (S.lines),
-  S.map (S.map (S.splitOn (':'))),
-  S.map (S.filter (x => x.length === 2)),
-  S.map (
-    S.map (([key, value]) =>
-      S.Pair (S.pipe ([snakeCase, getOriginal]) (key)) (
-        S.trim (value)
-      )
-    )
+  gets (['body', 'message', 'reply_to_message']),
+  S.chain (
+    lift2_ (stripText) (get ('text')) (getEntity ('hashtag'))
   ),
-  S.map (S.fromPairs),
+  S.map (S.equals ('#VisitSubmit')),
+  S.fromMaybe (false),
 ])
-
-// Message -> Either String Array String
-const getUserInput = msg =>
-  S.lift3 (visitData => location => telegramId => ({
-    ...visitData,
-    location,
-    telegram_id: telegramId,
-  })) (getVisitDataFromReplyMessage (msg)) (
-    getLocationFromMessage (msg)
-  ) (getTelegramIdFromMessage (msg))
 
 // Locals -> Req -> Future Error Axios
 export default locals =>
   S.ifElse (isVisitSubmit) (
     S.pipe ([
-      getUpdateFromRequest,
-      S.chain (getMessageFromUpdate),
-      S.chain (getUserInput),
+      gets (['body', 'message']),
+      S.maybeToEither ('Cannot get visit submit'),
+      S.chain (
+        lift3_ (
+          visitData => location => telegramId => ({
+            ...visitData,
+            location,
+            telegram_id: telegramId,
+          })
+        ) (
+          S.pipe ([
+            gets (['reply_to_message', 'text']),
+            S.map (textFormToStrMap),
+            S.maybeToEither ('Cannot get visit data'),
+          ])
+        ) (
+          S.pipe ([
+            get ('location'),
+            S.chain (
+              lift2_ (lat => lng => [lat, lng]) (
+                get ('latitude')
+              ) (get ('longitude'))
+            ),
+            S.map (location => location.toString ()),
+            S.maybeToEither ('Cannot to get location'),
+          ])
+        ) (
+          S.pipe ([
+            gets (['from', 'id']),
+            S.map (telegramId => telegramId.toString ()),
+            S.maybeToEither ('Cannot to get telegram id'),
+          ])
+        )
+      ),
       S.chain (validate (visitRules)),
       eitherToFuture,
       S.chain (addVisit),

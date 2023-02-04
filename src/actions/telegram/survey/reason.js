@@ -5,16 +5,14 @@ import {
   eitherToFuture,
 } from '../../../lib/fluture'
 import {S} from '../../../lib/sanctuary'
+import {getEntity} from '../../../lib/telegram/object'
 import {
-  getCallbackQueryFromUpdate,
-  getDataFromCallbackQuery,
-  getEntityTextFromMessage,
-  getFormDataFromText,
-  getMessageFromUpdate,
-  getTextFromFormData,
-  getTextFromMessage,
-  getUpdateFromRequest,
-} from '../../../lib/telegram/getter'
+  stripText,
+  textFormToStrMap,
+} from '../../../lib/telegram/string'
+import {strMapToTextForm} from '../../../lib/telegram/strmap'
+import {lift2_} from '../../../lib/utils/function'
+import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {surveyRules} from '../../../rules/survey'
 
@@ -26,12 +24,12 @@ const surveyReasonRules = S.pipe ([
 
 // Req -> boolean
 const isSurveyReason = S.pipe ([
-  getUpdateFromRequest,
-  S.chain (getCallbackQueryFromUpdate),
-  S.chain (getMessageFromUpdate),
-  S.chain (getEntityTextFromMessage ('hashtag')),
+  gets (['body', 'callback_query', 'message']),
+  S.chain (
+    lift2_ (stripText) (get ('text')) (getEntity ('hashtag'))
+  ),
   S.map (S.equals ('#SurveyReason')),
-  S.fromRight (false),
+  S.fromMaybe (false),
 ])
 
 // StrMap SurveyReason -> String
@@ -40,7 +38,7 @@ const surveyReasonTextGenerator = ({reason, ...survey}) =>
     ? '#SurveyLocation'
     : '#SurveyAdditionalDesc') +
   '\n' +
-  getTextFromFormData ({...survey, reason}) +
+  strMapToTextForm ({...survey, reason}) +
   (reason === 'no_need_for_internet'
     ? 'deskripsi_tambahan: -'
     : reason === 'already_subscribe_to_competitor'
@@ -127,16 +125,21 @@ const replyMarkup = reason =>
 export default locals =>
   S.ifElse (isSurveyReason) (
     S.pipe ([
-      getUpdateFromRequest,
-      S.chain (getCallbackQueryFromUpdate),
-      S.chain (cbq =>
-        S.lift2 (txt => reason => ({...txt, reason})) (
+      gets (['body', 'callback_query']),
+      S.maybeToEither ('Cannot get survey reason'),
+      S.chain (
+        lift2_ (txt => reason => ({...txt, reason})) (
           S.pipe ([
-            getMessageFromUpdate,
-            S.chain (getTextFromMessage),
-            S.map (getFormDataFromText),
-          ]) (cbq)
-        ) (getDataFromCallbackQuery (cbq))
+            gets (['message', 'text']),
+            S.map (textFormToStrMap),
+            S.maybeToEither ('Cannot get survey data'),
+          ])
+        ) (
+          S.pipe ([
+            get ('data'),
+            S.maybeToEither ('Cannot get survey reason'),
+          ])
+        )
       ),
       S.chain (validate (surveyReasonRules)),
       eitherToFuture,

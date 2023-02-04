@@ -5,14 +5,14 @@ import {
   eitherToFuture,
 } from '../../../lib/fluture'
 import {S} from '../../../lib/sanctuary'
+import {getEntity} from '../../../lib/telegram/object'
 import {
-  getEntityTextFromMessage,
-  getFormDataFromText,
-  getMessageFromUpdate,
-  getTextFromFormData,
-  getTextFromMessage,
-  getUpdateFromRequest,
-} from '../../../lib/telegram/getter'
+  stripText,
+  textFormToStrMap,
+} from '../../../lib/telegram/string'
+import {strMapToTextForm} from '../../../lib/telegram/strmap'
+import {lift2_} from '../../../lib/utils/function'
+import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {surveyRules} from '../../../rules/survey'
 
@@ -25,23 +25,23 @@ const surveyFormRules = S.pipe ([
 
 // Req -> boolean
 const isSurveyForm = S.pipe ([
-  getUpdateFromRequest,
-  S.chain (getMessageFromUpdate),
-  S.chain (getEntityTextFromMessage ('hashtag')),
+  gets (['body', 'message']),
+  S.chain (
+    lift2_ (stripText) (get ('text')) (getEntity ('hashtag'))
+  ),
   S.map (S.equals ('#SurveyForm')),
-  S.fromRight (false),
+  S.fromMaybe (false),
 ])
 
 // Locals -> Req -> Future Error Axios
 export default locals =>
   S.ifElse (isSurveyForm) (
     S.pipe ([
-      getUpdateFromRequest,
-      S.chain (getMessageFromUpdate),
-      S.chain (getTextFromMessage),
-      S.map (getFormDataFromText),
+      gets (['body', 'message', 'text']),
+      S.map (textFormToStrMap),
+      S.maybeToEither ('Cannot get survey form'),
       S.chain (validate (surveyFormRules)),
-      S.map (getTextFromFormData),
+      S.map (strMapToTextForm),
       S.map (x => '#SurveyReason\n' + x),
       eitherToFuture,
       S.chain (
