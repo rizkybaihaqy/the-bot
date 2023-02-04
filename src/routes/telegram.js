@@ -2,6 +2,7 @@ import {Router} from 'express'
 import {dispatcher} from 'fluture-express'
 import path from 'path'
 import config from '../config'
+import {errorHandler} from '../error/telegram'
 
 const URI = `/webhook/${config.TOKEN}`
 const router = Router ()
@@ -22,7 +23,6 @@ router.post (
   dispatch ('survey/form'),
   dispatch ('survey/reason'),
   dispatch ('survey/additional-desc'),
-  dispatch ('survey/other-additional-desc'),
   dispatch ('survey/location'),
   dispatch ('register/index'),
   dispatch ('register/sales_name/input'),
@@ -35,6 +35,8 @@ router.post (
   dispatch ('cancel'),
   dispatch ('default')
 )
+
+router.use (errorHandler)
 /* eslint-enable functional/no-expression-statement */
 
 export default router

@@ -1,6 +1,7 @@
 import {Router} from 'express'
 import {dispatcher} from 'fluture-express'
 import path from 'path'
+import {errorHandler} from '../error/web'
 
 const router = Router ()
 const dispatch = dispatcher (
@@ -18,6 +19,7 @@ router.post (
   '/set-reset-webhook',
   dispatch ('set-reset-webhook')
 )
+router.use (errorHandler)
 /* eslint-enable functional/no-expression-statement */
 
 export default router
