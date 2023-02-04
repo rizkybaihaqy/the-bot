@@ -1,7 +1,7 @@
 import {flDetaBase} from '../../db/deta-base'
 import {F} from '../../lib/fluture/'
 import {S} from '../../lib/sanctuary/'
-import {sameValues} from '../../lib/utils/getter'
+import {sameValues} from '../../lib/utils/array'
 import Survey from '../../models/Survey'
 
 // StrMap String -> Future Error Survey

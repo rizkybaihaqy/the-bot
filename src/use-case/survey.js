@@ -4,7 +4,7 @@ import {
   insertOneToSurveys,
 } from '../data-access'
 import {S} from '../lib/sanctuary'
-import {now} from '../lib/utils/getter'
+import {now} from '../lib/utils/date'
 
 // StrMap String -> Future String Survey
 export const addSurvey = S.pipe ([

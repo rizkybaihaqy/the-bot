@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker/locale/id_ID'
 import {sub} from 'date-fns'
-import {dateToStringWithTZ} from '../../lib/utils/getter'
+import {dateToStringWithTZ} from '../../lib/utils/date'
 
 const date = new Date ()
 

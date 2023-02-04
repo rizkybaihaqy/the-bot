@@ -5,7 +5,7 @@ import {
 } from '../data-access'
 import {F} from '../lib/fluture'
 import {S} from '../lib/sanctuary'
-import {now} from '../lib/utils/getter'
+import {now} from '../lib/utils/date'
 
 // StrMap String -> Future String Survey
 export const addSales = S.pipe ([

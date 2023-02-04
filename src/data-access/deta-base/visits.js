@@ -2,7 +2,7 @@ import {formatISO9075} from 'date-fns'
 import {flDetaBase} from '../../db/deta-base'
 import {F, maybeToFuture} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
-import {sameValues} from '../../lib/utils/getter'
+import {sameValues} from '../../lib/utils/array'
 import Visit from '../../models/Visit'
 
 // StrMap String -> Future Error Visit

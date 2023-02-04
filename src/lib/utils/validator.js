@@ -1,7 +1,7 @@
 import {capitalCase} from 'change-case'
 import {S} from '../sanctuary'
 import {tagByWithMessage} from './function'
-import {objDiff} from './getter'
+import {objDiff} from './object'
 
 // StrMap F -> StrMap String -> Either String StrMap String
 export const validate = rules =>

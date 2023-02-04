@@ -2,7 +2,7 @@ import {format} from 'node-pg-format'
 import {pgFlQuery} from '../../db/postgres'
 import {F} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
-import {sameValues} from '../../lib/utils/getter'
+import {sameValues} from '../../lib/utils/array'
 import Visit from '../../models/Visit'
 
 // StrMap String -> Future Error Visit
