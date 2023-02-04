@@ -20,8 +20,8 @@ app.engine ('eta', Eta.renderFile)
 app.set ('view engine', 'eta')
 app.set ('views', path.join (__dirname, 'views'))
 
-app.use ('/', webRoute)
 app.use ('/', telegramRoute)
+app.use ('/', webRoute)
 
 app.use (errorHandler)
 /* eslint-enable functional/no-expression-statement */
