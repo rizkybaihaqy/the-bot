@@ -18,7 +18,6 @@ export const errorHandler = (err, req, res, next) => {
       )
     ),
     S.chain (gets (['chat', 'id'])),
-    S.chain (S.K (S.Nothing)),
     maybeToFuture,
     S.chain (chatId =>
       sendMessage (chatId) ({
