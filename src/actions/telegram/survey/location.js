@@ -14,6 +14,7 @@ import {lift2_} from '../../../lib/utils/function'
 import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {surveyRules} from '../../../rules/survey'
+import {t} from '../../../translation'
 import {addSurvey} from '../../../use-case/survey'
 
 // Req -> boolean
@@ -31,7 +32,7 @@ export default locals =>
   S.ifElse (isSurveyLocation) (
     S.pipe ([
       gets (['body', 'message']),
-      S.maybeToEither ('Cannot get survey location'),
+      S.maybeToEither (t ('error_get_survey_location')),
       S.chain (
         lift2_ (visitData => location => ({
           ...visitData,
@@ -40,7 +41,7 @@ export default locals =>
           S.pipe ([
             gets (['reply_to_message', 'text']),
             S.map (textFormToStrMap),
-            S.maybeToEither ('Cannot get survey data'),
+            S.maybeToEither (t ('error_get_survey_data')),
           ])
         ) (
           S.pipe ([
@@ -51,7 +52,7 @@ export default locals =>
               ) (get ('longitude'))
             ),
             S.map (location => location.toString ()),
-            S.maybeToEither ('Cannot to get location'),
+            S.maybeToEither (t ('error_get_survey_location')),
           ])
         )
       ),
@@ -60,7 +61,7 @@ export default locals =>
       S.chain (addSurvey),
       S.chain (_ =>
         locals.sendMessage ({remove_keyboard: true}) (
-          'Data Berhasil di input'
+          t ('msg_save_survey_report')
         )
       ),
       S.map (JSONData),

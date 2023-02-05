@@ -15,6 +15,7 @@ import {alt_, lift2_} from '../../../lib/utils/function'
 import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {surveyRules} from '../../../rules/survey'
+import {t} from '../../../translation'
 
 // StrMap a
 const surveyAdditionalDescRules =
@@ -67,10 +68,10 @@ const surveyAdditionalDescTextGenerator = ({
   '#SurveyAdditionalDesc\n' +
   strMapToTextForm ({...survey, reason}) +
   (reason === 'already_subscribe_to_competitor'
-    ? '\nSiapa Kompetitornya ?'
+    ? '\n' + t ('msg_who_is_the_competitor')
     : reason === 'need_cheaper_package'
-    ? '\nBerapa range harganya ?'
-    : '\nTambahkan deskripsi !')
+    ? '\n' + t ('msg_whats_the_price_range')
+    : '\n' + t ('msg_add_more_desc'))
 
 // Locals -> Req -> Future Error Axios
 export default locals =>
@@ -83,7 +84,7 @@ export default locals =>
         )
       ),
       S.maybeToEither (
-        'Cannot get survey additional description'
+        t ('error_get_survey_additional_desc')
       ),
       S.chain (validate (surveyAdditionalDescRules)),
       eitherToFuture,
@@ -95,8 +96,9 @@ export default locals =>
             surveyAdditionalDescTextGenerator,
             locals.sendMessage ({
               force_reply: true,
-              input_field_placeholder:
-                'Please provide more information',
+              input_field_placeholder: t (
+                'msg_add_more_desc'
+              ),
             }),
           ])
         ) (
@@ -115,8 +117,9 @@ export default locals =>
                   },
                 ],
               ],
-              input_field_placeholder:
-                'Send Location If The Data Already Correct',
+              input_field_placeholder: t (
+                'msg_share_your_current_location'
+              ),
               resize_keyboard: true,
             }),
           ])

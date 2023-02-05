@@ -15,6 +15,7 @@ import {lift2_} from '../../../lib/utils/function'
 import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {surveyRules} from '../../../rules/survey'
+import {t} from '../../../translation'
 
 // StrMap a
 const surveyReasonRules = S.pipe ([
@@ -40,12 +41,12 @@ const surveyReasonTextGenerator = ({reason, ...survey}) =>
   '\n' +
   strMapToTextForm ({...survey, reason}) +
   (reason === 'no_need_for_internet'
-    ? 'deskripsi_tambahan: -'
+    ? t ('additional_desc') + ': -'
     : reason === 'already_subscribe_to_competitor'
-    ? '\nSiapa Kompetitornya ?'
+    ? '\n' + t ('msg_who_is_the_competitor')
     : reason === 'need_cheaper_package'
-    ? '\nBerapa range harganya ?'
-    : '\nTambahkan deskripsi !')
+    ? '\n' + t ('msg_whats_the_price_range')
+    : '\n' + t ('msg_add_more_desc'))
 
 // String -> ReplyMarkup
 const replyMarkup = reason =>
@@ -62,8 +63,9 @@ const replyMarkup = reason =>
             },
           ],
         ],
-        input_field_placeholder:
-          'Send Location If The Data Already Correct',
+        input_field_placeholder: t (
+          'msg_share_your_current_location'
+        ),
         resize_keyboard: true,
       }
     : reason === 'already_subscribe_to_competitor'
@@ -83,7 +85,7 @@ const replyMarkup = reason =>
           ],
           [
             {
-              text: 'Other',
+              text: t ('msg_other'),
               callback_data: 'other',
             },
           ],
@@ -106,7 +108,7 @@ const replyMarkup = reason =>
           ],
           [
             {
-              text: 'Other',
+              text: t ('msg_other'),
               callback_data: 'other',
             },
           ],
@@ -116,8 +118,7 @@ const replyMarkup = reason =>
       reason === 'other'
     ? {
         force_reply: true,
-        input_field_placeholder:
-          'Please provide more information',
+        input_field_placeholder: t ('msg_add_more_desc'),
       }
     : {remove_keyboard: true}
 
@@ -126,18 +127,18 @@ export default locals =>
   S.ifElse (isSurveyReason) (
     S.pipe ([
       gets (['body', 'callback_query']),
-      S.maybeToEither ('Cannot get survey reason'),
+      S.maybeToEither (t ('error_get_survey_reason')),
       S.chain (
         lift2_ (txt => reason => ({...txt, reason})) (
           S.pipe ([
             gets (['message', 'text']),
             S.map (textFormToStrMap),
-            S.maybeToEither ('Cannot get survey data'),
+            S.maybeToEither (t ('error_get_survey_data')),
           ])
         ) (
           S.pipe ([
             get ('data'),
-            S.maybeToEither ('Cannot get survey reason'),
+            S.maybeToEither (t ('error_get_survey_reason')),
           ])
         )
       ),

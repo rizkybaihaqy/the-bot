@@ -15,6 +15,7 @@ import {lift2_} from '../../../lib/utils/function'
 import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {surveyRules} from '../../../rules/survey'
+import {t} from '../../../translation'
 
 // StrMap a
 const surveyFormRules = S.pipe ([
@@ -39,7 +40,7 @@ export default locals =>
     S.pipe ([
       gets (['body', 'message', 'text']),
       S.map (textFormToStrMap),
-      S.maybeToEither ('Cannot get survey form'),
+      S.maybeToEither (t ('error_get_survey_form')),
       S.chain (validate (surveyFormRules)),
       S.map (strMapToTextForm),
       S.map (x => '#SurveyReason\n' + x),
@@ -49,32 +50,34 @@ export default locals =>
           inline_keyboard: [
             [
               {
-                text: 'Tidak Butuh Internet',
+                text: t ('msg_no_need_for_internet'),
                 callback_data: 'no_need_for_internet',
               },
             ],
             [
               {
-                text: 'Sudah Berlangganan Kompetitor',
+                text: t (
+                  'msg_already_subscribe_to_competitor'
+                ),
                 callback_data:
                   'already_subscribe_to_competitor',
               },
             ],
             [
               {
-                text: 'Perlu Paket yang Lebih Murah',
+                text: t ('msg_need_cheaper_package'),
                 callback_data: 'need_cheaper_package',
               },
             ],
             [
               {
-                text: 'Pernah Berlangganan, Kecewa',
+                text: t ('msg_unsubscribed_disappointed'),
                 callback_data: 'unsubscribed_disappointed',
               },
             ],
             [
               {
-                text: 'Lainnya',
+                text: t ('msg_other'),
                 callback_data: 'other',
               },
             ],
