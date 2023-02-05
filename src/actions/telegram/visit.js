@@ -4,7 +4,7 @@ import {S} from '../../lib/sanctuary'
 import {isCommandEqualsTo} from '../../lib/telegram/predicate'
 import Survey from '../../models/Survey'
 import Visit from '../../models/Visit'
-import {getTranslation} from '../../translation'
+import {getTranslation, t} from '../../translation'
 
 // f (Any -> Maybe) -> Array String -> String
 const fieldFromModel = fns =>
@@ -20,7 +20,7 @@ const fieldFromModel = fns =>
 export default locals =>
   S.ifElse (isCommandEqualsTo ('/visit')) (
     S.pipe ([
-      _ => 'Jenis visit apa yang ingin dilaporkan ?',
+      _ => t ('msg_what_kind_of_visit?'),
       locals.sendMessage ({
         inline_keyboard: [
           [

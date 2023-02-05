@@ -15,6 +15,7 @@ import {lift2_} from '../../../lib/utils/function'
 import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {visitRules} from '../../../rules/visit'
+import {t} from '../../../translation'
 
 // StrMap a
 const visitRulesWithoutLocationTelegramId = S.pipe ([
@@ -38,7 +39,7 @@ export default locals =>
     S.pipe ([
       gets (['body', 'message', 'text']),
       S.map (textFormToStrMap),
-      S.maybeToEither ('Cannot get visit report'),
+      S.maybeToEither (t ('error_get_visit_report')),
       S.chain (
         validate (visitRulesWithoutLocationTelegramId)
       ),
@@ -59,7 +60,7 @@ export default locals =>
             ],
           ],
           input_field_placeholder:
-            'Share lokasi anda saat ini',
+            t ('msg_share_your_current_location'),
           resize_keyboard: true,
         })
       ),

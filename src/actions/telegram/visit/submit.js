@@ -15,6 +15,7 @@ import {lift2_, lift3_} from '../../../lib/utils/function'
 import {get, gets} from '../../../lib/utils/object'
 import {validate} from '../../../lib/utils/validator'
 import {visitRules} from '../../../rules/visit'
+import {t} from '../../../translation'
 import {
   addVisit,
   getVisitUpdate,
@@ -35,7 +36,7 @@ export default locals =>
   S.ifElse (isVisitSubmit) (
     S.pipe ([
       gets (['body', 'message']),
-      S.maybeToEither ('Cannot get visit submit'),
+      S.maybeToEither (t ('error_get_visit_submit')),
       S.chain (
         lift3_ (
           visitData => location => telegramId => ({
@@ -47,7 +48,7 @@ export default locals =>
           S.pipe ([
             gets (['reply_to_message', 'text']),
             S.map (textFormToStrMap),
-            S.maybeToEither ('Cannot get visit data'),
+            S.maybeToEither (t ('error_get_visit_data')),
           ])
         ) (
           S.pipe ([
@@ -58,13 +59,13 @@ export default locals =>
               ) (get ('longitude'))
             ),
             S.map (location => location.toString ()),
-            S.maybeToEither ('Cannot to get location'),
+            S.maybeToEither (t ('error_get_location')),
           ])
         ) (
           S.pipe ([
             gets (['from', 'id']),
             S.map (telegramId => telegramId.toString ()),
-            S.maybeToEither ('Cannot to get telegram id'),
+            S.maybeToEither (t ('error_get_telegram_id')),
           ])
         )
       ),
@@ -75,12 +76,17 @@ export default locals =>
       S.chain (({user, todayVisit}) =>
         F.both (
           locals.sendMessage ({remove_keyboard: true}) (
-            'Data Berhasil di input'
+            t ('msg_save_visit_report')
           )
         ) (
           sendMessageToAdmin (
-            `Ada inputan baru dari ${user.name} (${user.sales_code})\n` +
-              `Total input hari ini: ${todayVisit}`
+            t ('msg_new_data_update') +
+              ' ' +
+              user.name +
+              `(${user.sales_code})\n` +
+              t ('msg_today_data_update') +
+              ' ' +
+              todayVisit
           )
         )
       ),

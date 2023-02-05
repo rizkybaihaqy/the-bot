@@ -1,8 +1,15 @@
 import {S} from '../lib/sanctuary'
+import visitError from './error/visit'
+import visitMessage from './message/visit'
 import surveyModel from './model/survey'
 import visitModel from './model/visit'
 
-const words = [...surveyModel, ...visitModel]
+const words = [
+  ...surveyModel,
+  ...visitModel,
+  ...visitMessage,
+  ...visitError,
+]
 
 export const getTranslation = txt =>
   S.pipe ([
