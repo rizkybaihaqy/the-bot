@@ -2,6 +2,7 @@ import {Next} from 'fluture-express'
 import $ from 'sanctuary-def'
 import {F, JSONData} from '../../../../lib/fluture'
 import {S} from '../../../../lib/sanctuary'
+import {t} from '../../../../translation'
 
 const isInputSalesCode = S.pipe ([
   S.gets (S.is ($.String)) ([
@@ -34,15 +35,13 @@ export default locals =>
         ) (S.get (S.is ($.String)) ('text') (msg)),
       S.maybe (
         S.Left (
-          '#InputSalesCode\n' +
-            'anda tidak memasukan kode sales\n' +
-            'silahkan masukan kode sales anda'
+          '#InputSalesCode\n' + t ('error_get_sales_code')
         )
       ) (([name, code]) =>
         S.Right (
           `name:${name}\n` +
             `code:${code}\n` +
-            'gunakan kode sales ini?'
+            t ('msg_use_this_sales_code')
         )
       ),
       S.either (locals.sendMessage ({force_reply: true})) (

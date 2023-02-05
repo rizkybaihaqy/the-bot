@@ -2,6 +2,7 @@ import {Next} from 'fluture-express'
 import $ from 'sanctuary-def'
 import {F, JSONData} from '../../../../lib/fluture'
 import {S} from '../../../../lib/sanctuary'
+import {t} from '../../../../translation'
 
 const isSaveSalesCode = S.pipe ([
   S.gets (S.is ($.String)) ([
@@ -31,11 +32,9 @@ export default locals =>
           '#SaveSales\n' +
           `name:${name}\n` +
           `code:${code}\n` +
-          'apakah data sudah benar?'
+          t ('msg_use_this_sales_data')
       ),
-      S.maybe (
-        F.reject ('gagal mendapatkan data @SaveSalesCodeAction')
-      ) (
+      S.maybe (F.reject (t ('error_get_sales_data'))) (
         locals.sendMessage ({
           inline_keyboard: [
             [{text: 'yes', callback_data: 'save-sales'}],

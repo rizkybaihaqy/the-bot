@@ -2,6 +2,7 @@ import {Next} from 'fluture-express'
 import $ from 'sanctuary-def'
 import {F, JSONData} from '../../../../lib/fluture'
 import {S} from '../../../../lib/sanctuary'
+import {t} from '../../../../translation'
 
 const isChangeSalesCode = S.pipe ([
   S.gets (S.is ($.String)) ([
@@ -30,13 +31,11 @@ export default locals =>
         name =>
           '#InputSalesCode\n' +
           `name: ${name}\n` +
-          'Silahkan masukan kode sales anda'
+          t ('msg_input_sales_code')
       ),
-      S.maybe (
-        F.reject (
-          'Failed To Get Data @ChangeSalesCodeAction'
-        )
-      ) (locals.sendMessage ({force_reply: true})),
+      S.maybe (F.reject (t ('error_get_sales_name'))) (
+        locals.sendMessage ({force_reply: true})
+      ),
       S.map (JSONData),
     ])
   ) (_ => F.resolve (Next (locals)))

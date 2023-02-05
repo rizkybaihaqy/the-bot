@@ -3,6 +3,7 @@ import $ from 'sanctuary-def'
 import {F, JSONData} from '../../../lib/fluture'
 import {S} from '../../../lib/sanctuary'
 import {isCommandEqualsTo} from '../../../lib/telegram/predicate'
+import {t} from '../../../translation'
 
 export default locals =>
   S.ifElse (isCommandEqualsTo ('/register')) (
@@ -20,10 +21,10 @@ export default locals =>
         ),
       S.maybe (
         S.Left (
-          '#InputSalesName\nTidak bisa mendapatkan nama dari Telegram, Silahkan masukan nama'
+          '#InputSalesName\n' + t ('error_get_telegram_name')
         )
       ) (full_name =>
-        S.Right (`Hi ${full_name}. Gunakan nama ini?`)
+        S.Right (`Hi ${full_name}. ` + t ('msg_use_this_name'))
       ),
       S.either (locals.sendMessage ({force_reply: true})) (
         locals.sendMessage ({

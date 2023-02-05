@@ -2,6 +2,7 @@ import {Next} from 'fluture-express'
 import $ from 'sanctuary-def'
 import {F, JSONData} from '../../../../lib/fluture'
 import {S} from '../../../../lib/sanctuary'
+import {t} from '../../../../translation'
 
 const isInputSalesName = S.pipe ([
   S.gets (S.is ($.String)) ([
@@ -20,12 +21,10 @@ export default locals =>
       S.gets (S.is ($.String)) (['body', 'message', 'text']),
       S.maybe (
         S.Left (
-          '#InputSalesName\n' +
-            'Tidak ada nama yang dimasukan\n' +
-            'Silahkan masukan nama anda'
+          '#InputSalesName\n' + t ('error_get_sales_name')
         )
       ) (full_name =>
-        S.Right (`${full_name}\nGunakan nama ini?`)
+        S.Right (`${full_name}\n` + t ('msg_use_this_name'))
       ),
       S.either (locals.sendMessage ({force_reply: true})) (
         locals.sendMessage ({

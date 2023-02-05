@@ -36,4 +36,19 @@ export default [
   S.Pair ('msg_save_survey_report') (
     'Data Survey Report berhasil di simpan'
   ),
+  S.Pair ('msg_use_this_name') (
+    'Gunakan nama ini?'
+  ),
+  S.Pair ('msg_use_this_sales_code') (
+    'Gunakan kode sales ini?'
+  ),
+  S.Pair ('msg_use_this_sales_data') (
+    'Apakah data sudah benar?'
+  ),
+  S.Pair ('msg_input_sales_code') (
+    'Silahkan masukan kode sales anda'
+  ),
+  S.Pair ('msg_input_sales_name') (
+    'Silahkan masukan nama anda'
+  ),
 ]

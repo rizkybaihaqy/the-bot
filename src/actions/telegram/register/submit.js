@@ -6,6 +6,7 @@ import {
   eitherToFuture,
 } from '../../../lib/fluture'
 import {S} from '../../../lib/sanctuary'
+import {t} from '../../../translation'
 import {addSales} from '../../../use-case/sales'
 
 const isChangeSalesName = S.pipe ([
@@ -31,7 +32,7 @@ export default locals =>
           S.pipe ([
             S.gets (S.is ($.Number)) (['from', 'id']),
             S.map (id => id.toString ()),
-            S.maybeToEither ('Gagal mendapatkan id telegram'),
+            S.maybeToEither (t ('error_get_telegram_id')),
           ]) (req)
         ) (
           S.pipe ([
@@ -41,9 +42,7 @@ export default locals =>
             S.map (S.filter (row => row.length === 2)),
             S.map (S.map (S.map (S.trim))),
             S.map (Object.fromEntries),
-            S.maybeToEither (
-              'Gagal mendapatkan nama sales dan kodenya'
-            ),
+            S.maybeToEither (t ('error_get_sales_data')),
           ]) (req)
         ),
       eitherToFuture,
