@@ -69,3 +69,19 @@ export const findAllTodayVisits = S.pipe ([
     }),
   S.map (S.prop ('rows')),
 ])
+
+export const findAllVisitsByDate = S.pipe ([
+  ({from, until}) =>
+    pgFlQuery ({
+      name: 'Get visits data by created at',
+      text: 'SELECT * FROM visits WHERE created_at >= date($1) AND created_at <= date($2)',
+      values: [from, until],
+    }),
+  S.map (S.prop ('rows')),
+  S.map (
+    S.map (({location, ...rest}) => ({
+      ...rest,
+      location: `${location.x}, ${location.y}`,
+    }))
+  ),
+])

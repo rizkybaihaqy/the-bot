@@ -1,6 +1,6 @@
 import {
   findAllSurveys,
-  findAllSurveysByReason,
+  findAllSurveysByReasonByDate,
   insertOneToSurveys,
 } from '../data-access'
 import {S} from '../lib/sanctuary'
@@ -15,16 +15,18 @@ export const addSurvey = S.pipe ([
 // Nothing -> Future String Array Survey
 export const getAllSurveys = findAllSurveys
 
-// String -> Future String Array Object
-export const getSurveysHeatmapDataByReason = S.pipe ([
-  findAllSurveysByReason,
-  S.map (
+// String -> String -> Future String Array Object
+export const getSurveysHeatmapDataByReasonByDate = reason =>
+  S.pipe ([
+    interval =>
+      findAllSurveysByReasonByDate ({reason, interval}),
     S.map (
-      S.pipe ([
-        S.prop ('location'),
-        S.splitOn (','),
-        ([lat, lng]) => ({lat, lng, value: '1'}),
-      ])
-    )
-  ),
-])
+      S.map (
+        S.pipe ([
+          S.prop ('location'),
+          S.splitOn (','),
+          ([lat, lng]) => ({lat, lng, value: '1'}),
+        ])
+      )
+    ),
+  ])

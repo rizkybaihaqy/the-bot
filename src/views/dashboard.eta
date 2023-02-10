@@ -2,6 +2,16 @@
 
 <h1>Heatmap</h1>
 
+<form action="/dashboard" method="get">
+  <label for="from">From
+    <input type="date" id="from" name="from" value="<%= it.data.interval.from %>">
+  </label>
+  <label for="until">Until
+    <input type="date" id="until" name="until" value="<%= it.data.interval.until %>">
+  </label>
+  <button type="submit">Filter</button>
+</form>
+
 <details>
   <summary role="button">Sales Visit Heatmap</summary>
   <%~ includeFile('./partials/heatmap', {name: 'visit',

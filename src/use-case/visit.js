@@ -1,6 +1,7 @@
 import {
   findAllTodayVisits,
   findAllVisits,
+  findAllVisitsByDate,
   findOneSalesById,
   findOneSalesByTelegramId,
   insertOneToVisits,
@@ -50,8 +51,8 @@ export const getVisitUpdate = S.pipe ([
 export const getAllVisits = findAllVisits
 
 // Nothing -> Future String Array Object
-export const getVisitsHeatmapData = S.pipe ([
-  getAllVisits,
+export const getVisitsHeatmapDataByDate = S.pipe ([
+  findAllVisitsByDate,
   S.map (
     S.map (
       S.pipe ([

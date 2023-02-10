@@ -8,12 +8,14 @@ import {
 import {
   findAllSurveys,
   findAllSurveysByReason,
+  findAllSurveysByReasonByDate,
   insertManyToSurveys,
   insertOneToSurveys,
 } from './surveys'
 import {
   findAllTodayVisits,
   findAllVisits,
+  findAllVisitsByDate,
   insertManyToVisits,
   insertOneToVisits,
 } from './visits'
@@ -28,7 +30,9 @@ export default {
   insertOneToSurveys,
   findAllSurveys,
   findAllSurveysByReason,
+  findAllSurveysByReasonByDate,
   findAllVisits,
+  findAllVisitsByDate,
   findAllTodayVisits,
   insertManyToVisits,
   insertOneToVisits,

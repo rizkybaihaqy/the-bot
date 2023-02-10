@@ -51,6 +51,23 @@ export const findAllSurveysByReason = S.pipe ([
   ),
 ])
 
+// String -> Future Error Array Survey
+export const findAllSurveysByReasonByDate = S.pipe ([
+  ({reason, interval: {from, until}}) =>
+    pgFlQuery ({
+      name: 'select all surveys by reason',
+      text: 'SELECT * FROM surveys WHERE reason=$1 AND created_at >= date($2) AND created_at <= date($3)',
+      values: [reason, from, until],
+    }),
+  S.map (S.prop ('rows')),
+  S.map (
+    S.map (({location, ...rest}) => ({
+      ...rest,
+      location: `${location.x}, ${location.y}`,
+    }))
+  ),
+])
+
 // Array StrMap String -> Future Error Array Survey
 export const insertManyToSurveys = data =>
   S.all (x => sameValues (Survey) (S.keys (x))) (data)
