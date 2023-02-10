@@ -1,6 +1,8 @@
 <% layout('./layouts/default') %>
 
 <h1><%= it.type %></h1>
+<button onclick="jsonToExcel()">Excel</button>
+
 <figure>
   <% if (it.data.length === 0) { %>
   <h2>Empty</h2>
@@ -25,3 +27,12 @@
   </table>
   <% } %>
 </figure>
+
+<script>
+  function jsonToExcel() {
+    let ws = XLSX.utils.json_to_sheet(<%~ JSON.stringify(it.data) %>)
+    let wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Data')
+    XLSX.writeFile(wb, '<%= it.type %>.xlsx')
+  }
+</script>
