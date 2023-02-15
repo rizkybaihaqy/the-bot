@@ -29,6 +29,14 @@ export const findAllSurveysByReason = S.pipe ([
   S.map (S.map (S.prop ('data'))),
 ])
 
+// String -> Future Error Array Surveys
+export const findAllSurveysByReasonByDate = S.pipe ([
+  reason =>
+    flDetaBase ('fetch') ({'data.reason?contains': reason}),
+  S.map (S.prop ('items')),
+  S.map (S.map (S.prop ('data'))),
+])
+
 // Array StrMap String -> Future Error Array Survey
 export const insertManyToSurveys = data =>
   S.all (x => sameValues (Survey) (S.keys (x))) (data)

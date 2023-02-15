@@ -1,4 +1,4 @@
-import {formatISO9075} from 'date-fns'
+import {eachDayOfInterval, formatISO9075} from 'date-fns'
 import {flDetaBase} from '../../db/deta-base'
 import {F, maybeToFuture} from '../../lib/fluture'
 import {S} from '../../lib/sanctuary'
@@ -47,4 +47,25 @@ export const findAllTodayVisits = S.pipe ([
     })
   ),
   S.map (S.prop ('items')),
+])
+
+// String -> Future Error Array Visit
+export const findAllVisitsByDate = S.pipe ([
+  ({from, until}) =>
+    eachDayOfInterval ({
+      start: new Date (from),
+      end: new Date (until),
+    }),
+  S.map (date =>
+    formatISO9075 (date, {representation: 'date'})
+  ),
+  date =>
+    flDetaBase ('fetch') (
+      date.map (d => ({
+        'data.created_at?contains': d,
+        'type': 'visits',
+      }))
+    ),
+  S.map (S.prop ('items')),
+  S.map (S.map (S.prop ('data'))),
 ])
