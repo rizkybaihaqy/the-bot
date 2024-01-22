@@ -4,7 +4,7 @@
 ></div>
 <script>
   L.map('<%= it.name %>')
-  .setView([-2.2134244817818147, 113.92042805677664], 16)
+  .setView([-7.057418,110.440670], 16)
   .addLayer(
     L.tileLayer(
       'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
@@ -15,7 +15,9 @@
     ),
   )
   .addLayer(L.heatLayer(<%~ JSON.stringify(it.data) %>, {
-      radius: 25,
+      radius: 15,
       blur: 15,
     }))
+
+  console.log(<%~ JSON.stringify(it.data) %>)
 </script>

@@ -19,9 +19,6 @@ const checkData = S.pipe ([
 
 // Data -> String
 const formatData = x => `
-      Nama Pelanggan: ${
-        x.milestones[0].variables.customerName
-      }
   ${x.milestones[0].name}: ${
   x.milestones[0].description ?? x.milestones[0].status
 }
@@ -65,6 +62,7 @@ export default locals =>
       S.maybe (F.reject ('Order Id Is Required')) (F.resolve),
       S.chain (fetchTrackId),
       S.chain (checkData),
+      S.map (x => (console.log (x), x)),
       S.map (formatData),
       S.chain (locals.sendMessage ({remove_keyboard: true})),
       S.map (JSONData),

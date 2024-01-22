@@ -47,7 +47,11 @@ export default locals =>
         ),
       eitherToFuture,
       S.chain (addSales),
-      S.chain (locals.sendMessage ({remove_keyboard: true})),
+      S.chain (_ =>
+        locals.sendMessage ({remove_keyboard: true}) (
+          'Data Disimpan'
+        )
+      ),
       S.map (JSONData),
     ])
   ) (_ => F.resolve (Next (locals)))

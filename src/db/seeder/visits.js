@@ -24,13 +24,13 @@ export const fakeVisits = n => salesCodes =>
       allowLeadingZeros: true,
     }),
     address: faker.address.streetAddress (),
-    package_desc: faker.lorem.text (),
+    package_desc: faker.lorem.sentence (),
     home_state: faker.helpers.arrayElement ([
       'private',
       'rental',
       'state_property',
     ]),
-    additional_desc: faker.lorem.text (),
+    additional_desc: faker.lorem.sentence (),
     location: faker.address
       .nearbyGPSCoordinate ([-7.057418, 110.44067], 1, true)
       .toString (),
